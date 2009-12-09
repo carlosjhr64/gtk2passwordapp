@@ -20,5 +20,6 @@ module Configuration
 
   URL_PATTERN	= Regexp.new('^https?:\/\/[^\s\']+$')
 
+  GUI[:window_size] = [100,100]
   MENU[:close]  = '_Close'
 end

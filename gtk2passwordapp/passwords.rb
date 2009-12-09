@@ -1,36 +1,6 @@
 require 'gtk2passwordapp/passwords_data.rb'
+module Gtk2PasswordApp
 class Passwords < PasswordsData
-
-  def get_salt(title='Short Password')
-    dialog = Gtk::Dialog.new(
-        title,
-        nil, nil,
-        [ Gtk::Stock::QUIT,  0 ],
-        [ Gtk::Stock::OK,  1 ])
-
-    label = Gtk::Label.new(title)
-    label.justify = Gtk::JUSTIFY_LEFT
-    label.wrap = true
-    label.modify_font(Configuration::FONT[:normal])
-    dialog.vbox.add(label)
-    entry = Gtk::Entry.new
-    entry.visibility = false
-    entry.modify_font(Configuration::FONT[:normal])
-    dialog.vbox.add(entry)
-    dialog.show_all
-
-    entry.signal_connect('activate'){
-      dialog.response(1)
-    }
-
-    ret = nil
-    dialog.run {|response|
-      ret = entry.text.strip if response == 1
-    }
-    dialog.destroy
-
-    return ret
-  end
 
   def _create_passphrase(pfile)
     passphrase = ''
@@ -73,7 +43,7 @@ class Passwords < PasswordsData
   end
 
   def initialize
-    @pwd = get_salt || exit
+    @pwd = Gtk2PasswordApp.get_salt || exit
     @pph = get_passphrase
     super(@pwd+@pph)
     # Password file exist?
@@ -85,21 +55,22 @@ class Passwords < PasswordsData
       if has_datafile? # then
         # Yes, it's got a datafile. Ask for password again.
         while !self.exist? do
-          @pwd = get_salt('Try again!') || exit
+          @pwd = Gtk2PasswordApp.get_salt('Try again!') || exit
           super(@pwd+@pph)
         end
         self.load 
       else
-      # Else, must be a new intall.
+      # Else, must be a new install.
         pwd = @pwd
-        @pwd = get_salt('Verify New Password') || exit
+        @pwd = Gtk2PasswordApp.get_salt('Verify New Password') || exit
         while !(pwd == @pwd) do
-          pwd = get_salt('Try again!') || exit
-          @pwd = get_salt('Verify New Password') || exit
+          pwd = Gtk2PasswordApp.get_salt('Try again!') || exit
+          @pwd = Gtk2PasswordApp.get_salt('Verify New Password') || exit
         end
       end
     end
     # Off to the races...
   end
 
+end
 end

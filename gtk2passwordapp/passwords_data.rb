@@ -1,6 +1,7 @@
 require 'gtk2passwordapp/iocrypt'
 require 'digest/md5'
 
+module Gtk2PasswordApp
 class PasswordsData
   include Configuration
   attr_accessor :account
@@ -105,4 +106,5 @@ class PasswordsData
     @data[account][USERNAME] = usr if usr 
     return @data[account][USERNAME]	|| ''
   end
+end
 end

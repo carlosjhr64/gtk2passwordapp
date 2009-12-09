@@ -7,43 +7,24 @@ rescue Exception
   require 'crypt-tea'
 end
 
+module Gtk2PasswordApp
 class IOCrypt
   LENGTH = 15
-  #HTTPX = Regexp.new('^https?:\/\/')
 
   def initialize(passphrase)
-    #@key = Crypt::Blowfish.new(passphrase[0..55])  
     @key = Crypt::XXTEA.new(passphrase[0..LENGTH])
   end
 
   def load(dumpfile)
     data = nil
-
-    #if dumpfile =~ HTTPX then
-    #  require 'open-uri'
-    #  open(dumpfile){|fh|
-    #    #data = YAML.load( @key.decrypt_string( fh.read ) )
-    #    data = YAML.load( @key.decrypt( fh.read ) )
-    #  }
-    #else
-      File.open(dumpfile,'r'){|fh|
-        #data = YAML.load( @key.decrypt_string( fh.read ) )
-        data = YAML.load( @key.decrypt( fh.read ) )
-      }
-    #end
-
+    File.open(dumpfile,'r'){|fh| data = YAML.load( @key.decrypt( fh.read ) ) }
     return data
   end
 
   def dump(dumpfile, data)
     count = nil
-    raise "Http PUT not supported" if dumpfile =~ HTTPX
-
-    File.open(dumpfile,'w') do |fh|
-      #count = fh.write( @key.encrypt_string( YAML.dump( data ) ) )
-      count = fh.write( @key.encrypt( YAML.dump( data ) ) )
-    end
-
+    File.open(dumpfile,'w') { |fh| count = fh.write( @key.encrypt( YAML.dump( data ) ) ) }
     return count
   end
+end
 end
