@@ -2,14 +2,14 @@ require 'gtk2passwordapp/passwords_data.rb'
 module Gtk2PasswordApp
 class Passwords < PasswordsData
 
-  def _create_passphrase(pfile)
+  def _create_passphrase
     passphrase = ''
 
     IOCrypt::LENGTH.times do
       passphrase += (rand(94)+33).chr
     end
-    File.open(pfile,'w'){|fh| fh.write passphrase }
-    File.chmod(0600, pfile)
+    File.open(@pfile,'w'){|fh| fh.write passphrase }
+    File.chmod(0600, @pfile)
 
     return passphrase
   end
@@ -17,15 +17,15 @@ class Passwords < PasswordsData
   def get_passphrase(mv=false)
     passphrase = ''
 
-    pfile = UserSpace::DIRECTORY+'/passphrase.txt'
+    @pfile = UserSpace::DIRECTORY+'/passphrase.txt'
     if mv then
-      File.rename(pfile, pfile+'.bak') if File.exist?(pfile)
-      passphrase = _create_passphrase(pfile)
+      File.rename(@pfile, @pfile+'.bak') if File.exist?(@pfile)
+      passphrase = _create_passphrase
     else
-      if File.exist?(pfile) then
-        File.open(pfile,'r'){|fh| passphrase = fh.read }
+      if File.exist?(@pfile) then
+        File.open(@pfile,'r'){|fh| passphrase = fh.read }
       else
-        passphrase = _create_passphrase(pfile)
+        passphrase = _create_passphrase(@pfile)
       end
     end
 
@@ -42,8 +42,10 @@ class Passwords < PasswordsData
     return false
   end
 
+  attr_reader :pfile
   def initialize
     @pwd = Gtk2PasswordApp.get_salt || exit
+    @pfile = nil
     @pph = get_passphrase
     super(@pwd+@pph)
     # Password file exist?
@@ -74,8 +76,14 @@ class Passwords < PasswordsData
 
   def save(pwd=nil)
     if pwd then
+      pfbak = self.pfile + '.bak'
+      pph = get_passphrase(true) # new passphrase
+      dfbak = self.dumpfile + '.bak'
+      super(pwd+pph)
       @pwd = pwd
-      super(@pwd+@pph)
+      @pph = pph
+      File.unlink(pfbak) if File.exist?(pfbak)
+      File.unlink(dfbak) if File.exist?(dfbak)
     else
       super()
     end

@@ -5,7 +5,7 @@ module Gtk2PasswordApp
 class PasswordsData
   include Configuration
   attr_accessor :account
-  attr_reader :data
+  attr_reader :data, :dumpfile
 
   PASSWORD	= 0
   PREVIOUS	= 1
@@ -37,13 +37,11 @@ class PasswordsData
 
   def save(passphrase = nil)
     # just in case, keep a backup
-    bak = @dumpfile+'.bak'
-    File.rename(@dumpfile, bak) if File.exist?(@dumpfile)
+    File.rename(@dumpfile, @dumpfile+'.bak') if File.exist?(@dumpfile)
     _reset(passphrase) if passphrase 
     iocrypt = IOCrypt.new(@passphrase)
     iocrypt.dump(@dumpfile, @data)
     File.chmod(0600, @dumpfile)
-    File.unlink(bak) if File.exist?(bak)
   end
 
   def add(account)
