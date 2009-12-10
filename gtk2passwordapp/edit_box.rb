@@ -263,20 +263,16 @@ module Gtk2PasswordApp
  
        # Current
        widget[:current].signal_connect('clicked'){
-         primary   = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
-         clipboard = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
          account = (widget[:account].active_text)? widget[:account].active_text.strip: ''
-         primary.text = passwords.password_of(account)
-         clipboard.text = passwords.username_of(account)
+         PRIMARY.text = passwords.password_of(account)
+         CLIPBOARD.text = passwords.username_of(account)
        }
  
        # Previous
        widget[:previous].signal_connect('clicked'){
-         primary   = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
-         clipboard = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
          account = (widget[:account].active_text)? widget[:account].active_text.strip: ''
-         primary.text = passwords.previous_password_of(account)
-         clipboard.text = passwords.username_of(account)
+         PRIMARY.text = passwords.previous_password_of(account)
+         CLIPBOARD.text = passwords.username_of(account)
        }
  
        # Change Password
