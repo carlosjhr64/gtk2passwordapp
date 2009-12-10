@@ -8,6 +8,7 @@ module Configuration
 
   ENTRY_WIDTH	= 275
   LABEL_WIDTH	= 75
+  GO_BUTTON_LENGTH = 30
   SPIN_BUTTON_LENGTH = 50
   PAD		= 2	# cell padding
 
