@@ -289,8 +289,8 @@ module Gtk2PasswordApp
                pwd2 = Gtk2PasswordApp.get_salt('Verify')
                return if !pwd2
              end
-             @pwd = pwd1
-             passwords.save(@pwd+@pph)
+             #@pwd = pwd1
+             passwords.save(pwd1)
            end
          end
        }

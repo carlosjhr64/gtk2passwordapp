@@ -72,5 +72,14 @@ class Passwords < PasswordsData
     # Off to the races...
   end
 
+  def save(pwd=nil)
+    if pwd then
+      @pwd = pwd
+      super(@pwd+@pph)
+    else
+      super()
+    end
+  end
+
 end
 end
