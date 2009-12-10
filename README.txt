@@ -38,6 +38,11 @@ The password is copied the the primary clipboard and will paste on
 middle mouse button click.
 Right click on an entry box to paste the username (via the clipboard's menu).
 
+Lastly, do not edit
+	~/.gtk2passwordapp-1/passphrase.txt
+It's used to "salt" the password... without it,
+one will not be able to decrypt the datafile.
+
 
 For full documentation and comments, see
 

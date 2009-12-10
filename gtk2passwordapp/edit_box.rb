@@ -74,7 +74,6 @@ module Gtk2PasswordApp
    EDITOR_BUTTONS = [
  	[ :random, :alphanum, :num, :alpha, :caps, ],
  	[ :visibility, :current, :previous, :cancel, :save, :update, ],
- 	#[ :delete, :cpwd, :cpph ],
  	[ :delete, :cpwd ],
  	]
  
@@ -101,7 +100,6 @@ module Gtk2PasswordApp
  	:cancel		=> 'Cancel',
  	:save		=> 'Save',
  	:cpwd		=> 'Change Data File Password',
-#	:cpph		=> 'Data File Passphrase',
  	:delete		=> 'Delete Account',
    }
  
@@ -290,12 +288,6 @@ module Gtk2PasswordApp
            end
          end
        }
- 
-       # Change Passphrase
-#      widget[:cpph].signal_connect('clicked'){
-#        @pph = get_passphrase(true) # mv old passphrase? true
-#        passwords.save(@pwd+@pph)
-#      }
  
        # Save
        widget[:save].signal_connect('clicked'){
