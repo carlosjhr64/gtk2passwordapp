@@ -4,9 +4,11 @@ module Gtk2PasswordApp
    PRIMARY = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
    CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
 
+   @@index = nil
    def self._rebuild_menu(menu,passwords)
      passwords.accounts.each {|account|
        item = menu.append_menu_item(account){
+         @@index = passwords.accounts.index(account)
          PRIMARY.text   = passwords.password_of(account)
          CLIPBOARD.text = passwords.username_of(account)
        }
@@ -103,7 +105,7 @@ module Gtk2PasswordApp
  	:delete		=> 'Delete Account',
    }
  
-   def self.edit(window, menu, passwords, index=nil)
+   def self.edit(window, menu, passwords)
      begin
        dialog_options = {:window=>window}
        updated = false	# only saves data if data updated
@@ -159,7 +161,7 @@ module Gtk2PasswordApp
        passwords.accounts.each { |account|
          widget[:account].append_text( account )
        }
-       widget[:account].active = index	if index
+       widget[:account].active = @@index	if @@index
        account_changed = proc {
          account = (widget[:account].active_text)? widget[:account].active_text.strip: ''
          if account.length > 0 then
@@ -192,7 +194,7 @@ module Gtk2PasswordApp
              updated = true if !updated
              if !passwords.include?(account) then
                passwords.add(account) 
-               i = passwords.accounts.index(account)
+               @@index = i = passwords.accounts.index(account)
                widget[:account].insert_text(i,account)
              end
              passwords.url_of(account, url)
@@ -309,6 +311,7 @@ module Gtk2PasswordApp
              widget[:account].remove_text(i)
              widget[:account].active = (i > 0)? i - 1: 0
              updated = true
+             @@index = nil
              DIALOGS.quick_message("#{account} deleted.", dialog_options)
            end
          end
