@@ -4,7 +4,7 @@ module Gtk2PasswordApp
    CLIPBOARD	= Gtk::Clipboard.get((SWITCH_CLIPBOARDS)? Gdk::Selection::PRIMARY: Gdk::Selection::CLIPBOARD)
 
    @@index = nil
-   def self._rebuild_menu(passwords)
+   def self.build_menu(passwords)
      passwords.accounts.each {|account|
        item = Gtk2App.dock_menu.append_menu_item(account){
          @@index = passwords.accounts.index(account)
@@ -22,12 +22,7 @@ module Gtk2PasswordApp
        Gtk2App.dock_menu.remove(item)
        item.destroy
      end
-     Gtk2PasswordApp._rebuild_menu(passwords)
-   end
-   def self.build_menu(passwords)
-     Gtk2App.dock_menu.append_menu_item('Quit'){ Gtk2App.quit }
-     Gtk2App.dock_menu.append( Gtk::SeparatorMenuItem.new )
-     Gtk2PasswordApp._rebuild_menu(passwords)
+     Gtk2PasswordApp.build_menu(passwords)
    end
 
    def self.get_salt(title='Short Password')
