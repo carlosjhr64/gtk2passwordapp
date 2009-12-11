@@ -116,7 +116,9 @@ module Gtk2PasswordApp
        pwdlength = Gtk::SpinButton.new(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, 1)
        pwdlength.value = DEFAULT_PASSWORD_LENGTH
        pwdlength.width_request = SPIN_BUTTON_LENGTH
+       pwdlength.child.modify_font(FONT[:normal])
        goto_url = Gtk::Button.new('Go')
+       goto_url.child.modify_font(FONT[:normal])
        goto_url.width_request = GO_BUTTON_LENGTH
  
        widget = {}
@@ -134,10 +136,10 @@ module Gtk2PasswordApp
 		((s == :url)? (GO_BUTTON_LENGTH+2*GUI[:padding]): 0))
          widget[s].modify_font(FONT[:normal])
          #hbox.pack_start(label, false, false, GUI[:padding])
-         hbox.pack_end(pwdlength, false, false, GUI[:padding]) if s == :password
-         hbox.pack_end(goto_url, false, false, GUI[:padding]) if s == :url
-         hbox.pack_end(widget[s], false, false, GUI[:padding])
+         hbox.pack_start(widget[s], false, false, GUI[:padding])
          vbox.pack_start(hbox, false, false, GUI[:padding])
+         hbox.pack_start(pwdlength, false, false, GUI[:padding]) if s == :password
+         hbox.pack_start(goto_url, false, false, GUI[:padding]) if s == :url
        }
 
        # The go button opens the url in a browser
@@ -150,9 +152,7 @@ module Gtk2PasswordApp
          row.each {|s|
            widget[s] = Gtk::Button.new(TEXT[s])
            widget[s].child.modify_font(FONT[:normal])
-           (s==:cancel || s==:save || s==:update || s==:cpwd)?
- 		hbox.pack_end(widget[s], false, false, GUI[:padding]) :
- 		hbox.pack_start(widget[s], false, false, GUI[:padding])
+           hbox.pack_start(widget[s], false, false, GUI[:padding])
          }
          vbox.pack_start(hbox, false, false, GUI[:padding])
        }

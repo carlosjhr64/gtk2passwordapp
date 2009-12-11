@@ -6,10 +6,10 @@ module Configuration
   # You cam place your passwords data file in a directory other than ~/gtk2passwordapp-*
   PASSWORDS_DATA_DIR = UserSpace::DIRECTORY
 
-  ENTRY_WIDTH	= 275
+  ENTRY_WIDTH	= 500
   LABEL_WIDTH	= 75
-  GO_BUTTON_LENGTH = 30
-  SPIN_BUTTON_LENGTH = 50
+  GO_BUTTON_LENGTH = 50
+  SPIN_BUTTON_LENGTH = 60
   PAD		= 2	# cell padding
 
   MAX_PASSWORD_LENGTH = 20
@@ -21,6 +21,7 @@ module Configuration
 
   URL_PATTERN	= Regexp.new('^https?:\/\/[^\s\']+$')
 
+  FONT[:normal] = FONT[:large]	if Gtk2App::HILDON
   GUI[:window_size] = [100,100]
   MENU[:close]  = '_Close'
 end
