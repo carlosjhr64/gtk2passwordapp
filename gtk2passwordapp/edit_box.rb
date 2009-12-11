@@ -175,6 +175,7 @@ module Gtk2PasswordApp
              widget[:note].text		= ''
              widget[:username].text	= ''
            end
+           @@index = widget[:account].active
          end
        }
        account_changed.call
@@ -309,9 +310,8 @@ module Gtk2PasswordApp
            if i then
              passwords.delete(account)
              widget[:account].remove_text(i)
-             widget[:account].active = (i > 0)? i - 1: 0
+             @@index = (widget[:account].active = (i > 0)? i - 1: 0)
              updated = true
-             @@index = nil
              DIALOGS.quick_message("#{account} deleted.", dialog_options)
            end
          end
