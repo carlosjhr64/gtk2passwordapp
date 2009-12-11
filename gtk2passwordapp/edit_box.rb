@@ -1,8 +1,7 @@
 module Gtk2PasswordApp
    include Configuration
-
-   PRIMARY = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
-   CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
+   PRIMARY	= Gtk::Clipboard.get((SWITCH_CLIPBOARDS)? Gdk::Selection::CLIPBOARD: Gdk::Selection::PRIMARY)
+   CLIPBOARD	= Gtk::Clipboard.get((SWITCH_CLIPBOARDS)? Gdk::Selection::PRIMARY: Gdk::Selection::CLIPBOARD)
 
    @@index = nil
    def self._rebuild_menu(menu,passwords)

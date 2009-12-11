@@ -16,6 +16,9 @@ module Configuration
   DEFAULT_PASSWORD_LENGTH = 7
   MIN_PASSWORD_LENGTH = 3
 
+  # Switches the roles of PRIMARY and CLIPBOARD
+  SWITCH_CLIPBOARDS = Gtk2App::HILDON
+
   VERIFIED_EXPIRED = 60*60 # one hour
   PASSWORD_EXPIRED = 60*60*24*30*3 # 3 months
 
