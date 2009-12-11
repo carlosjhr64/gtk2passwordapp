@@ -6,7 +6,7 @@ module Configuration
   # You cam place your passwords data file in a directory other than ~/gtk2passwordapp-*
   PASSWORDS_DATA_DIR = UserSpace::DIRECTORY
 
-  ENTRY_WIDTH	= 500
+  ENTRY_WIDTH	= (Gtk2App::HILDON)? 600: 300
   LABEL_WIDTH	= 75
   GO_BUTTON_LENGTH = 50
   SPIN_BUTTON_LENGTH = 60
@@ -21,7 +21,7 @@ module Configuration
 
   URL_PATTERN	= Regexp.new('^https?:\/\/[^\s\']+$')
 
-  FONT[:normal] = FONT[:large]	if Gtk2App::HILDON
+  FONT[:normal] = FONT[:large] = Pango::FontDescription.new( 'Arial 18' )	if Gtk2App::HILDON
   GUI[:window_size] = [100,100]
   MENU[:close]  = '_Close'
 end
