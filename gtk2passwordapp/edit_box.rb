@@ -116,7 +116,7 @@ module Gtk2PasswordApp
        pwdlength = Gtk::SpinButton.new(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, 1)
        pwdlength.value = DEFAULT_PASSWORD_LENGTH
        pwdlength.width_request = SPIN_BUTTON_LENGTH
-       pwdlength.child.modify_font(FONT[:normal])
+       pwdlength.modify_font(FONT[:normal])
        goto_url = Gtk::Button.new('Go')
        goto_url.child.modify_font(FONT[:normal])
        goto_url.width_request = GO_BUTTON_LENGTH
