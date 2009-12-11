@@ -4,30 +4,30 @@ module Gtk2PasswordApp
    CLIPBOARD	= Gtk::Clipboard.get((SWITCH_CLIPBOARDS)? Gdk::Selection::PRIMARY: Gdk::Selection::CLIPBOARD)
 
    @@index = nil
-   def self._rebuild_menu(menu,passwords)
+   def self._rebuild_menu(passwords)
      passwords.accounts.each {|account|
-       item = menu.append_menu_item(account){
+       item = Gtk2App.dock_menu.append_menu_item(account){
          @@index = passwords.accounts.index(account)
          PRIMARY.text   = passwords.password_of(account)
          CLIPBOARD.text = passwords.username_of(account)
        }
        item.child.modify_fg(Gtk::STATE_NORMAL, RED) if passwords.expired?(account)
      }
-     menu.show_all
+     Gtk2App.dock_menu.show_all
    end
-   def self.rebuild_menu(menu,passwords)
-     items = menu.children
-     items.shift; items.shift # shift out Quit and Spacer
+   def self.rebuild_menu(passwords)
+     items = Gtk2App.dock_menu.children
+     3.times{ items.shift } # shift out Quit, Run, and Spacer
      while item = items.shift do
-       menu.remove(item)
+       Gtk2App.dock_menu.remove(item)
        item.destroy
      end
-     Gtk2PasswordApp._rebuild_menu(menu,passwords)
+     Gtk2PasswordApp._rebuild_menu(passwords)
    end
-   def self.build_menu(menu,passwords)
-     menu.append_menu_item('Quit'){ Gtk2App.quit }
-     menu.append( Gtk::SeparatorMenuItem.new )
-     Gtk2PasswordApp._rebuild_menu(menu,passwords)
+   def self.build_menu(passwords)
+     Gtk2App.dock_menu.append_menu_item('Quit'){ Gtk2App.quit }
+     Gtk2App.dock_menu.append( Gtk::SeparatorMenuItem.new )
+     Gtk2PasswordApp._rebuild_menu(passwords)
    end
 
    def self.get_salt(title='Short Password')
@@ -104,7 +104,7 @@ module Gtk2PasswordApp
  	:delete		=> 'Delete Account',
    }
  
-   def self.edit(window, menu, passwords)
+   def self.edit(window, passwords)
      begin
        dialog_options = {:window=>window}
        updated = false	# only saves data if data updated
@@ -296,7 +296,7 @@ module Gtk2PasswordApp
          if updated then
            passwords.save
            updated = false
-           Gtk2PasswordApp.rebuild_menu(menu,passwords)
+           Gtk2PasswordApp.rebuild_menu(passwords)
          end
          Gtk2App.close
        }
