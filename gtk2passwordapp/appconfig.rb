@@ -3,7 +3,7 @@
 
 module Configuration
   # Note that the passwords data file name is auto generated, but...
-  # You cam place your passwords data file in a directory other than ~/gtk2passwordapp-*
+  # You can place your passwords data file in a directory other than ~/gtk2passwordapp-*
   PASSWORDS_DATA_DIR = UserSpace::DIRECTORY
 
   ENTRY_WIDTH	= (Gtk2App::HILDON)? 600: 300
@@ -16,10 +16,9 @@ module Configuration
   DEFAULT_PASSWORD_LENGTH = 7
   MIN_PASSWORD_LENGTH = 3
 
-  # Switches the roles of PRIMARY and CLIPBOARD
+  # Switches the roles of PRIMARY and CLIPBOARD when true
   SWITCH_CLIPBOARDS = Gtk2App::HILDON
 
-  VERIFIED_EXPIRED = 60*60 # one hour
   PASSWORD_EXPIRED = 60*60*24*30*3 # 3 months
 
   URL_PATTERN	= Regexp.new('^https?:\/\/[^\s\']+$')
