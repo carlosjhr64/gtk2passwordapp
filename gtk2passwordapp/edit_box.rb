@@ -118,18 +118,14 @@ module Gtk2PasswordApp
        widget = {}
        EDITOR_LABELS.each {|s|
          hbox = Gtk::HBox.new
-         #label = Gtk::Label.new(TEXT[s]+':',hbox)
          label = Gtk2App::Label.new(TEXT[s]+':',hbox) # Gtk2App's Label
-         #label.modify_font(FONT[:normal])
          label.width_request = LABEL_WIDTH
          label.justify = Gtk::JUSTIFY_RIGHT
-         #label.wrap = true
          widget[s] = (s==:account)? Gtk::ComboBoxEntry.new : Gtk::Entry.new
          widget[s].width_request = ENTRY_WIDTH -
 		((s == :password)? (SPIN_BUTTON_LENGTH+2*GUI[:padding]):
 		((s == :url)? (GO_BUTTON_LENGTH+2*GUI[:padding]): 0))
          widget[s].modify_font(FONT[:normal])
-         #hbox.pack_start(label, false, false, GUI[:padding])
          hbox.pack_start(widget[s], false, false, GUI[:padding])
          vbox.pack_start(hbox, false, false, GUI[:padding])
          hbox.pack_start(pwdlength, false, false, GUI[:padding]) if s == :password

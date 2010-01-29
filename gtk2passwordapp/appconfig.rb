@@ -10,7 +10,7 @@ module Configuration
   LABEL_WIDTH	= 75
   GO_BUTTON_LENGTH = 50
   SPIN_BUTTON_LENGTH = 60
-  PAD		= 2	# cell padding
+# PAD		= 2	# cell padding
 
   MAX_PASSWORD_LENGTH = 20
   DEFAULT_PASSWORD_LENGTH = 7
