@@ -11,7 +11,7 @@ module Gtk2PasswordApp
          PRIMARY.text   = passwords.password_of(account)
          CLIPBOARD.text = passwords.username_of(account)
        }
-       item.child.modify_fg(Gtk::STATE_NORMAL, RED) if passwords.expired?(account)
+       item.child.modify_fg(Gtk::STATE_NORMAL, COLOR[:red]) if passwords.expired?(account)
      }
      Gtk2App.dock_menu.show_all
    end
