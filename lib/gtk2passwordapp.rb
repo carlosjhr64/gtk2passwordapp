@@ -5,25 +5,25 @@ module Gtk2PasswordApp
    CLIPBOARD	= Gtk::Clipboard.get((SWITCH_CLIPBOARDS)? Gdk::Selection::PRIMARY: Gdk::Selection::CLIPBOARD)
 
    @@index = nil
-   def self.build_menu(passwords,dock_menu)
+   def self.build_menu(passwords)
      passwords.accounts.each {|account|
-       item = dock_menu.append_menu_item(account){
+       item = PROGRAM.dock_menu.append_menu_item(account){
          @@index = passwords.accounts.index(account)
          PRIMARY.text   = passwords.password_of(account)
          CLIPBOARD.text = passwords.username_of(account)
        }
        item.child.modify_fg(Gtk::STATE_NORMAL, COLOR[:red]) if passwords.expired?(account)
      }
-     dock_menu.show_all
+     PROGRAM.dock_menu.show_all
    end
-   def self.rebuild_menu(passwords,dock_menu)
-     items = dock_menu.children
+   def self.rebuild_menu(passwords)
+     items = PROGRAM.dock_menu.children
      3.times{ items.shift } # shift out Quit, Run, and Spacer
      while item = items.shift do
-       dock_menu.remove(item)
+       PROGRAM.dock_menu.remove(item)
        item.destroy
      end
-     Gtk2PasswordApp.build_menu(passwords,dock_menu)
+     Gtk2PasswordApp.build_menu(passwords)
    end
 
    def self.get_salt(prompt,title=prompt)
@@ -233,6 +233,7 @@ module Gtk2PasswordApp
              end
              #@pwd = pwd1
              passwords.save(pwd1)
+             Gtk2AppLib.passwords_updated
            end
          end
        }
@@ -241,6 +242,7 @@ module Gtk2PasswordApp
        widget[:save].signal_connect('clicked'){
          if updated then
            passwords.save
+           Gtk2AppLib.passwords_updated
            updated = false
            Gtk2PasswordApp.rebuild_menu(passwords)
          end

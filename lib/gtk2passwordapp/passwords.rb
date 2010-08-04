@@ -25,7 +25,7 @@ class Passwords < PasswordsData
       if File.exist?(@pfile) then
         File.open(@pfile,'r'){|fh| passphrase = fh.read }
       else
-        passphrase = _create_passphrase(@pfile)
+        passphrase = _create_passphrase
       end
     end
 

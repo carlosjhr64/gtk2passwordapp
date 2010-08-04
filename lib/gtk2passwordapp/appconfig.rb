@@ -38,4 +38,11 @@ module Configuration
   WIDGET_OPTIONS[:spinbutton_width] = SPIN_BUTTON_LENGTH
   WIDGET_OPTIONS[:padding]	= PADDING
 end
+
+  def self.passwords_updated
+    # You may want to mirror Configuration::PASSWORDS_DATA_DIR.
+    # For example: 
+    # system( "scp #{Configuration::PASSWORDS_DATA_DIR}/*.dat user@192.168.1.123:.gtk2passwordapp-1/")
+    # system( "scp #{Configuration::PASSWORDS_DATA_DIR}/passphrase.txt user@192.168.1.123:.gtk2passwordapp-1/passphrase.txt")
+  end
 end
