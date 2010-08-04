@@ -1,63 +1,35 @@
+require 'gtk2passwordapp/passwords'
 module Gtk2PasswordApp
    include Configuration
    PRIMARY	= Gtk::Clipboard.get((SWITCH_CLIPBOARDS)? Gdk::Selection::CLIPBOARD: Gdk::Selection::PRIMARY)
    CLIPBOARD	= Gtk::Clipboard.get((SWITCH_CLIPBOARDS)? Gdk::Selection::PRIMARY: Gdk::Selection::CLIPBOARD)
 
    @@index = nil
-   def self.build_menu(passwords)
+   def self.build_menu(passwords,dock_menu)
      passwords.accounts.each {|account|
-       item = Gtk2App.dock_menu.append_menu_item(account){
+       item = dock_menu.append_menu_item(account){
          @@index = passwords.accounts.index(account)
          PRIMARY.text   = passwords.password_of(account)
          CLIPBOARD.text = passwords.username_of(account)
        }
        item.child.modify_fg(Gtk::STATE_NORMAL, COLOR[:red]) if passwords.expired?(account)
      }
-     Gtk2App.dock_menu.show_all
+     dock_menu.show_all
    end
-   def self.rebuild_menu(passwords)
-     items = Gtk2App.dock_menu.children
+   def self.rebuild_menu(passwords,dock_menu)
+     items = dock_menu.children
      3.times{ items.shift } # shift out Quit, Run, and Spacer
      while item = items.shift do
-       Gtk2App.dock_menu.remove(item)
+       dock_menu.remove(item)
        item.destroy
      end
-     Gtk2PasswordApp.build_menu(passwords)
+     Gtk2PasswordApp.build_menu(passwords,dock_menu)
    end
 
-   def self.get_salt(title='Short Password')
-     dialog = Gtk::Dialog.new(
-         title,
-         nil, nil,
-         [ Gtk::Stock::QUIT,  0 ],
-         [ Gtk::Stock::OK,  1 ])
- 
-     label = Gtk::Label.new(title)
-     label.justify = Gtk::JUSTIFY_LEFT
-     label.wrap = true
-     label.modify_font(Configuration::FONT[:normal])
-     dialog.vbox.add(label)
-     entry = Gtk::Entry.new
-     entry.visibility = false
-     entry.modify_font(Configuration::FONT[:normal])
-     dialog.vbox.add(entry)
-     dialog.show_all
- 
-     entry.signal_connect('activate'){
-       dialog.response(1)
-     }
- 
-     ret = nil
-     dialog.run {|response|
-       ret = entry.text.strip if response == 1
-     }
-     dialog.destroy
- 
-     return ret
+   def self.get_salt(prompt,title=prompt)
+     Gtk2AppLib::DIALOGS.entry(prompt,{:title=>title,:visibility=>false})
    end
  
-   DIALOGS = Gtk2App::Dialogs.new
-
    EDITOR_LABELS = [
  	:account,
   	:url,
@@ -69,8 +41,9 @@ module Gtk2PasswordApp
  
    EDITOR_BUTTONS = [
  	[ :random, :alphanum, :num, :alpha, :caps, ],
- 	[ :visibility, :current, :previous, :cancel, :save, :update, ],
- 	[ :delete, :cpwd ],
+ 	[ :cancel, :delete, :update, :save, ],
+ 	[ :cpwd ],
+ 	[ :current, :previous, ],
  	]
  
    TEXT = {
@@ -80,77 +53,59 @@ module Gtk2PasswordApp
  	:password	=> 'New',
  	# Buttons
  	:username	=> 'Username',
- 	:current	=> 'Current',
+ 	:current	=> 'Clip Current Password',
  	:url		=> 'Url',
  	:note		=> 'Note',
  	:edit		=> 'Edit',
- 	:update		=> 'Update',
- 	:visibility	=> 'Visible',
+ 	:update		=> 'Update Account',
  	:alphanum	=> 'Alpha-Numeric',
  	:num		=> 'Numeric',
  	:alpha		=> 'Letters',
  	:caps		=> 'All-Caps',
  	:random		=> 'Random',
- 	:previous	=> 'Previous',
+ 	:previous	=> 'Clip Previous Password',
  	:quit		=> 'Quit',
- 	:cancel		=> 'Cancel',
- 	:save		=> 'Save',
+ 	:cancel		=> 'Cancel All Changes',
+ 	:save		=> 'Save To Disk',
  	:cpwd		=> 'Change Data File Password',
  	:delete		=> 'Delete Account',
    }
  
    def self.edit(window, passwords)
-     begin
        dialog_options = {:window=>window}
        updated = false	# only saves data if data updated
 
-       vbox = Gtk::VBox.new
-       window.add(vbox)
+       vbox = Gtk2AppLib::VBox.new(window)
  
-       pwdlength = Gtk::SpinButton.new(MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH, 1)
-       pwdlength.value = DEFAULT_PASSWORD_LENGTH
-       pwdlength.width_request = SPIN_BUTTON_LENGTH
-       pwdlength.modify_font(FONT[:normal])
-       goto_url = Gtk::Button.new('Go')
-       goto_url.child.modify_font(FONT[:normal])
-       goto_url.width_request = GO_BUTTON_LENGTH
+       goto_url = pwdlength = visibility = nil
  
        widget = {}
        EDITOR_LABELS.each {|s|
-         hbox = Gtk::HBox.new
-         label = Gtk2App::Label.new(TEXT[s]+':',hbox) # Gtk2App's Label
-         label.width_request = LABEL_WIDTH
-         label.justify = Gtk::JUSTIFY_RIGHT
-         widget[s] = (s==:account)? Gtk::ComboBoxEntry.new : Gtk::Entry.new
-         widget[s].width_request = ENTRY_WIDTH -
-		((s == :password)? (SPIN_BUTTON_LENGTH+2*GUI[:padding]):
-		((s == :url)? (GO_BUTTON_LENGTH+2*GUI[:padding]): 0))
-         widget[s].modify_font(FONT[:normal])
-         hbox.pack_start(widget[s], false, false, GUI[:padding])
-         vbox.pack_start(hbox, false, false, GUI[:padding])
-         hbox.pack_start(pwdlength, false, false, GUI[:padding]) if s == :password
-         hbox.pack_start(goto_url, false, false, GUI[:padding]) if s == :url
+         hbox = Gtk2AppLib::HBox.new(vbox)
+         label = Gtk2AppLib::Label.new(TEXT[s]+':',hbox,{:label_width=>LABEL_WIDTH})
+         dx =  ((s == :password)? (SPIN_BUTTON_LENGTH+2*PADDING+30): ((s == :url)? (GO_BUTTON_LENGTH+2*PADDING): 0))
+         width = ENTRY_WIDTH  - dx
+         widget[s] = (s==:account)?
+		Gtk2AppLib::ComboBoxEntry.new(passwords.accounts,hbox,{:comboboxentry_width=>width}) :
+		Gtk2AppLib::Entry.new('',hbox,{:entry_width=>width})
+
+         if s == :password then
+           visibility = Gtk2AppLib::CheckButton.new(hbox,{:active=>true})
+           pwdlength = Gtk2AppLib::SpinButton.new(hbox)
+           pwdlength.value = DEFAULT_PASSWORD_LENGTH
+         elsif s == :url then
+           goto_url = Gtk2AppLib::Button.new('Go',hbox,{:button_width=>GO_BUTTON_LENGTH}){
+             # The go button opens the url in a browser
+             system("#{APP[:browser]} #{widget[:url].text} > /dev/null 2> /dev/null &")
+           }
+         end
        }
 
-       # The go button opens the url in a browser
-       goto_url.signal_connect('clicked'){
-         system("#{APP[:browser]} #{widget[:url].text} > /dev/null 2> /dev/null &")
-       }
- 
        EDITOR_BUTTONS.each{|row|
-         hbox = Gtk::HBox.new
-         row.each {|s|
-           widget[s] = Gtk::Button.new(TEXT[s])
-           widget[s].child.modify_font(FONT[:normal])
-           hbox.pack_start(widget[s], false, false, GUI[:padding])
-         }
-         vbox.pack_start(hbox, false, false, GUI[:padding])
+         hbox = Gtk2AppLib::HBox.new(vbox)
+         row.each {|s| widget[s] = Gtk2AppLib::Button.new(TEXT[s],hbox) }
        }
  
-       # Account
-       passwords.accounts.each { |account|
-         widget[:account].append_text( account )
-       }
        widget[:account].active = @@index	if @@index
        account_changed = proc {
          account = (widget[:account].active_text)? widget[:account].active_text.strip: ''
@@ -198,7 +153,7 @@ module Gtk2PasswordApp
              end
            end
          else
-           DIALOGS.quick_message('Need url like http://www.site.com/page.html', dialog_options)
+           Gtk2AppLib::DIALOGS.quick_message('Need url like http://www.site.com/page.html', dialog_options)
          end
        }
    
@@ -248,7 +203,7 @@ module Gtk2PasswordApp
        }
  
        # Visibility
-       widget[:visibility].signal_connect('clicked'){
+       visibility.signal_connect('clicked'){
          widget[:password].visibility = !widget[:password].visibility?
        }
  
@@ -289,7 +244,7 @@ module Gtk2PasswordApp
            updated = false
            Gtk2PasswordApp.rebuild_menu(passwords)
          end
-         Gtk2App.close
+         PROGRAM.close
        }
  
        # Delete
@@ -302,13 +257,13 @@ module Gtk2PasswordApp
              widget[:account].remove_text(i)
              @@index = (widget[:account].active = (i > 0)? i - 1: 0)
              updated = true
-             DIALOGS.quick_message("#{account} deleted.", dialog_options)
+             Gtk2AppLib::DIALOGS.quick_message("#{account} deleted.", dialog_options)
            end
          end
        }
 
        # Cancel
-       widget[:cancel].signal_connect('clicked'){ Gtk2App.close }
+       widget[:cancel].signal_connect('clicked'){ PROGRAM.close }
        window.signal_connect('destroy'){
          if updated then
            passwords.load # revert
@@ -317,8 +272,5 @@ module Gtk2PasswordApp
        }
  
        window.show_all
-     rescue Exception
-       puts_bang!
-     end
    end
 end

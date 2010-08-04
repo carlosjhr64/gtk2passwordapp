@@ -42,9 +42,14 @@ class Passwords < PasswordsData
     return false
   end
 
+  def self._get_salt(prompt)
+    (ret = Gtk2PasswordApp.get_salt(prompt,'Salt')) || exit
+    ret.strip
+  end
+
   attr_reader :pfile
   def initialize
-    @pwd = Gtk2PasswordApp.get_salt || exit
+    @pwd = Passwords._get_salt('Short Password')
     @pfile = nil
     @pph = get_passphrase
     super(@pwd+@pph)
@@ -57,17 +62,17 @@ class Passwords < PasswordsData
       if has_datafile? # then
         # Yes, it's got a datafile. Ask for password again.
         while !self.exist? do
-          @pwd = Gtk2PasswordApp.get_salt('Try again!') || exit
+          @pwd = Passwords._get_salt('Try again!')
           super(@pwd+@pph)
         end
         self.load 
       else
       # Else, must be a new install.
         pwd = @pwd
-        @pwd = Gtk2PasswordApp.get_salt('Verify New Password') || exit
+        @pwd = Passwords._get_salt('Verify New Password')
         while !(pwd == @pwd) do
-          pwd = Gtk2PasswordApp.get_salt('Try again!') || exit
-          @pwd = Gtk2PasswordApp.get_salt('Verify New Password') || exit
+          pwd = Passwords._get_salt('Try again!')
+          @pwd = Passwords._get_salt('Verify New Password')
         end
       end
     end
