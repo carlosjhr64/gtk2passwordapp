@@ -92,6 +92,7 @@ class Passwords < PasswordsData
     else
       super()
     end
+    return self.dumpfile
   end
 
 end

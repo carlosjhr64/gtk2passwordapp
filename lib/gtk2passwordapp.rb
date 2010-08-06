@@ -231,9 +231,7 @@ module Gtk2PasswordApp
                pwd2 = Gtk2PasswordApp.get_salt('Verify')
                return if !pwd2
              end
-             #@pwd = pwd1
-             passwords.save(pwd1)
-             Gtk2AppLib.passwords_updated
+             Gtk2AppLib.passwords_updated( passwords.save(pwd1) )
            end
          end
        }
@@ -241,8 +239,7 @@ module Gtk2PasswordApp
        # Save
        widget[:save].signal_connect('clicked'){
          if updated then
-           passwords.save
-           Gtk2AppLib.passwords_updated
+           Gtk2AppLib.passwords_updated( passwords.save )
            updated = false
            Gtk2PasswordApp.rebuild_menu(passwords)
          end

@@ -39,10 +39,10 @@ module Configuration
   WIDGET_OPTIONS[:padding]	= PADDING
 end
 
-  def self.passwords_updated
-    # You may want to mirror Configuration::PASSWORDS_DATA_DIR.
-    # For example: 
-    # system( "scp #{Configuration::PASSWORDS_DATA_DIR}/*.dat user@192.168.1.123:.gtk2passwordapp-1/")
-    # system( "scp #{Configuration::PASSWORDS_DATA_DIR}/passphrase.txt user@192.168.1.123:.gtk2passwordapp-1/passphrase.txt")
+  def self.passwords_updated(dumpfile)
+    # After the password files are saved, you have the option here to backup or mirror the files elsewhere....
+   #fn = File.basename(dumpfile)
+   #system( "scp #{dumpfile} user@192.168.1.123:.gtk2passwordapp-1/#{fn}")
+   #system( "scp #{Configuration::PASSWORDS_DATA_DIR}/passphrase.txt user@192.168.1.123:.gtk2passwordapp-1/passphrase.txt")
   end
 end
