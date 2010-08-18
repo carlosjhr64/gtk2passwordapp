@@ -7,7 +7,7 @@ module Configuration
   # You can place your passwords data file in a directory other than ~/gtk2passwordapp-*
   PASSWORDS_DATA_DIR = UserSpace::DIRECTORY
 
-  HILDON = (WRAPPER.to_s == 'HildonWrapper')
+  HILDON = (WRAPPER.to_s =~ /HildonWrapper/)? true: false
 
   GO_BUTTON_LENGTH	= 50
   SPIN_BUTTON_LENGTH	= 60
