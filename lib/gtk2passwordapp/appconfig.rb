@@ -3,46 +3,93 @@
 
 module Gtk2AppLib
 module Configuration
+  if HILDON then
+    # WIDGET_OPTIONS[:font] = 
+    FONT[:Normal] = FONT[:Large] = Pango::FontDescription.new( 'Arial 18' )
+  end
+  MENU[:close]		= '_Close'
+
+  WINDOW_DEFAULT_SIZE[0],WINDOW_DEFAULT_SIZE[1] = 100,100
+  padding = Widgets::WIDGET[:Widgets][:pack_start].last
+  go = 50
+  label = 75
+  entry = 300
+  spin = 60
+  check = 20
+
+  wrap		= {:wrap= => true}
+  label_width	= {:width_request= => label, :wrap= => true}
+  entry_width	= {:width_request= => entry}
+  entry_shorten	= {:width_request= => entry - go - 2*padding}
+  entry_shorten2 = {:width_request= => entry - spin - check - 4*padding, :visibility= => false}
+  go_width	= {:width_request= => go}
+  check_width	= {:width_request= => check, :active= => true}
+  spin_width	= {:width_request= => spin, :set_range  => [3,30], :value= => 7}
+  clicked	= 'clicked'
+
+  PARAMETERS[:Account_Label]		= ['Account:',label_width]
+  PARAMETERS[:Account_ComboBoxEntry]	= [[],entry_width]
+
+  PARAMETERS[:Url_Label]	= ['Url:',label_width]
+  PARAMETERS[:Url_Entry]	= [entry_shorten]
+  PARAMETERS[:Url_Button]	= ['Go!',go_width,clicked]
+
+  PARAMETERS[:Note_Label]	= ['Note:',label_width]
+  PARAMETERS[:Note_Entry]	= [entry_width]
+
+  PARAMETERS[:Username_Label]	= ['Username:',label_width]
+  PARAMETERS[:Username_Entry]	= [entry_width]
+
+  PARAMETERS[:Password_Label]	= ['Password:',label_width]
+  PARAMETERS[:Password_Entry]	= [entry_shorten2]
+  PARAMETERS[:Password_CheckButton]	= [check_width]
+  PARAMETERS[:Password_SpinButton]	= [spin_width]
+
+  PARAMETERS[:Random_Button]	= ['Random',clicked]
+  PARAMETERS[:Alpha_Button]	= ['Alpha-Numeric',clicked]
+  PARAMETERS[:Numeric_Button]	= ['Numeric',clicked]
+  PARAMETERS[:Letters_Button]	= ['Letters',clicked]
+  PARAMETERS[:Caps_Button]	= ['All-Caps',clicked]
+
+  PARAMETERS[:Cancel_Button]	= ['Cancel All Changes',clicked]
+  PARAMETERS[:Delete_Button]	= ['Delete Account',clicked]
+  PARAMETERS[:Update_Button]	= ['Update Account',clicked]
+  PARAMETERS[:Save_Button]	= ['Save To Disk',clicked]
+
+  PARAMETERS[:Datafile_Button]	= ['Change Data File Password',clicked]
+
+  PARAMETERS[:Current_Button]	= ['Clip Current Password',clicked]
+  PARAMETERS[:Previous_Button]	= ['Clip Previous Password',clicked]
+end
+end
+
+module Gtk2PasswordApp
+module Configuration
   # Note that the passwords data file name is auto generated, but...
   # You can place your passwords data file in a directory other than ~/gtk2passwordapp-*
-  PASSWORDS_DATA_DIR = UserSpace::DIRECTORY
-
-  HILDON = (WRAPPER.to_s =~ /HildonWrapper/)? true: false
-
-  GO_BUTTON_LENGTH	= 50
-  SPIN_BUTTON_LENGTH	= 60
-  PADDING		= 2
-  ENTRY_WIDTH		= (HILDON)? 600: 300
-  LABEL_WIDTH		= 75
-
+  PASSWORDS_DATA_DIR = Gtk2AppLib::USERDIR
 
   # Switches the roles of PRIMARY and CLIPBOARD when true
-  SWITCH_CLIPBOARDS	= HILDON
+  SWITCH_CLIPBOARDS	= (Gtk2AppLib::HILDON)? true: false
 
   PASSWORD_EXPIRED	= 60*60*24*30*3 # 3 months
 
   URL_PATTERN		= Regexp.new('^https?:\/\/[^\s\']+$')
 
-  if HILDON then
-    WIDGET_OPTIONS[:font] = FONT[:normal] = FONT[:large] = Pango::FontDescription.new( 'Arial 18' )
-  end
-
-  MENU[:close]		= '_Close'
-
-  WINDOW_DEFAULT_SIZE[0],WINDOW_DEFAULT_SIZE[1] = 100,100
-
-  WIDGET_OPTIONS[:max]		= 20 # MAX PASSWORD LENGTH
-  WIDGET_OPTIONS[:min]		= 3  # MIN PASSWORD LENGTH
   DEFAULT_PASSWORD_LENGTH = 7
-
-  WIDGET_OPTIONS[:spinbutton_width] = SPIN_BUTTON_LENGTH
-  WIDGET_OPTIONS[:padding]	= PADDING
 end
 
   def self.passwords_updated(dumpfile)
-    # After the password files are saved, you have the option here to backup or mirror the files elsewhere....
-   #fn = File.basename(dumpfile)
-   #system( "scp #{dumpfile} user@192.168.1.123:.gtk2passwordapp-1/#{fn}")
-   #system( "scp #{Configuration::PASSWORDS_DATA_DIR}/passphrase.txt user@192.168.1.123:.gtk2passwordapp-1/passphrase.txt")
+    ## After the password files are saved, you have the option here to backup or mirror the files elsewhere.
+    ## Here's a example:
+    # system( "ssh user@192.168.1.123 mv .gtk2passwordapp-1/*.dat .gtk2passwordapp-1/bak/")
+    # fn = File.basename(dumpfile)
+    # if system( "scp #{dumpfile} user@192.168.1.123:.gtk2passwordapp-1/#{fn}")	then
+    # if system( "scp #{Configuration::PASSWORDS_DATA_DIR}/passphrase.txt user@192.168.1.123:.gtk2passwordapp-1/passphrase.txt") then
+    #   Gtk2AppLib::DIALOGS.quick_message("Passwords saved on 192.168.1.101 and 102")
+    #   return
+    # end
+    # end
+    # Gtk2AppLib::DIALOGS.quick_message("Warning: Could not create backup on 192.168.1.123")
   end
 end
