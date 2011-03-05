@@ -17,7 +17,7 @@ class Passwords < PasswordsData
   def get_passphrase(mv=false)
     passphrase = ''
 
-    @pfile = UserSpace::DIRECTORY+'/passphrase.txt'
+    @pfile = Gtk2AppLib::USERDIR+'/passphrase.txt'
     if mv then
       File.rename(@pfile, @pfile+'.bak') if File.exist?(@pfile)
       passphrase = _create_passphrase
