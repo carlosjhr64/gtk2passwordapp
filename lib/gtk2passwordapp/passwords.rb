@@ -33,8 +33,8 @@ class Passwords < PasswordsData
   end
 
   def has_datafile?
-    Find.find(UserSpace::DIRECTORY){|fn|
-      Find.prune if !(fn==UserSpace::DIRECTORY) &&  File.directory?(fn)
+    Find.find(Gtk2AppLib::USERDIR){|fn|
+      Find.prune if !(fn==Gtk2AppLib::USERDIR) &&  File.directory?(fn)
       if fn =~/[0123456789abcdef]{32}\.dat$/ then
         return true
       end
