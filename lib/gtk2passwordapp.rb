@@ -10,6 +10,7 @@ module Gtk2PasswordApp
   end
   def self.build_menu(program,passwords)
     program.clear_dock_menu
+    program.append_dock_menu(Gtk::SeparatorMenuItem.new)
     passwords.accounts.each do |account|
       item = program.append_dock_menu(account) do
         @@index = passwords.accounts.index(account)
