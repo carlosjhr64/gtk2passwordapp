@@ -4,7 +4,10 @@ module Gtk2PasswordApp
   PRIMARY	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::CLIPBOARD: Gdk::Selection::PRIMARY)
   CLIPBOARD	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::PRIMARY: Gdk::Selection::CLIPBOARD)
 
-  @@index = nil
+  @@index = 0
+  def self.index
+    @@index
+  end
   def self.build_menu(program,passwords)
     program.clear_dock_menu
     passwords.accounts.each do |account|
@@ -17,8 +20,14 @@ module Gtk2PasswordApp
     end
   end
 
+  def self.save(program,passwords)
+    dumpfile = passwords.save
+    Gtk2PasswordApp.passwords_updated(dumpfile)
+    Gtk2PasswordApp.build_menu(program,passwords)
+  end
+
   def self.get_salt(prompt,title=prompt)
-    Gtk2AppLib::DIALOGS.entry(prompt,{:title=>title,:visibility=>false})
+    Gtk2AppLib::DIALOGS.entry( prompt, {:Title=>title, :Entry => [{:visibility= => false},'activate']} )
   end
 
   def self.account( shared = Gtk2AppLib::Component::SHARED )

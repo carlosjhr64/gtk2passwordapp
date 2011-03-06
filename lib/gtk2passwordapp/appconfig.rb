@@ -25,7 +25,7 @@ module Configuration
   entry_shorten2 = {:width_request= => entry - spin - check - 4*padding, :visibility= => false}
   go_width	= {:width_request= => go}
   check_width	= {:width_request= => check, :active= => true}
-  spin_width	= {:width_request= => spin, :set_range  => [3,30], :value= => 7}
+  spin_width	= {:width_request= => spin, :set_range  => [3,30]}
   clicked	= 'clicked'
 
   PARAMETERS[:Account_Label]		= ['Account:',label_width]
@@ -77,8 +77,9 @@ module Configuration
   DEFAULT_PASSWORD_LENGTH = 7
   EXPIRED_COLOR = Gtk2AppLib::Color[:Red]
 
-  BAD_URL = ['Need url like http://www.site.com/page.html',{:Title => 'Error: Bad Url'}]
+  BAD_URL = ['Need url like http://www.site.com/page.html',{:Title => 'Error: Bad Url',:Scrolled_Window => false}]
   ARE_YOU_SURE = ['Changes will lost, are you sure you want to close?',{:Title => 'Are you sure?'}]
+  WANT_TO_SAVE = ['Would you like to save your changes?',{:Title => 'Save?'}]
 end
 
   def self.passwords_updated(dumpfile)
