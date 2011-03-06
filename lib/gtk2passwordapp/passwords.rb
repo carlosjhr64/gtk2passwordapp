@@ -74,6 +74,8 @@ class Passwords < PasswordsData
           pwd = Passwords._get_salt('Try again!')
           @pwd = Passwords._get_salt('Verify New Password')
         end
+        super(@pwd+@pph)
+        self.save
       end
     end
     # Off to the races...

@@ -165,6 +165,7 @@ module Gtk2PasswordApp
           shared[:Url_Entry].text	= passwords.url_of(account)
           shared[:Note_Entry].text	= passwords.note_of(account)
           shared[:Username_Entry].text	= passwords.username_of(account)
+          shared[:Password_Entry].text	= passwords.password_of(account)
         else
           shared[:Url_Entry].text	= ''
           shared[:Note_Entry].text	= ''

@@ -56,7 +56,7 @@ module Configuration
   PARAMETERS[:Letters_Button]	= ['Letters',clicked]
   PARAMETERS[:Caps_Button]	= ['All-Caps',clicked]
 
-  PARAMETERS[:Cancel_Button]	= ['Cancel All Changes',clicked]
+  PARAMETERS[:Cancel_Button]	= ['Close',clicked]
   PARAMETERS[:Delete_Button]	= ['Delete Account',clicked]
   PARAMETERS[:Update_Button]	= ['Update Account',clicked]
   PARAMETERS[:Save_Button]	= ['Save To Disk',clicked]
@@ -83,6 +83,7 @@ module Configuration
   BAD_URL = ['Need url like http://www.site.com/page.html',{:Title => 'Error: Bad Url',:Scrolled_Window => false}]
   ARE_YOU_SURE = ['Changes will lost, are you sure you want to close?',{:Title => 'Are you sure?'}]
   WANT_TO_SAVE = ['Would you like to save your changes?',{:Title => 'Save?'}]
+  NO_UPDATES = ["You've not updated any accounts yet.",{:Title => 'Not Modified',:Scrolled_Window => false}]
 end
 
   def self.passwords_updated(dumpfile)
