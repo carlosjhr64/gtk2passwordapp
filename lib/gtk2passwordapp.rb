@@ -113,10 +113,8 @@ module Gtk2PasswordApp
           passwords.note_of(account, shared[:Note_Entry].text.strip)
           passwords.username_of(account, shared[:Username_Entry].text.strip)
           password = shared[:Password_Entry].text.strip
-          if password.length > 0 then
-            passwords.password_of(account, password) if !passwords.verify?(account, password)
-            shared[:Password_Entry].text = ''
-          end
+          passwords.password_of(account, password) if !passwords.verify?(account, password)
+          Gtk2AppLib::DIALOGS.quick_message(*Configuration::UPDATED)
         else
           Gtk2AppLib::DIALOGS.quick_message(*Configuration::BAD_URL)
         end
@@ -131,7 +129,8 @@ module Gtk2PasswordApp
             pwd2 = Gtk2PasswordApp.get_salt('Verify')
             return if !pwd2
           end
-          Gtk2AppLib.passwords_updated( passwords.save(pwd1) )
+          dumpfile = passwords.save(pwd1)
+          Gtk2PasswordApp.passwords_updated(dumpfile)
         end
       end
 

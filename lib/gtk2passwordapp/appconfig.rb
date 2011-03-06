@@ -84,6 +84,7 @@ module Configuration
   ARE_YOU_SURE = ['Changes will lost, are you sure you want to close?',{:Title => 'Are you sure?'}]
   WANT_TO_SAVE = ['Would you like to save your changes?',{:Title => 'Save?'}]
   NO_UPDATES = ["You've not updated any accounts yet.",{:Title => 'Not Modified',:Scrolled_Window => false}]
+  UPDATED = ["Updated!",{:Title => 'Updated!',:Scrolled_Window => false}]
 end
 
   def self.passwords_updated(dumpfile)
@@ -100,5 +101,6 @@ end
     # end
     # end
     # Gtk2AppLib::DIALOGS.quick_message("Warning: Could not create backup on 192.168.1.123")
+    Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:Title => 'Saved',:Scrolled_Window => false})
   end
 end
