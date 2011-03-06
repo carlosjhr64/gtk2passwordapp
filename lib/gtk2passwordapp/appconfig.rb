@@ -2,6 +2,9 @@
 # Do not edit or delete passphrase, or you'll loose your passwords data.
 
 module Gtk2AppLib
+# Only one gtk2passwordapp will be allowed to run.
+# Will kill a duplicate proccess...
+Lock.lock_mode
 module Configuration
   if HILDON then
     # WIDGET_OPTIONS[:font] = 
