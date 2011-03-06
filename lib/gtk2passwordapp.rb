@@ -9,15 +9,17 @@ module Gtk2PasswordApp
     @@index
   end
   def self.build_menu(program,passwords)
-    program.clear_dock_menu
-    program.append_dock_menu(Gtk::SeparatorMenuItem.new)
-    passwords.accounts.each do |account|
-      item = program.append_dock_menu(account) do
-        @@index = passwords.accounts.index(account)
-        PRIMARY.text   = passwords.password_of(account)
-        CLIPBOARD.text = passwords.username_of(account)
+    if program.icon? then
+      program.clear_dock_menu
+      program.append_dock_menu(Gtk::SeparatorMenuItem.new)
+      passwords.accounts.each do |account|
+        item = program.append_dock_menu(account) do
+          @@index = passwords.accounts.index(account)
+          PRIMARY.text   = passwords.password_of(account)
+          CLIPBOARD.text = passwords.username_of(account)
+        end
+        item.child.modify_fg(Gtk::STATE_NORMAL, Configuration::EXPIRED_COLOR) if passwords.expired?(account)
       end
-      item.child.modify_fg(Gtk::STATE_NORMAL, Configuration::EXPIRED_COLOR) if passwords.expired?(account)
     end
   end
 
@@ -183,6 +185,16 @@ module Gtk2PasswordApp
     pwd.visibility = !pwd.visibility?
   end
 
+end
+
+module Gtk2AppLib
+module Component
+
+  SHARED = {}
+
+  updates = [:Delete_Button,:Update_Button,:Save_Button]
+  updates.unshift(:Cancel_Button) if Configuration::MENU[:close]
+
   vbox = 'Gtk2AppLib::Widgets::VBox'
   hbox = 'Gtk2AppLib::Widgets::HBox'
   classes = [
@@ -194,17 +206,11 @@ module Gtk2PasswordApp
     ['Password',hbox,	[:Password_Label,:Password_Entry,:Password_CheckButton,:Password_SpinButton]],
     ['Buttons',	vbox,	[:Generators_Component,:Updates_Component,:Datafile_Component,:Clip_Component]],
     ['Generators',hbox,	[:Random_Button,:Alpha_Button,:Numeric_Button,:Letters_Button,:Caps_Button]],
-    ['Updates',	hbox,	[:Cancel_Button,:Delete_Button,:Update_Button,:Save_Button]],
+    ['Updates',	hbox,	updates],
     ['Datafile',hbox,	[:Datafile_Button]],
     ['Clip',	hbox,	[:Current_Button,:Previous_Button]],
   ]
-  classes.each{|clss,spr,keys| Gtk2AppLib::Component.define(clss,spr,keys)}
-
-end
-
-module Gtk2AppLib
-module Component
-  SHARED = {}
+  classes.each{|clss,spr,keys| Component.define(clss,spr,keys)}
 
   def self.init_code(clss,keys)
     $stderr.puts '<<<START CODE EVAL>>>' if $trace
@@ -233,7 +239,7 @@ module Component
 	['Username',	[:Username_Entry]],
 	['Password',	[:Password_Entry,:Password_SpinButton]],
 	['Generators',	[:Random_Button,:Alpha_Button,:Numeric_Button,:Letters_Button,:Caps_Button]],
-	['Updates',	[:Cancel_Button,:Delete_Button,:Update_Button,:Save_Button]],
+	['Updates',	updates],
 	['Datafile',	[:Datafile_Button]],
 	['Clip',	[:Current_Button,:Previous_Button]],
   ].each { |clss,keys| eval( Component.init_code(clss,keys) ) }

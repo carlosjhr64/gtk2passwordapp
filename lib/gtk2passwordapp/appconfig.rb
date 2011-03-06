@@ -6,20 +6,30 @@ module Gtk2AppLib
 # Will kill a duplicate proccess...
 Lock.lock_mode
 module Configuration
-  if HILDON then
-    # WIDGET_OPTIONS[:font] = 
-    FONT[:Normal] = FONT[:Large] = Pango::FontDescription.new( 'Arial 18' )
-  end
-  MENU[:close]		= '_Close'
 
-
-  WINDOW_DEFAULT_SIZE[0],WINDOW_DEFAULT_SIZE[1] = 100,100
   padding = Widgets::WIDGET[:Widgets][:pack_start].last
   go = 50
   label = 75
   entry = 300
   spin = 60
   check = 20
+
+  if HILDON then
+    # WIDGET_OPTIONS[:font] = 
+    FONT[:Normal] = FONT[:Large] = Pango::FontDescription.new( 'Arial 18' )
+    go = 75
+    label = 150
+    entry = 500
+    spin = 75
+    check = 25
+    if Gtk2AppLib::Configuration::OSTYPE == 'Internet Tablet OS: maemo Linux based OS2008' then
+      # Icon works on N800, but not N800 (Maemo 5)
+      MENU[:close]		= '_Close'
+    end
+  else
+    WINDOW_DEFAULT_SIZE[0],WINDOW_DEFAULT_SIZE[1] = 100,100
+    MENU[:close]		= '_Close'
+  end
 
   wrap		= {:wrap= => true}
   label_width	= {:width_request= => label, :wrap= => true}
