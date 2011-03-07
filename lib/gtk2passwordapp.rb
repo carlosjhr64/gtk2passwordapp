@@ -33,13 +33,13 @@ module Gtk2PasswordApp
     Gtk2AppLib::DIALOGS.entry( prompt, {:Title=>title, :Entry => [{:visibility= => false},'activate']} )
   end
 
-  def self.account( shared = Gtk2AppLib::Component::SHARED )
+  def self.account( shared = Component::SHARED )
     (shared[:Account_ComboBoxEntry].active_text)? shared[:Account_ComboBoxEntry].active_text.strip: nil
   end
 
   def self.clicked(is,passwords)
 
-    shared = Gtk2AppLib::Component::SHARED
+    shared = Component::SHARED
     pwdlength = shared[:Password_SpinButton]
     account = Gtk2PasswordApp.account
 
@@ -156,7 +156,7 @@ module Gtk2PasswordApp
   end
 
   def self.changed(is,passwords)
-    shared = Gtk2AppLib::Component::SHARED
+    shared = Component::SHARED
     account = Gtk2PasswordApp.account
     case is
     when shared[:Account_ComboBoxEntry]
@@ -181,59 +181,56 @@ module Gtk2PasswordApp
   end
 
   def self.toggled(is,passwords)
-    pwd = Gtk2AppLib::Component::SHARED[:Password_Entry]
+    pwd = Component::SHARED[:Password_Entry]
     pwd.visibility = !pwd.visibility?
   end
 
-end
+  module Component
+    SHARED = {}
 
-module Gtk2AppLib
-module Component
+    updates = [:Delete_Button,:Update_Button,:Save_Button]
+    updates.unshift(:Cancel_Button) if Gtk2AppLib::Configuration::MENU[:close]
 
-  SHARED = {}
-
-  updates = [:Delete_Button,:Update_Button,:Save_Button]
-  updates.unshift(:Cancel_Button) if Configuration::MENU[:close]
-
-  vbox = 'Gtk2AppLib::Widgets::VBox'
-  hbox = 'Gtk2AppLib::Widgets::HBox'
-  classes = [
-    ['Gui',	vbox,	[:Account_Component,:Url_Component,:Note_Component,:Username_Component,:Password_Component,:Buttons_Component]],
-    ['Account',	hbox,	[:Account_Label,:Account_ComboBoxEntry]],
-    ['Url',	hbox,	[:Url_Label,:Url_Entry,:Url_Button]],
-    ['Note',	hbox,	[:Note_Label,:Note_Entry]],
-    ['Username',hbox,	[:Username_Label,:Username_Entry]],
-    ['Password',hbox,	[:Password_Label,:Password_Entry,:Password_CheckButton,:Password_SpinButton]],
-    ['Buttons',	vbox,	[:Generators_Component,:Updates_Component,:Datafile_Component,:Clip_Component]],
-    ['Generators',hbox,	[:Random_Button,:Alpha_Button,:Numeric_Button,:Letters_Button,:Caps_Button]],
-    ['Updates',	hbox,	updates],
-    ['Datafile',hbox,	[:Datafile_Button]],
-    ['Clip',	hbox,	[:Current_Button,:Previous_Button]],
-  ]
-  classes.each{|clss,spr,keys| Component.define(clss,spr,keys)}
-
-  def self.init_code(clss,keys)
-    $stderr.puts '<<<START CODE EVAL>>>' if $trace
-    code = <<-EOT
-      class #{clss}
-        def _init(block)
-    EOT
-    keys.each do |key|
-      code += <<-EOT
-          SHARED[:#{key}] = self.#{key.to_s.downcase}
-      EOT
+    vbox = 'Gtk2AppLib::Widgets::VBox'
+    hbox = 'Gtk2AppLib::Widgets::HBox'
+    classes = [
+	['Gui',		vbox,	[:Account_Component,:Url_Component,:Note_Component,:Username_Component,:Password_Component,:Buttons_Component]],
+	['Account',	hbox,	[:Account_Label,:Account_ComboBoxEntry]],
+	['Url',		hbox,	[:Url_Label,:Url_Entry,:Url_Button]],
+	['Note',	hbox,	[:Note_Label,:Note_Entry]],
+	['Username',	hbox,	[:Username_Label,:Username_Entry]],
+	['Password',	hbox,	[:Password_Label,:Password_Entry,:Password_CheckButton,:Password_SpinButton]],
+	['Buttons',	vbox,	[:Generators_Component,:Updates_Component,:Datafile_Component,:Clip_Component]],
+	['Generators',	hbox,	[:Random_Button,:Alpha_Button,:Numeric_Button,:Letters_Button,:Caps_Button]],
+	['Updates',	hbox,	updates],
+	['Datafile',	hbox,	[:Datafile_Button]],
+	['Clip',	hbox,	[:Current_Button,:Previous_Button]],
+    ]
+    classes.each do |clss,spr,keys|
+      code = Gtk2AppLib::Component.define(clss,spr,keys)
+      $stderr.puts "<<<START CODE EVAL>>>\n#{code}\n<<<END CODE EVAL>>>" if $trace && $verbose
+      eval( code )
     end
-    code += <<-EOT
-        end
-      end
-    EOT
-    $stderr.puts code if $trace
-    $stderr.puts '<<<END CODE EVAL>>>' if $trace
-    code
-  end
 
-  # Regardless of where in the gui they are...
-  [	['Account',	[:Account_ComboBoxEntry]],
+    def self.init_code(clss,keys)
+      code = <<-EOT
+        class #{clss}
+          def _init(block)
+      EOT
+      keys.each do |key|
+        code += <<-EOT
+            SHARED[:#{key}] = self.#{key.to_s.downcase}
+        EOT
+      end
+      code += <<-EOT
+          end
+        end
+      EOT
+      code
+    end
+
+    # Regardless of where in the gui they are...
+    [	['Account',	[:Account_ComboBoxEntry]],
 	['Url',		[:Url_Entry,:Url_Button]],
 	['Note',	[:Note_Entry]],
 	['Username',	[:Username_Entry]],
@@ -242,7 +239,11 @@ module Component
 	['Updates',	updates],
 	['Datafile',	[:Datafile_Button]],
 	['Clip',	[:Current_Button,:Previous_Button]],
-  ].each { |clss,keys| eval( Component.init_code(clss,keys) ) }
+    ].each do |clss,keys|
+      code = Component.init_code(clss,keys) 
+      $stderr.puts "<<<START CODE EVAL>>>\n#{code}\n<<<END CODE EVAL>>>" if $trace && $verbose
+      eval( code )
+    end
 
-end
+  end
 end
