@@ -34,7 +34,8 @@ module Gtk2PasswordApp
   end
 
   def self.account( shared = Component::SHARED )
-    (shared[:Account_ComboBoxEntry].active_text)? shared[:Account_ComboBoxEntry].active_text.strip: nil
+    account = (shared[:Account_ComboBoxEntry].active_text)? shared[:Account_ComboBoxEntry].active_text.strip: ''
+    (account.length>0)? account: nil
   end
 
   def self.clicked(is,passwords)

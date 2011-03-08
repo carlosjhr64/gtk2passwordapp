@@ -84,7 +84,7 @@ module Configuration
   # You can place your passwords data file in a directory other than ~/gtk2passwordapp-*
   PASSWORDS_DATA_DIR = Gtk2AppLib::USERDIR
   # Switches the roles of PRIMARY and CLIPBOARD when true
-  SWITCH_CLIPBOARDS	= (Gtk2AppLib::HILDON)? true: false
+  SWITCH_CLIPBOARDS	= (Gtk2AppLib::HILDON || !Gtk2AppLib::Configuration::X)? true: false
   PASSWORD_EXPIRED	= 60*60*24*30*3 # 3 months
   URL_PATTERN		= Regexp.new('^https?:\/\/[^\s\']+$')
   DEFAULT_PASSWORD_LENGTH = 7
