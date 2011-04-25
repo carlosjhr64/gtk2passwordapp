@@ -30,7 +30,7 @@ module Gtk2PasswordApp
   end
 
   def self.get_salt(prompt,title=prompt)
-    Gtk2AppLib::DIALOGS.entry( prompt, {:Title=>title, :Entry => [{:visibility= => false},'activate']} )
+    Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} )
   end
 
   def self.account( shared = Component::SHARED )
@@ -216,7 +216,7 @@ module Gtk2PasswordApp
     def self.init_code(clss,keys)
       code = <<-EOT
         class #{clss}
-          def _init(block)
+          def _init(&block)
       EOT
       keys.each do |key|
         code += <<-EOT

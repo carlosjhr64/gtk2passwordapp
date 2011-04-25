@@ -15,8 +15,7 @@ module Configuration
   check = 20
 
   if HILDON then
-    # WIDGET_OPTIONS[:font] = 
-    FONT[:Normal] = FONT[:Large] = Pango::FontDescription.new( 'Arial 18' )
+    FONT[:NORMAL] = FONT[:LARGE] = Pango::FontDescription.new( 'Arial 18' )
     go = 75
     label = 150
     entry = 500
@@ -90,11 +89,11 @@ module Configuration
   DEFAULT_PASSWORD_LENGTH = 7
   EXPIRED_COLOR = Gtk2AppLib::Color[:Red]
 
-  BAD_URL = ['Need url like http://www.site.com/page.html',{:Title => 'Error: Bad Url',:Scrolled_Window => false}]
-  ARE_YOU_SURE = ['Changes will lost, are you sure you want to close?',{:Title => 'Are you sure?'}]
-  WANT_TO_SAVE = ['Would you like to save your changes?',{:Title => 'Save?'}]
-  NO_UPDATES = ["You've not updated any accounts yet.",{:Title => 'Not Modified',:Scrolled_Window => false}]
-  UPDATED = ["Updated!",{:Title => 'Updated!',:Scrolled_Window => false}]
+  BAD_URL = ['Need url like http://www.site.com/page.html',{:TITLE => 'Error: Bad Url',:Scrolled_Window => false}]
+  ARE_YOU_SURE = ['Changes will lost, are you sure you want to close?',{:TITLE => 'Are you sure?'}]
+  WANT_TO_SAVE = ['Would you like to save your changes?',{:TITLE => 'Save?'}]
+  NO_UPDATES = ["You've not updated any accounts yet.",{:TITLE => 'Not Modified',:Scrolled_Window => false}]
+  UPDATED = ["Updated!",{:TITLE => 'Updated!',:Scrolled_Window => false}]
 end
 
   def self.passwords_updated(dumpfile)
@@ -111,6 +110,6 @@ end
     # end
     # end
     # Gtk2AppLib::DIALOGS.quick_message("Warning: Could not create backup on 192.168.1.123")
-    Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:Title => 'Saved',:Scrolled_Window => false})
+    Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:Scrolled_Window => false})
   end
 end
