@@ -1,5 +1,6 @@
 require 'gtk2passwordapp/passwords_data.rb'
-module Gtk2PasswordApp
+module Gtk2Password
+# Passwords subclasses PasswordsData :P
 class Passwords < PasswordsData
 
   def _create_passphrase
@@ -18,11 +19,12 @@ class Passwords < PasswordsData
     passphrase = ''
 
     @pfile = Gtk2AppLib::USERDIR+'/passphrase.txt'
+    exists = File.exist?(@pfile)
     if mv then
-      File.rename(@pfile, @pfile+'.bak') if File.exist?(@pfile)
+      File.rename(@pfile, @pfile+'.bak') if exists
       passphrase = _create_passphrase
     else
-      if File.exist?(@pfile) then
+      if exists then
         File.open(@pfile,'r'){|fh| passphrase = fh.read }
       else
         passphrase = _create_passphrase
@@ -43,7 +45,7 @@ class Passwords < PasswordsData
   end
 
   def self._get_salt(prompt)
-    (ret = Gtk2PasswordApp.get_salt(prompt,'Salt')) || exit
+    (ret = Gtk2Password.get_salt(prompt,'Salt')) || exit
     ret.strip
   end
 
@@ -82,7 +84,9 @@ class Passwords < PasswordsData
   end
 
   def save(pwd=nil)
-    if pwd then
+    if pwd.nil? then
+      super()
+    else
       pfbak = self.pfile + '.bak'
       pph = get_passphrase(true) # new passphrase
       dfbak = self.dumpfile + '.bak'
@@ -91,8 +95,6 @@ class Passwords < PasswordsData
       @pph = pph
       File.unlink(pfbak) if File.exist?(pfbak)
       File.unlink(dfbak) if File.exist?(dfbak)
-    else
-      super()
     end
     return self.dumpfile
   end

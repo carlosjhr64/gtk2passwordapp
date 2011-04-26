@@ -1,249 +1,286 @@
 require 'gtk2passwordapp/passwords'
-module Gtk2PasswordApp
+module Gtk2Password
+
+  ABOUT		= {
+	'name'		=> 'Ruby-Gnome Password Manager',
+	'authors'	=> ['carlosjhr64@gmail.com'],
+	'website'	=> 'https://sites.google.com/site/gtk2applib/home/gtk2applib-applications/gtk2passwordapp',
+	'website-label'	=> 'Ruby-Gnome Password Manager',
+        'license'        => 'GPL',
+        'copyright'      => '2011-03-07 17:05:39',
+  }
 
   PRIMARY	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::CLIPBOARD: Gdk::Selection::PRIMARY)
   CLIPBOARD	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::PRIMARY: Gdk::Selection::CLIPBOARD)
-
-  @@index = 0
-  def self.index
-    @@index
-  end
-  def self.build_menu(program,passwords)
-    if program.icon? then
-      program.clear_dock_menu
-      program.append_dock_menu(Gtk::SeparatorMenuItem.new)
-      passwords.accounts.each do |account|
-        item = program.append_dock_menu(account) do
-          @@index = passwords.accounts.index(account)
-          PRIMARY.text   = passwords.password_of(account)
-          CLIPBOARD.text = passwords.username_of(account)
-        end
-        item.child.modify_fg(Gtk::STATE_NORMAL, Configuration::EXPIRED_COLOR) if passwords.expired?(account)
-      end
-    end
-  end
-
-  def self.save(program,passwords)
-    dumpfile = passwords.save
-    Gtk2PasswordApp.passwords_updated(dumpfile)
-    Gtk2PasswordApp.build_menu(program,passwords)
-  end
 
   def self.get_salt(prompt,title=prompt)
     Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} )
   end
 
-  def self.account( shared = Component::SHARED )
-    account = (shared[:Account_ComboBoxEntry].active_text)? shared[:Account_ComboBoxEntry].active_text.strip: ''
-    (account.length>0)? account: nil
+  Configuration::GUI.each do |clss,spr,keys|
+    code = Gtk2AppLib::Component.define(clss,spr,keys)
+    $stderr.puts "<<<START CODE EVAL>>>\n#{code}\n<<<END CODE EVAL>>>" if $trace && $verbose
+    eval( code )
   end
 
-  def self.clicked(is,passwords)
+  # App is an App is an App...
+  class App
+    @@index = 0
 
-    shared = Component::SHARED
-    pwdlength = shared[:Password_SpinButton]
-    account = Gtk2PasswordApp.account
-
-    case is
-
-    when shared[:Url_Button]
-      url = shared[:Url_Entry].text.strip
-      Gtk2AppLib.run(url) if url =~ Configuration::URL_PATTERN
-
-    when shared[:Random_Button]
-      suggestion = ''
-      pwdlength.value.to_i.times do
-        suggestion += (rand(94)+33).chr
+    def initialize(program)
+      @program		= program
+      @passwords	= Gtk2Password::Passwords.new
+      @modified		= false
+      self.build_menu
+      program.window do |window|
+        @window	= window
+        self.pre_gui
+        @gui	= self.build_gui
+        self.post_gui
       end
-      shared[:Password_Entry].text = suggestion
-
-    when shared[:Alpha_Button]
-      suggestion = ''
-      while suggestion.length <  pwdlength.value.to_i do
-        chr = (rand(75)+48).chr
-        suggestion += chr if chr =~/\w/
-      end
-      shared[:Password_Entry].text = suggestion
-
-    when shared[:Numeric_Button]
-      suggestion = ''
-      pwdlength.value.to_i.times do
-        chr = (rand(10)+48).chr
-        suggestion += chr
-      end
-      shared[:Password_Entry].text = suggestion
-
-    when shared[:Letters_Button]
-      suggestion = ''
-      while suggestion.length < pwdlength.value.to_i do
-        chr = (rand(58)+65).chr
-        suggestion += chr if chr =~/[A-Z]/i
-      end
-      shared[:Password_Entry].text = suggestion
-
-    when shared[:Caps_Button]
-      suggestion = ''
-      pwdlength.value.to_i.times do
-        chr = (rand(26)+65).chr
-        suggestion += chr
-      end
-      shared[:Password_Entry].text = suggestion
-
-    when shared[:Delete_Button]
-      # MODIFIES!!!
-      if account then
-        i = passwords.accounts.index(account)
-        if i then
-          passwords.delete(account)
-          shared[:Account_ComboBoxEntry].remove_text(i)
-          @@index = (shared[:Account_ComboBoxEntry].active = (i > 0)? i - 1: 0)
-          yield(:modified)
-        end
-      end
-
-    when shared[:Update_Button]
-      # MODIFIES!!!
-      if account then
-        url = shared[:Url_Entry].text.strip
-        if url.length == 0 || url =~ Configuration::URL_PATTERN then
-          yield(:modified)
-          if !passwords.include?(account) then
-            passwords.add(account) 
-            @@index = i = passwords.accounts.index(account)
-            shared[:Account_ComboBoxEntry].insert_text(i,account)
-          end
-          passwords.url_of(account, url)
-          passwords.note_of(account, shared[:Note_Entry].text.strip)
-          passwords.username_of(account, shared[:Username_Entry].text.strip)
-          password = shared[:Password_Entry].text.strip
-          passwords.password_of(account, password) if !passwords.verify?(account, password)
-          Gtk2AppLib::DIALOGS.quick_message(*Configuration::UPDATED)
-        else
-          Gtk2AppLib::DIALOGS.quick_message(*Configuration::BAD_URL)
-        end
-      end
-
-    when shared[:Datafile_Button]
-      if pwd1 = Gtk2PasswordApp.get_salt('New Password') then
-        if pwd2 = Gtk2PasswordApp.get_salt('Verify') then
-          while !(pwd1==pwd2) do
-            pwd1 = Gtk2PasswordApp.get_salt('Try again!')
-            return if !pwd1
-            pwd2 = Gtk2PasswordApp.get_salt('Verify')
-            return if !pwd2
-          end
-          dumpfile = passwords.save(pwd1)
-          Gtk2PasswordApp.passwords_updated(dumpfile)
-        end
-      end
-
-    when shared[:Current_Button]
-      if account then
-        PRIMARY.text = passwords.password_of(account)
-        CLIPBOARD.text = passwords.username_of(account)
-      end
-
-    when shared[:Previous_Button]
-      if account then
-        PRIMARY.text = passwords.previous_password_of(account)
-        CLIPBOARD.text = passwords.username_of(account)
-      end
-
-    when shared[:Save_Button]	then yield(:save)
-    when shared[:Cancel_Button]	then yield(:close)
-    else $stderr.puts "What? #{is} in #{is.parent.class}."
     end
 
-  end
+    def menu_item(account)
+      item = @program.append_dock_menu(account) do
+        @@index	= @passwords.accounts.index(account)
+        PRIMARY.text	= @passwords.password_of(account)
+        CLIPBOARD.text	= @passwords.username_of(account)
+      end
+      item.child.modify_fg(Gtk::STATE_NORMAL, Configuration::EXPIRED_COLOR)	if @passwords.expired?(account)
+    end
 
-  def self.changed(is,passwords)
-    shared = Component::SHARED
-    account = Gtk2PasswordApp.account
-    case is
-    when shared[:Account_ComboBoxEntry]
-      if account then
-        shared[:Password_Entry].text	= ''
-        if passwords.include?(account) then
-          shared[:Url_Entry].text	= passwords.url_of(account)
-          shared[:Note_Entry].text	= passwords.note_of(account)
-          shared[:Username_Entry].text	= passwords.username_of(account)
-          shared[:Password_Entry].text	= passwords.password_of(account)
-        else
-          shared[:Url_Entry].text	= ''
-          shared[:Note_Entry].text	= ''
-          shared[:Username_Entry].text	= ''
+    def build_menu
+      if @program.icon? then
+        @program.clear_dock_menu
+        @program.append_dock_menu(Gtk::SeparatorMenuItem.new)
+        @passwords.accounts.each{|account| menu_item(account)}
+      end
+    end
+
+    def _save
+      dumpfile = @passwords.save
+      Gtk2Password.passwords_updated(dumpfile)
+      build_menu
+    end
+
+    def save
+      if @modified then
+        _save
+        @modified = false
+      else
+        Gtk2AppLib::DIALOGS.quick_message(*Gtk2Password::Configuration::NO_UPDATES)
+      end
+    end
+
+    def finalyze
+      if @modified then
+        if Gtk2AppLib::DIALOGS.question?(*Gtk2Password::Configuration::WANT_TO_SAVE) then
+          save
+          @modified = false
         end
-        @@index = is.active
-        $stderr.puts "Index: #{@@index}" if $trace
       end
-    else
-      $stderr.puts "What? Expected #{shared[:Account_ComboBoxEntry]}, got #{is}."
-    end
-  end
-
-  def self.toggled(is,passwords)
-    pwd = Component::SHARED[:Password_Entry]
-    pwd.visibility = !pwd.visibility?
-  end
-
-  module Component
-    SHARED = {}
-
-    updates = [:Delete_Button,:Update_Button,:Save_Button]
-    updates.unshift(:Cancel_Button) if Gtk2AppLib::Configuration::MENU[:close]
-
-    vbox = 'Gtk2AppLib::Widgets::VBox'
-    hbox = 'Gtk2AppLib::Widgets::HBox'
-    classes = [
-	['Gui',		vbox,	[:Account_Component,:Url_Component,:Note_Component,:Username_Component,:Password_Component,:Buttons_Component]],
-	['Account',	hbox,	[:Account_Label,:Account_ComboBoxEntry]],
-	['Url',		hbox,	[:Url_Label,:Url_Entry,:Url_Button]],
-	['Note',	hbox,	[:Note_Label,:Note_Entry]],
-	['Username',	hbox,	[:Username_Label,:Username_Entry]],
-	['Password',	hbox,	[:Password_Label,:Password_Entry,:Password_CheckButton,:Password_SpinButton]],
-	['Buttons',	vbox,	[:Generators_Component,:Updates_Component,:Datafile_Component,:Clip_Component]],
-	['Generators',	hbox,	[:Random_Button,:Alpha_Button,:Numeric_Button,:Letters_Button,:Caps_Button]],
-	['Updates',	hbox,	updates],
-	['Datafile',	hbox,	[:Datafile_Button]],
-	['Clip',	hbox,	[:Current_Button,:Previous_Button]],
-    ]
-    classes.each do |clss,spr,keys|
-      code = Gtk2AppLib::Component.define(clss,spr,keys)
-      $stderr.puts "<<<START CODE EVAL>>>\n#{code}\n<<<END CODE EVAL>>>" if $trace && $verbose
-      eval( code )
+      if @modified then
+        @passwords.load # revert
+        @modified = false
+      end
     end
 
-    def self.init_code(clss,keys)
-      code = <<-EOT
-        class #{clss}
-          def _init(&block)
-      EOT
-      keys.each do |key|
-        code += <<-EOT
-            SHARED[:#{key}] = self.#{key.to_s.downcase}
-        EOT
+    def post_gui
+      @gui[:password_spinbutton].value = Gtk2Password::Configuration::DEFAULT_PASSWORD_LENGTH
+      @gui[:account_comboboxentry].active = @@index
+      @window.signal_connect('destroy'){ finalyze }
+      @window.show_all
+    end
+
+    def pre_gui
+      Gtk2AppLib::Configuration::PARAMETERS[:Account_ComboBoxEntry][0] = @passwords.accounts
+      Gtk2AppLib::Dialogs::DIALOG[:Window] = @window
+    end
+
+    def close
+      if !@modified || Gtk2AppLib::DIALOGS.question?(*Gtk2Password::Configuration::ARE_YOU_SURE) then
+        @passwords.load # revert
+        @modified = false
+        @program.close
       end
-      code += <<-EOT
+    end
+
+    def method_call(is,signal)
+      self.method(signal).call(is) do |action|
+        case action
+        when :modified	then @modified ||= true
+        when :save	then save
+        when :close	then close
+        end
+      end
+    end
+
+    def build_gui
+      Gtk2Password::Gui.new(@window) do |is,signal,*emits|
+        $stderr.puts "#{is},#{signal}:\t#{emits}" if $trace
+        method_call(is,signal)
+      end
+    end
+
+    def self.get_account(account)
+      if !account.nil? then
+        account.strip!
+        account = nil if account.length<1
+      end
+      return account
+    end
+    def get_account
+      App.get_account( @gui[:account_comboboxentry].active_text )
+    end
+
+    def clicked(is)
+
+      pwdlength = @gui[:password_spinbutton]
+      account = get_account
+
+      case is
+
+      when @gui[:url_button]
+        url = @gui[:url_entry].text.strip
+        Gtk2AppLib.run(url) if url =~ Configuration::URL_PATTERN
+
+      when @gui[:random_button]
+        suggestion = ''
+        pwdlength.value.to_i.times do
+          suggestion += (rand(94)+33).chr
+        end
+        @gui[:password_entry].text = suggestion
+
+      when @gui[:alpha_button]
+        suggestion = ''
+        while suggestion.length <  pwdlength.value.to_i do
+          chr = (rand(75)+48).chr
+          suggestion += chr if chr =~/\w/
+        end
+        @gui[:password_entry].text = suggestion
+
+      when @gui[:numeric_button]
+        suggestion = ''
+        pwdlength.value.to_i.times do
+          chr = (rand(10)+48).chr
+          suggestion += chr
+        end
+        @gui[:password_entry].text = suggestion
+
+      when @gui[:letters_button]
+        suggestion = ''
+        while suggestion.length < pwdlength.value.to_i do
+          chr = (rand(58)+65).chr
+          suggestion += chr if chr =~/[A-Z]/i
+        end
+        @gui[:password_entry].text = suggestion
+
+      when @gui[:caps_button]
+        suggestion = ''
+        pwdlength.value.to_i.times do
+          chr = (rand(26)+65).chr
+          suggestion += chr
+        end
+        @gui[:password_entry].text = suggestion
+
+      when @gui[:delete_button]
+        # MODIFIES!!!
+        if account then
+          i = @passwords.accounts.index(account)
+          if i then
+            @passwords.delete(account)
+            @gui[:account_comboboxentry].remove_text(i)
+            @@index = (@gui[:account_comboboxentry].active = (i > 0)? i - 1: 0)
+            yield(:modified)
           end
         end
-      EOT
-      code
+
+      when @gui[:update_button]
+        # MODIFIES!!!
+        if account then
+          url = @gui[:url_entry].text.strip
+          if url.length == 0 || url =~ Configuration::URL_PATTERN then
+            yield(:modified)
+            if !@passwords.include?(account) then
+              @passwords.add(account) 
+              @@index = i = @passwords.accounts.index(account)
+              @gui[:account_comboboxentry].insert_text(i,account)
+            end
+            @passwords.url_of(account, url)
+            @passwords.note_of(account, @gui[:note_entry].text.strip)
+            @passwords.username_of(account, @gui[:username_entry].text.strip)
+            password = @gui[:password_entry].text.strip
+            @passwords.password_of(account, password) if !@passwords.verify?(account, password)
+            Gtk2AppLib::DIALOGS.quick_message(*Configuration::UPDATED)
+          else
+            Gtk2AppLib::DIALOGS.quick_message(*Configuration::BAD_URL)
+          end
+        end
+
+      when @gui[:datafile_button]
+        if pwd1 = Gtk2Password.get_salt('New Password') then
+          if pwd2 = Gtk2Password.get_salt('Verify') then
+            while !(pwd1==pwd2) do
+              pwd1 = Gtk2Password.get_salt('Try again!')
+              return if !pwd1
+              pwd2 = Gtk2Password.get_salt('Verify')
+              return if !pwd2
+            end
+            dumpfile = @passwords.save(pwd1)
+            Gtk2Password.passwords_updated(dumpfile)
+          end
+        end
+
+      when @gui[:current_button]
+        if account then
+          PRIMARY.text = @passwords.password_of(account)
+          CLIPBOARD.text = @passwords.username_of(account)
+        end
+
+      when @gui[:previous_button]
+        if account then
+          PRIMARY.text = @passwords.previous_password_of(account)
+          CLIPBOARD.text = @passwords.username_of(account)
+        end
+
+      when @gui[:save_button]	then yield(:save)
+      when @gui[:cancel_button]	then yield(:close)
+      else $stderr.puts "What? #{is} in #{is.parent.class}."
+      end
+
     end
 
-    # Regardless of where in the gui they are...
-    [	['Account',	[:Account_ComboBoxEntry]],
-	['Url',		[:Url_Entry,:Url_Button]],
-	['Note',	[:Note_Entry]],
-	['Username',	[:Username_Entry]],
-	['Password',	[:Password_Entry,:Password_SpinButton]],
-	['Generators',	[:Random_Button,:Alpha_Button,:Numeric_Button,:Letters_Button,:Caps_Button]],
-	['Updates',	updates],
-	['Datafile',	[:Datafile_Button]],
-	['Clip',	[:Current_Button,:Previous_Button]],
-    ].each do |clss,keys|
-      code = Component.init_code(clss,keys) 
-      $stderr.puts "<<<START CODE EVAL>>>\n#{code}\n<<<END CODE EVAL>>>" if $trace && $verbose
-      eval( code )
+    def _changed_clear
+      @gui[:url_entry].text		= ''
+      @gui[:note_entry].text		= ''
+      @gui[:username_entry].text	= ''
+    end
+
+    def _changed_set(account)
+      @gui[:url_entry].text		= @passwords.url_of(account)
+      @gui[:note_entry].text		= @passwords.note_of(account)
+      @gui[:username_entry].text	= @passwords.username_of(account)
+      @gui[:password_entry].text	= @passwords.password_of(account)
+    end
+
+    def _changed(is,account)
+      @gui[:password_entry].text	= ''
+      (@passwords.include?(account))?  _changed_set(account) : _changed_clear
+      @@index = is.active
+      $stderr.puts "Index: #{@@index}" if $trace
+    end
+
+    def changed(is)
+      if account = get_account then
+        _changed(is,account)
+      end
+    end
+
+    def self.toggled(pwd)
+      pwd.visibility = !pwd.visibility?
+    end
+    def toggled(is)
+      App.toggled(@gui[:password_entry])
     end
 
   end

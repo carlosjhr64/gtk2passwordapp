@@ -7,7 +7,8 @@ rescue Exception
   require 'crypt-tea'
 end
 
-module Gtk2PasswordApp
+module Gtk2Password
+# Wrapper around Crypt::XXTEA
 class IOCrypt
   LENGTH = 15
 

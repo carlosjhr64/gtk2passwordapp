@@ -1,7 +1,8 @@
 require 'gtk2passwordapp/iocrypt'
 require 'digest/md5'
 
-module Gtk2PasswordApp
+module Gtk2Password
+# PasswordsData maitains passwords
 class PasswordsData
   include Configuration
   attr_accessor :account
@@ -30,7 +31,7 @@ class PasswordsData
   end
 
   def load(passphrase = nil)
-    _reset(passphrase) if passphrase 
+    _reset(passphrase) if !passphrase.nil?
     iocrypt = IOCrypt.new(@passphrase)
     @data = iocrypt.load(@dumpfile)
   end
@@ -38,7 +39,7 @@ class PasswordsData
   def save(passphrase = nil)
     # just in case, keep a backup
     File.rename(@dumpfile, @dumpfile+'.bak') if File.exist?(@dumpfile)
-    _reset(passphrase) if passphrase 
+    _reset(passphrase) if !passphrase.nil?
     iocrypt = IOCrypt.new(@passphrase)
     iocrypt.dump(@dumpfile, @data)
     File.chmod(0600, @dumpfile)
@@ -46,7 +47,7 @@ class PasswordsData
 
   def add(account)
     raise "Pre-existing" if @data[account]
-    raise "Can't have nil account" if !account
+    raise "Can't have nil account" if account.nil?
     @data[account] = ['','','','','']
   end
 
@@ -68,43 +69,50 @@ class PasswordsData
   end
 
   def url_of(account, url=nil)
-    raise "#{account} not found" if !@data[account]
-    @data[account][URL] = url if url
-    return @data[account][URL]	|| ''
+    data_account = @data[account]
+    raise "#{account} not found" if data_account.nil?
+    data_account[URL] = url if !url.nil?
+    return data_account[URL]	|| ''
   end
 
   def expired?(account)
-    raise "#{account} not found" if !@data[account]
-    return true if !@data[account][LAST_UPDATE] || ((Time.now.to_i - @data[account][LAST_UPDATE]) > PASSWORD_EXPIRED)
+    data_account = @data[account]
+    raise "#{account} not found" if data_account.nil?
+    last_update = data_account[LAST_UPDATE]
+    return true if last_update.nil? || ((Time.now.to_i - last_update) > PASSWORD_EXPIRED)
     return false
   end
 
-  def password_of(account, p=nil)
-    raise "#{account} not found" if !@data[account]
-    if p then
-      @data[account][PREVIOUS] = @data[account][PASSWORD]
-      @data[account][PASSWORD] = p
-      @data[account][LAST_UPDATE] = Time.now.to_i
+  def password_of(account, password=nil)
+    data_account = @data[account]
+    raise "#{account} not found" if data_account.nil?
+    if !password.nil? then
+      data_account[PREVIOUS] = data_account[PASSWORD]
+      data_account[PASSWORD] = password
+      data_account[LAST_UPDATE] = Time.now.to_i
     end
-    return @data[account][PASSWORD]	|| ''
+    return data_account[PASSWORD]	|| ''
   end
 
   # previous password
   def previous_password_of(account)
-    raise "#{account} not found" if !@data[account]
-    return @data[account][PREVIOUS]	|| ''
+    data_account = @data[account]
+    raise "#{account} not found" if data_account.nil?
+    return data_account[PREVIOUS]	|| ''
   end
 
-  def note_of(account, n=nil)
-    raise "#{account} not found" if !@data[account]
-    @data[account][NOTE] = n if n
-    return @data[account][NOTE]	|| ''
+  def note_of(account, note=nil)
+    data_account = @data[account]
+    raise "#{account} not found" if data_account.nil?
+    data_account[NOTE] = note if !note.nil?
+    return data_account[NOTE]	|| ''
   end
 
   def username_of(account, usr=nil)
-    raise "#{account} not found" if !@data[account]
-    @data[account][USERNAME] = usr if usr 
-    return @data[account][USERNAME]	|| ''
+    data_account = @data[account]
+    raise "#{account} not found" if data_account.nil?
+    data_account[USERNAME] = usr if !usr.nil?
+    return data_account[USERNAME]	|| ''
   end
 end
 end

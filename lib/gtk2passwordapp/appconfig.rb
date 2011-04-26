@@ -33,8 +33,8 @@ module Configuration
   wrap		= {:wrap= => true}
   label_width	= {:width_request= => label, :wrap= => true}
   entry_width	= {:width_request= => entry}
-  entry_shorten	= {:width_request= => entry - go - 2*padding}
-  entry_shorten2 = {:width_request= => entry - spin - check - 4*padding, :visibility= => false}
+  shorten_a	= {:width_request= => entry - go - 2*padding}
+  shorten_b = {:width_request= => entry - spin - check - 4*padding, :visibility= => false}
   go_width	= {:width_request= => go}
   check_width	= {:width_request= => check, :active= => true}
   spin_width	= {:width_request= => spin, :set_range  => [3,30]}
@@ -45,7 +45,7 @@ module Configuration
   PARAMETERS[:Account_ComboBoxEntry]	= [nil,entry_width,'changed'] # catching changed signal
 
   PARAMETERS[:Url_Label]	= ['Url:',label_width]
-  PARAMETERS[:Url_Entry]	= [entry_shorten]
+  PARAMETERS[:Url_Entry]	= [shorten_a]
   PARAMETERS[:Url_Button]	= ['Go!',go_width,clicked]
 
   PARAMETERS[:Note_Label]	= ['Note:',label_width]
@@ -55,7 +55,7 @@ module Configuration
   PARAMETERS[:Username_Entry]	= [entry_width]
 
   PARAMETERS[:Password_Label]	= ['Password:',label_width]
-  PARAMETERS[:Password_Entry]	= [entry_shorten2]
+  PARAMETERS[:Password_Entry]	= [shorten_b]
   PARAMETERS[:Password_CheckButton]	= [check_width,'toggled']
   PARAMETERS[:Password_SpinButton]	= [spin_width]
 
@@ -77,7 +77,7 @@ module Configuration
 end
 end
 
-module Gtk2PasswordApp
+module Gtk2Password
 module Configuration
   # Note that the passwords data file name is auto generated, but...
   # You can place your passwords data file in a directory other than ~/gtk2passwordapp-*
@@ -94,6 +94,24 @@ module Configuration
   WANT_TO_SAVE = ['Would you like to save your changes?',{:TITLE => 'Save?'}]
   NO_UPDATES = ["You've not updated any accounts yet.",{:TITLE => 'Not Modified',:Scrolled_Window => false}]
   UPDATED = ["Updated!",{:TITLE => 'Updated!',:Scrolled_Window => false}]
+
+  updates = [:Delete_Button,:Update_Button,:Save_Button]
+  updates.unshift(:Cancel_Button) if Gtk2AppLib::Configuration::MENU[:close]
+  vbox = 'Gtk2AppLib::Widgets::VBox'
+  hbox = 'Gtk2AppLib::Widgets::HBox'
+  GUI = [
+	['Gui',		vbox,	[:Account_Component,:Url_Component,:Note_Component,:Username_Component,:Password_Component,:Buttons_Component]],
+	['Account',	hbox,	[:Account_Label,:Account_ComboBoxEntry]],
+	['Url',		hbox,	[:Url_Label,:Url_Entry,:Url_Button]],
+	['Note',	hbox,	[:Note_Label,:Note_Entry]],
+	['Username',	hbox,	[:Username_Label,:Username_Entry]],
+	['Password',	hbox,	[:Password_Label,:Password_Entry,:Password_CheckButton,:Password_SpinButton]],
+	['Buttons',	vbox,	[:Generators_Component,:Updates_Component,:Datafile_Component,:Clip_Component]],
+	['Generators',	hbox,	[:Random_Button,:Alpha_Button,:Numeric_Button,:Letters_Button,:Caps_Button]],
+	['Updates',	hbox,	updates],
+	['Datafile',	hbox,	[:Datafile_Button]],
+	['Clip',	hbox,	[:Current_Button,:Previous_Button]],
+    ]
 end
 
   def self.passwords_updated(dumpfile)
