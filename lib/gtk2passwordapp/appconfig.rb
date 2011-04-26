@@ -29,6 +29,7 @@ module Configuration
     WINDOW_DEFAULT_SIZE[0],WINDOW_DEFAULT_SIZE[1] = 100,100
     MENU[:close]		= '_Close'
   end
+  MENU[:help] = '_Help'
 
   wrap		= {:wrap= => true}
   label_width	= {:width_request= => label, :wrap= => true}
@@ -89,11 +90,11 @@ module Configuration
   DEFAULT_PASSWORD_LENGTH = 7
   EXPIRED_COLOR = Gtk2AppLib::Color[:Red]
 
-  BAD_URL = ['Need url like http://www.site.com/page.html',{:TITLE => 'Error: Bad Url',:Scrolled_Window => false}]
+  BAD_URL = ['Need url like http://www.site.com/page.html',{:TITLE => 'Error: Bad Url',:SCROLLED_WINDOW => false}]
   ARE_YOU_SURE = ['Changes will lost, are you sure you want to close?',{:TITLE => 'Are you sure?'}]
   WANT_TO_SAVE = ['Would you like to save your changes?',{:TITLE => 'Save?'}]
-  NO_UPDATES = ["You've not updated any accounts yet.",{:TITLE => 'Not Modified',:Scrolled_Window => false}]
-  UPDATED = ["Updated!",{:TITLE => 'Updated!',:Scrolled_Window => false}]
+  NO_UPDATES = ["You've not updated any accounts yet.",{:TITLE => 'Not Modified',:SCROLLED_WINDOW => false}]
+  UPDATED = ["Updated!",{:TITLE => 'Updated!',:SCROLLED_WINDOW => false}]
 
   updates = [:Delete_Button,:Update_Button,:Save_Button]
   updates.unshift(:Cancel_Button) if Gtk2AppLib::Configuration::MENU[:close]
@@ -128,6 +129,6 @@ end
     # end
     # end
     # Gtk2AppLib::DIALOGS.quick_message("Warning: Could not create backup on 192.168.1.123")
-    Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:Scrolled_Window => false})
+    Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
   end
 end
