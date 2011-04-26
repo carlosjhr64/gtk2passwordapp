@@ -7,7 +7,7 @@ module Gtk2Password
 	'website'	=> 'https://sites.google.com/site/gtk2applib/home/gtk2applib-applications/gtk2passwordapp',
 	'website-label'	=> 'Ruby-Gnome Password Manager',
         'license'        => 'GPL',
-        'copyright'      => '2011-03-07 17:05:39',
+        'copyright'      => '2011-04-26 13:57:20',
   }
 
   PRIMARY	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::CLIPBOARD: Gdk::Selection::PRIMARY)
