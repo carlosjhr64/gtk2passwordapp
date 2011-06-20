@@ -1,4 +1,5 @@
-require 'gtk2passwordapp/passwords_data.rb'
+require 'gtk2passwordapp/passwords_data'
+require 'gtk2passwordapp/rnd'
 module Gtk2Password
 # Passwords subclasses PasswordsData :P
 class Passwords < PasswordsData
@@ -7,7 +8,7 @@ class Passwords < PasswordsData
     passphrase = ''
 
     IOCrypt::LENGTH.times do
-      passphrase += (rand(94)+33).chr
+      passphrase += (Rnd::RND.random(94)+33).chr
     end
     File.open(@pfile,'w'){|fh| fh.write passphrase }
     File.chmod(0600, @pfile)

@@ -1,4 +1,6 @@
 require 'gtk2passwordapp/passwords'
+require 'gtk2passwordapp/rnd'
+
 module Gtk2Password
 
   ABOUT		= {
@@ -147,14 +149,14 @@ module Gtk2Password
       when @gui[:random_button]
         suggestion = ''
         pwdlength.value.to_i.times do
-          suggestion += (rand(94)+33).chr
+          suggestion += (Rnd::RND.random(94)+33).chr
         end
         @gui[:password_entry].text = suggestion
 
       when @gui[:alpha_button]
         suggestion = ''
         while suggestion.length <  pwdlength.value.to_i do
-          chr = (rand(75)+48).chr
+          chr = (Rnd::RND.random(75)+48).chr
           suggestion += chr if chr =~/\w/
         end
         @gui[:password_entry].text = suggestion
@@ -162,7 +164,7 @@ module Gtk2Password
       when @gui[:numeric_button]
         suggestion = ''
         pwdlength.value.to_i.times do
-          chr = (rand(10)+48).chr
+          chr = (Rnd::RND.random(10)+48).chr
           suggestion += chr
         end
         @gui[:password_entry].text = suggestion
@@ -170,7 +172,7 @@ module Gtk2Password
       when @gui[:letters_button]
         suggestion = ''
         while suggestion.length < pwdlength.value.to_i do
-          chr = (rand(58)+65).chr
+          chr = (Rnd::RND.random(58)+65).chr
           suggestion += chr if chr =~/[A-Z]/i
         end
         @gui[:password_entry].text = suggestion
@@ -178,7 +180,7 @@ module Gtk2Password
       when @gui[:caps_button]
         suggestion = ''
         pwdlength.value.to_i.times do
-          chr = (rand(26)+65).chr
+          chr = (Rnd::RND.random(26)+65).chr
           suggestion += chr
         end
         @gui[:password_entry].text = suggestion

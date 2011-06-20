@@ -1,5 +1,6 @@
 require 'yaml'
 require 'rubygems'
+gem 'crypt-tea','= 1.3.0'
 begin
   require 'crypt_tea'
 rescue Exception
