@@ -3,11 +3,12 @@ module Gtk2Password
   # if either one is honest, we'll get honest random numbers.
   class Rnd
     begin
+      raise "no command line realrand" if $options =~ /-no-gui/
       gem 'realrand', '~> 1.0'
       require 'random/online'
       REALRAND = true
     rescue Exception
-      $stderr.puts "Could not load realrand"
+      $stderr.puts $!
       REALRAND = false
     end
 
