@@ -51,8 +51,8 @@ class Passwords < PasswordsData
   end
 
   attr_reader :pfile
-  def initialize
-    @pwd = Passwords._get_salt('Short Password')
+  def initialize(pwd=nil)
+    @pwd = pwd || Passwords._get_salt('Short Password')
     @pfile = nil
     @pph = get_passphrase
     super(@pwd+@pph)
@@ -61,6 +61,7 @@ class Passwords < PasswordsData
       # Yes, load passwords file.
       self.load 
     else
+      raise "bad salt" if pwd
       # No, check if there is a file....
       if has_datafile? # then
         # Yes, it's got a datafile. Ask for password again.

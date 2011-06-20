@@ -14,7 +14,7 @@ module Gtk2Password
     def initialize
       @bucket = []
       @refilling = false
-      self.refill
+      self.refill	if REALRAND
     end
 
     def refill

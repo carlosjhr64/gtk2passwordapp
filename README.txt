@@ -24,4 +24,6 @@ It's used to "salt" the password... without it, one will not be able to decrypt 
 For full documentation and comments, see
 https://sites.google.com/site/gtk2applib/home/gtk2applib-applications/gtk2passwordapp
 
+For a command line access to your passwords, use --no-gui option.
+
 carlosjhr64@gmail.com
