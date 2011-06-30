@@ -12,10 +12,19 @@ module Gtk2Password
       REALRAND = false
     end
 
+    NUMBERS = [75,10,58,26,94]
+
     def initialize
       @bucket = []
       @refilling = false
       self.refill	if REALRAND
+    end
+
+    def refill_timeout
+      Timeout.timeout(60) do
+        generator = Random::RandomOrg.new
+        @bucket += generator.randnum(100, 0, 2657849) # 2657850 % <75,10,58,26,94>
+      end
     end
 
     def refill
@@ -23,36 +32,39 @@ module Gtk2Password
       @refilling = true
       Thread.new do
         begin
-          Timeout.timeout(60) do
-            generator1 = Random::RandomOrg.new
-            @bucket += generator1.randnum(200, 0, 2657849) # 2657850 % <75,10,58,26,94>
-          end
+          Thread.pass
+          refill_timeout
         rescue Exception
           $stderr.puts $!
-          $stderr.puts "Failed to fill the bucket"
         ensure
           @refilling = false
         end
       end
     end
 
-    def random(n)
-      if ![75,10,58,26,94].include?(n) then
+    def self.randomize(rnd,number)
+      ((rnd + rand(number)) % number)
+    end
+
+    def real_random(number)
+      refill if @bucket.length < 50
+      if rnd = @bucket.shift then
+        return Rnd.randomize(rnd,number)
+      else
+        return rand(number)
+      end
+    end
+
+    def validate(number)
+      if !NUMBERS.include?(number) then
         $stderr.puts "Did not code for that number" 
         exit # seriously messed up! :))
       end
-      if REALRAND then
-        refill if @bucket.length < 100
-        if rnd = @bucket.shift then
-          rnd = ((rnd + rand(n)) % n)
-          return rnd
-        else
-          return rand(n)
-        end
-      else
-        return rand(n)
-      end
-      raise "Should not get here"
+    end
+
+    def random(number)
+      validate(number)
+      (REALRAND)? real_random(number) : rand(number)
     end
 
     RND = Rnd.new

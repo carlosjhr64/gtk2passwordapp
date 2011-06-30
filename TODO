@@ -1,9 +1,12 @@
 TODO
 
-	Have a command line option
+	The "saved" box is screwy? Just on my configuration.?
+	Encrypt passphrase file.
+		At first I didn't see how, but it can be done.
 
 DONE
 
+	Have a command line option
 	want generator1.randnum(5, 0, 2657849) # 2657850 % <75,10,58,26,94> = <0..0>
 	Updated, Saved dialog need not be scrolled.
 	This app DOES NEED TO KILL the duplicate instance, and IT'S DAEMON.
