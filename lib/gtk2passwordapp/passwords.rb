@@ -6,7 +6,7 @@ class Passwords < PasswordsData
 
   attr_reader :pfile
   def initialize(pwd=nil)
-    @pwd = pwd || Passwords._get_salt('Short Password')
+    @pwd = (pwd.nil?)? Passwords._get_salt('Short Password') : pwd
     @pfile = nil
     @pph = self.get_passphrase
     super(@pwd+@pph)
@@ -15,28 +15,48 @@ class Passwords < PasswordsData
       # Yes, load passwords file.
       self.load 
     else
-      raise "bad salt" if pwd
-      # No, check if there is a file....
-      if self.has_datafile? # then
-        # Yes, it's got a datafile. Ask for password again.
-        while !self.exist? do
-          @pwd = Passwords._get_salt('Try again!')
-          super(@pwd+@pph)
-        end
-        self.load 
-      else
-      # Else, must be a new install.
-        pwd = @pwd
-        @pwd = Passwords._get_salt('Verify New Password')
-        while !(pwd == @pwd) do
-          pwd = Passwords._get_salt('Try again!')
-          @pwd = Passwords._get_salt('Verify New Password')
-        end
-        super(@pwd+@pph)
-        self.save
-      end
+      raise "bad salt" unless pwd.nil?
+      self.reinit{|salt| super(salt) }
     end
     # Off to the races...
+  end
+
+  def self.try_again
+    Passwords._get_salt('Try again!')
+  end
+
+  def self.verify_password
+    Passwords._get_salt('Verify New Password')
+  end
+
+  def try_again(&block)
+    # Yes, it's got a datafile. Ask for password again.
+    while !self.exist? do
+      @pwd = Passwords.try_again
+      block.call(@pwd+@pph)
+    end
+    self.load 
+  end
+
+  def new_install(&block)
+      pwd = @pwd
+      @pwd = Passwords.verify_password
+      while !(pwd == @pwd) do
+        pwd = Passwords.try_again
+        @pwd = Passwords.verify_password
+      end
+      block.call(@pwd+@pph)
+      self.save
+  end
+
+  def reinit(&block)
+    # No, check if there is a file....
+    if Passwords.has_datafile? # then
+      try_again(&block)
+    else
+    # Else, must be a new install.
+      new_install(&block)
+    end
   end
 
   def _create_passphrase
@@ -51,26 +71,27 @@ class Passwords < PasswordsData
     return passphrase
   end
 
-  def get_passphrase(mv=false)
-    passphrase = ''
+  def mv_create_passphrase
+    File.rename(@pfile, @pfile+'.bak') if File.exist?(@pfile)
+    _create_passphrase
+  end
 
-    @pfile = Gtk2AppLib::USERDIR+'/passphrase.txt'
-    exists = File.exist?(@pfile)
-    if mv then
-      File.rename(@pfile, @pfile+'.bak') if exists
-      passphrase = _create_passphrase
+  def fc_passphrase
+    passphrase = nil
+    if File.exist?(@pfile) then
+      File.open(@pfile,'r'){|fh| passphrase = fh.read }
     else
-      if exists then
-        File.open(@pfile,'r'){|fh| passphrase = fh.read }
-      else
-        passphrase = _create_passphrase
-      end
+      passphrase = _create_passphrase
     end
-
     return passphrase
   end
 
-  def has_datafile?
+  def get_passphrase(mv=false)
+    @pfile = Gtk2AppLib::USERDIR+'/passphrase.txt'
+    (mv)? mv_create_passphrase : fc_passphrase
+  end
+
+  def self.has_datafile?
     Find.find(Gtk2AppLib::USERDIR){|fn|
       Find.prune if !(fn==Gtk2AppLib::USERDIR) &&  File.directory?(fn)
       if fn =~/[0123456789abcdef]{32}\.dat$/ then
