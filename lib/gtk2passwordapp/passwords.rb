@@ -4,6 +4,41 @@ module Gtk2Password
 # Passwords subclasses PasswordsData :P
 class Passwords < PasswordsData
 
+  attr_reader :pfile
+  def initialize(pwd=nil)
+    @pwd = pwd || Passwords._get_salt('Short Password')
+    @pfile = nil
+    @pph = self.get_passphrase
+    super(@pwd+@pph)
+    # Password file exist?
+    if self.exist? # then
+      # Yes, load passwords file.
+      self.load 
+    else
+      raise "bad salt" if pwd
+      # No, check if there is a file....
+      if self.has_datafile? # then
+        # Yes, it's got a datafile. Ask for password again.
+        while !self.exist? do
+          @pwd = Passwords._get_salt('Try again!')
+          super(@pwd+@pph)
+        end
+        self.load 
+      else
+      # Else, must be a new install.
+        pwd = @pwd
+        @pwd = Passwords._get_salt('Verify New Password')
+        while !(pwd == @pwd) do
+          pwd = Passwords._get_salt('Try again!')
+          @pwd = Passwords._get_salt('Verify New Password')
+        end
+        super(@pwd+@pph)
+        self.save
+      end
+    end
+    # Off to the races...
+  end
+
   def _create_passphrase
     passphrase = ''
 
@@ -48,41 +83,6 @@ class Passwords < PasswordsData
   def self._get_salt(prompt)
     (ret = Gtk2Password.get_salt(prompt,'Salt')) || exit
     ret.strip
-  end
-
-  attr_reader :pfile
-  def initialize(pwd=nil)
-    @pwd = pwd || Passwords._get_salt('Short Password')
-    @pfile = nil
-    @pph = get_passphrase
-    super(@pwd+@pph)
-    # Password file exist?
-    if self.exist? # then
-      # Yes, load passwords file.
-      self.load 
-    else
-      raise "bad salt" if pwd
-      # No, check if there is a file....
-      if has_datafile? # then
-        # Yes, it's got a datafile. Ask for password again.
-        while !self.exist? do
-          @pwd = Passwords._get_salt('Try again!')
-          super(@pwd+@pph)
-        end
-        self.load 
-      else
-      # Else, must be a new install.
-        pwd = @pwd
-        @pwd = Passwords._get_salt('Verify New Password')
-        while !(pwd == @pwd) do
-          pwd = Passwords._get_salt('Try again!')
-          @pwd = Passwords._get_salt('Verify New Password')
-        end
-        super(@pwd+@pph)
-        self.save
-      end
-    end
-    # Off to the races...
   end
 
   def save(pwd=nil)
