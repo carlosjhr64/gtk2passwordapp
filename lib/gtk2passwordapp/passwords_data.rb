@@ -46,7 +46,7 @@ class PasswordsData
   end
 
   def add(account)
-    raise "Pre-existing" if @data[account]
+    raise "Pre-existing" unless @data[account].nil?
     raise "Can't have nil account" if account.nil?
     @data[account] = ['','','','','']
   end
@@ -56,7 +56,7 @@ class PasswordsData
   end
 
   def include?(account)
-    return (@data[account])? true: false
+    return !@data[account].nil?
   end
 
   def verify?(account,password)
@@ -64,55 +64,66 @@ class PasswordsData
   end
 
   def delete(account)
-    raise "#{account} not found" if !@data[account]
+    raise "#{account} not found" if @data[account].nil?
     @data.delete(account)
   end
 
-  def url_of(account, url=nil)
+  def get_data_account(account)
     data_account = @data[account]
     raise "#{account} not found" if data_account.nil?
+    return data_account
+  end
+
+  def self.url_of(data_account, url)
     data_account[URL] = url if !url.nil?
     return data_account[URL]	|| ''
   end
 
+  def url_of(account, url=nil)
+    PasswordsData.url_of( get_data_account(account), url )
+  end
+
   def expired?(account)
-    data_account = @data[account]
-    raise "#{account} not found" if data_account.nil?
+    data_account = get_data_account(account)
     last_update = data_account[LAST_UPDATE]
     return true if last_update.nil? || ((Time.now.to_i - last_update) > PASSWORD_EXPIRED)
     return false
   end
 
+  def self.password_of(data_account,password)
+    data_account[PREVIOUS] = data_account[PASSWORD]
+    data_account[PASSWORD] = password
+    data_account[LAST_UPDATE] = Time.now.to_i
+  end
+
   def password_of(account, password=nil)
-    data_account = @data[account]
-    raise "#{account} not found" if data_account.nil?
-    if !password.nil? then
-      data_account[PREVIOUS] = data_account[PASSWORD]
-      data_account[PASSWORD] = password
-      data_account[LAST_UPDATE] = Time.now.to_i
-    end
+    data_account = get_data_account(account)
+    PasswordsData.password_of(data_account,password) unless password.nil?
     return data_account[PASSWORD]	|| ''
   end
 
   # previous password
   def previous_password_of(account)
-    data_account = @data[account]
-    raise "#{account} not found" if data_account.nil?
+    data_account = get_data_account(account)
     return data_account[PREVIOUS]	|| ''
   end
 
-  def note_of(account, note=nil)
-    data_account = @data[account]
-    raise "#{account} not found" if data_account.nil?
+  def self.note_of(data_account,note)
     data_account[NOTE] = note if !note.nil?
     return data_account[NOTE]	|| ''
   end
 
-  def username_of(account, usr=nil)
-    data_account = @data[account]
-    raise "#{account} not found" if data_account.nil?
+  def note_of(account, note=nil)
+    PasswordsData.note_of( get_data_account(account), note )
+  end
+
+  def self.username_of(data_account,usr)
     data_account[USERNAME] = usr if !usr.nil?
     return data_account[USERNAME]	|| ''
+  end
+
+  def username_of(account, usr=nil)
+    PasswordsData.username_of( get_data_account(account), usr )
   end
 end
 end
