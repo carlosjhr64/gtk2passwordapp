@@ -37,17 +37,16 @@ module Test
     "LCF is not the lowest common factor"
   end
 
-  rnd = Rnd.new
   Thread.pass
   puts "Refilling..."
   Thread.pass
-  while rnd.refilling do
+  while Rnd::RND.refilling do
     Thread.pass
   end
-  puts rnd.bucket.join(' ')
+  puts Rnd::RND.bucket.join(' ')
 
   puts "Bucket size: #{Rnd::BUCKET_LENGTH}"
-  if !(rnd.bucket.length == Rnd::BUCKET_LENGTH) then
+  if !(Rnd::RND.bucket.length == Rnd::BUCKET_LENGTH) then
     errors += 1
     puts "Did not fill bucket to #{Rnd::BUCKET_LENGTH}"
   end
@@ -62,14 +61,14 @@ module Test
 
   puts "Some real_random numbers"
   Rnd::NUMBERS.each do |number|
-    r = rnd.real_random(number)
+    r = Rnd::RND.real_random(number)
     puts "Number:#{number} Random:#{r}"
     errors += 1 if r == number
     errors += 1 if r < 0
   end
 
-  puts "Bucket size after use #{rnd.bucket.length}"
-  if !(rnd.bucket.length == Rnd::BUCKET_LENGTH - Rnd::NUMBERS.length) then
+  puts "Bucket size after use #{Rnd::RND.bucket.length}"
+  if !(Rnd::RND.bucket.length == Rnd::BUCKET_LENGTH - Rnd::NUMBERS.length) then
     errors += 1
     puts "Got an unexpected bucket size after use"
   end
@@ -80,7 +79,7 @@ module Test
   puts "#{valid} is a valid number, should continue..."
   got_error = false
   begin
-    rnd.validate(valid)
+    Rnd::RND.validate(valid)
   rescue Exception
     puts $!
     errors += 1
@@ -92,7 +91,7 @@ module Test
   puts "#{not_valid} is a NOT valid number, should raise exit"
   got_exit = false
   begin
-    rnd.validate(not_valid)
+    Rnd::RND.validate(not_valid)
   rescue Exception
     if !($!.message == 'exit') then
       errors += 1
@@ -103,19 +102,19 @@ module Test
     puts "Did not raise exit, why?" unless got_exit
   end
 
-  puts "Some rnd.random numbers"
+  puts "Some Rnd::RND.random numbers"
   Rnd::NUMBERS.each do |number|
-    r = rnd.random(number)
+    r = Rnd::RND.random(number)
     puts "Number:#{number} Random:#{r}"
     errors += 1 if r == number
     errors += 1 if r < 0
   end
 
-  puts "Bucket size after second use #{rnd.bucket.length}"
-  if !(rnd.bucket.length == Rnd::BUCKET_LENGTH - 2*Rnd::NUMBERS.length) then
+  puts "Bucket size after second use #{Rnd::RND.bucket.length}"
+  if !(Rnd::RND.bucket.length == Rnd::BUCKET_LENGTH - 2*Rnd::NUMBERS.length) then
     errors += 1
     puts "Got an unexpected bucket size after second use"
   end
 
-  puts "There were #{errors} error."
+  puts "There were #{errors} errors."
 end
