@@ -12,8 +12,11 @@ module Gtk2Password
       REALRAND = false
     end
 
+    BUCKET_LENGTH = 100
     NUMBERS = [75,10,58,26,94]
+    LCF = 2657850
 
+    attr_reader :bucket, :refilling
     def initialize
       @bucket = []
       @refilling = false
@@ -23,7 +26,7 @@ module Gtk2Password
     def refill_timeout
       Timeout.timeout(60) do
         generator = Random::RandomOrg.new
-        @bucket += generator.randnum(100, 0, 2657849) # 2657850 % <75,10,58,26,94>
+        @bucket += generator.randnum(BUCKET_LENGTH, 0, LCF - 1)
       end
     end
 
@@ -47,7 +50,7 @@ module Gtk2Password
     end
 
     def real_random(number)
-      refill if @bucket.length < 50
+      refill if @bucket.length < BUCKET_LENGTH/2
       if rnd = @bucket.shift then
         return Rnd.randomize(rnd,number)
       else
