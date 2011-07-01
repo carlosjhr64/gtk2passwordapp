@@ -11,10 +11,10 @@ end
 module Gtk2Password
 # Wrapper around Crypt::XXTEA
 class IOCrypt
-  LENGTH = 15
+  LENGTH = 16
 
   def initialize(passphrase)
-    @key = Crypt::XXTEA.new(passphrase[0..LENGTH])
+    @key = Crypt::XXTEA.new(passphrase[0..(LENGTH-1)])
   end
 
   def load(dumpfile)

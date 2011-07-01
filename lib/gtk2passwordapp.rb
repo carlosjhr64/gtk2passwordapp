@@ -15,7 +15,7 @@ module Gtk2Password
   PRIMARY	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::CLIPBOARD: Gdk::Selection::PRIMARY)
   CLIPBOARD	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::PRIMARY: Gdk::Selection::CLIPBOARD)
 
-  def self.get_salt(prompt,title=prompt)
+  def self.get_password(prompt,title=prompt)
     Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} )
   end
 
@@ -220,12 +220,12 @@ module Gtk2Password
         end
 
       when @gui[:datafile_button]
-        if pwd1 = Gtk2Password.get_salt('New Password') then
-          if pwd2 = Gtk2Password.get_salt('Verify') then
+        if pwd1 = Gtk2Password.get_password('New Password') then
+          if pwd2 = Gtk2Password.get_password('Verify') then
             while !(pwd1==pwd2) do
-              pwd1 = Gtk2Password.get_salt('Try again!')
+              pwd1 = Gtk2Password.get_password('Try again!')
               return if !pwd1
-              pwd2 = Gtk2Password.get_salt('Verify')
+              pwd2 = Gtk2Password.get_password('Verify')
               return if !pwd2
             end
             dumpfile = @passwords.save(pwd1)
