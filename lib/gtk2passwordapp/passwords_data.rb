@@ -4,7 +4,6 @@ require 'digest/md5'
 module Gtk2Password
 # PasswordsData maitains passwords
 class PasswordsData
-  include Configuration
   attr_accessor :account
   attr_reader :data, :dumpfile
 
@@ -15,11 +14,13 @@ class PasswordsData
   URL		= 4
   LAST_UPDATE	= 5
 
+  attr_accessor :expired
   def reset(password)
     raise "password too short" if password.length < 7
     @passphrase = Digest::MD5.digest( password )
     raise "bad passphrase length" unless @passphrase.length == IOCrypt::LENGTH
     @dumpfile = File.join( PASSWORDS_DATA_DIR, 'gtk2passwordapp2.dat' )
+    @expired = 60*60*24*30*3 # 3 months
   end
 
   def initialize(passphrase)
@@ -86,7 +87,7 @@ class PasswordsData
   def expired?(account)
     data_account = get_data_account(account)
     last_update = data_account[LAST_UPDATE]
-    return true if last_update.nil? || ((Time.now.to_i - last_update) > PASSWORD_EXPIRED)
+    return true if last_update.nil? || ((Time.now.to_i - last_update) > @expired)
     return false
   end
 
