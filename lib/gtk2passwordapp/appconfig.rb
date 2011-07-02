@@ -1,10 +1,8 @@
-# Note: you'll see in ~/.gtk2passwordapp-* a file called passphrase.txt.
-# Do not edit or delete passphrase, or you'll loose your passwords data.
-
 module Gtk2AppLib
-# Only one gtk2passwordapp will be allowed to run.
-# Will kill a duplicate proccess...
-Lock.lock_mode
+  # Only one gtk2passwordapp will be allowed to run.
+  # Will kill a duplicate proccess...
+  Lock.lock_mode
+
 module Configuration
 
   padding = Widgets::WIDGET[:Widgets][:pack_start].last
@@ -22,7 +20,7 @@ module Configuration
     spin = 75
     check = 25
     if Gtk2AppLib::Configuration::OSTYPE == 'Internet Tablet OS: maemo Linux based OS2008' then
-      # Icon works on N800, but not N800 (Maemo 5)
+      # Icon works on N800, but not N900 (Maemo 5)
       MENU[:close]		= '_Close'
     end
   else
