@@ -127,6 +127,7 @@ require 'gtk2passwordapp/passwords_data'
   end
   # and the rest is fine.  :P
 
+  File.unlink(dump)
   puts "There were #{errors} errors."
 
 

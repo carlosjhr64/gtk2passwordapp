@@ -13,7 +13,6 @@ class PasswordsData
   LAST_UPDATE	= 5
 
   def reset(password)
-    raise "password too short" if password.length < 7
     # MD5 digest length is 16 to match tiny encryption's block length
     passphrase = Digest::MD5.digest( password )
     @iocrypt =  IOCrypt.new(passphrase)
@@ -41,7 +40,6 @@ class PasswordsData
 
   def save
     # just in case, keep a backup
-    File.rename(@dumpfile, @dumpfile+'.bak') if File.exist?(@dumpfile)
     @iocrypt.dump(@dumpfile, @data)
     File.chmod(0600, @dumpfile)
   end
