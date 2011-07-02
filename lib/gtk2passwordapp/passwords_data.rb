@@ -21,7 +21,7 @@ class PasswordsData
 
   attr_reader :data
   attr_accessor :expired, :dumpfile
-  def initialize(password,dumpfile)
+  def initialize(dumpfile,password)
     reset(password) # sets @iocrypt
     @dumpfile = dumpfile
     @expired = 60*60*24*30*3 # 3 months

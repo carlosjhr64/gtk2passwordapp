@@ -4,7 +4,7 @@ require 'gtk2passwordapp/passwords_data'
   errors = 0
 
   dump = './test.dump'
-  pd = PasswordsData.new('A password',dump)
+  pd = PasswordsData.new(dump,'A password')
 
   if pd.exist? then
     File.unlink(dump)

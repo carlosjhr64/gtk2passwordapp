@@ -1,5 +1,4 @@
 require 'gtk2passwordapp/passwords_data'
-require 'gtk2passwordapp/rnd'
 module Gtk2Password
 # Passwords subclasses PasswordsData :P
 class Passwords < PasswordsData
