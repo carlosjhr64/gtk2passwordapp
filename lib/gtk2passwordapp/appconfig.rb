@@ -80,12 +80,12 @@ module Gtk2Password
 module Configuration
   # Note that the passwords data file name is auto generated, but...
   # You can place your passwords data file in a directory other than ~/gtk2passwordapp-*
-  PASSWORDS_DATA_DIR = Gtk2AppLib::USERDIR
+  PASSWORDS_FILE = File.join( Gtk2AppLib::USERDIR, 'passwords.dat' )
   # Switches the roles of PRIMARY and CLIPBOARD when true
   SWITCH_CLIPBOARDS	= (Gtk2AppLib::HILDON || !Gtk2AppLib::Configuration::X)? true: false
   PASSWORD_EXPIRED	= 60*60*24*30*3 # 3 months
   URL_PATTERN		= Regexp.new('^https?:\/\/[^\s\']+$')
-  DEFAULT_PASSWORD_LENGTH = 7
+  DEFAULT_PASSWORD_LENGTH = 16
   EXPIRED_COLOR = Gtk2AppLib::Color[:Red]
 
   BAD_URL = ['Need url like http://www.site.com/page.html',{:TITLE => 'Error: Bad Url',:SCROLLED_WINDOW => false}]
@@ -111,18 +111,22 @@ module Configuration
 	['Datafile',	hbox,	[:Datafile_Button]],
 	['Clip',	hbox,	[:Current_Button,:Previous_Button]],
     ]
+
+  # These are the prompts for passwords
+  PASSWORD = 'Password' # for when for asking.
+  AGAIN = 'Again' # for when verifying new passwords.
+  RETRY = 'Retry' # for when you got your password wrong.
+
+  # These are the --no-gui dialogs...
+  COMMAND_LINE_MSG1 = "Warning: password will be shown.\nPassword:"
+  COMMAND_LINE_MSG2 = "Warning: selected passwords will be shown.\nEnter Account pattern:"
 end
 
-  def self.passwords_updated(dumpfile)
+  def self.passwords_updated
     ## After the password files are saved, you have the option here to backup or mirror the files elsewhere.
     ## Here's an example:
-    # system( "ssh user@192.168.1.123 mv .gtk2passwordapp-1/*.dat .gtk2passwordapp-1/bak/")
-    # system( "ssh user@192.168.1.123 cp .gtk2passwordapp-1/passphrase.txt .gtk2passwordapp-1/bak/passphrase.txt") # you might choose not too.
-    # fn = File.basename(dumpfile)
-    # if system( "scp #{dumpfile} user@192.168.1.123:.gtk2passwordapp-1/#{fn}")	then
-    # # again, you might choose not to distribute passphrase (reduces cracking to your short password)
-    # if system( "scp #{Configuration::PASSWORDS_DATA_DIR}/passphrase.txt user@192.168.1.123:.gtk2passwordapp-1/passphrase.txt") then
-    #   Gtk2AppLib::DIALOGS.quick_message("Passwords saved on 192.168.1.101 and 102")
+    # if system( "scp ~/.gtk2passwordapp-2/passwords.dat user@192.168.1.123:.gtk2passwordapp-2/passwords.dat")	then
+    #   Gtk2AppLib::DIALOGS.quick_message("Passwords saved on 192.168.1.123")
     #   return
     # end
     # end

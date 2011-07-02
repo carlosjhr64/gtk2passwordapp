@@ -9,11 +9,15 @@ module Gtk2Password
 	'website'	=> 'https://sites.google.com/site/gtk2applib/home/gtk2applib-applications/gtk2passwordapp',
 	'website-label'	=> 'Ruby-Gnome Password Manager',
         'license'        => 'GPL',
-        'copyright'      => '2011-06-19 21:49:32',
+        'copyright'      => '2011-07-02 16:50:32',
   }
 
   PRIMARY	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::CLIPBOARD: Gdk::Selection::PRIMARY)
   CLIPBOARD	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::PRIMARY: Gdk::Selection::CLIPBOARD)
+
+  Passwords::PROMPT[:password]	= Configuration::PASSWORD
+  Passwords::PROMPT[:again]	= Configuration::AGAIN
+  Passwords::PROMPT[:retry]	= Configuration::RETRY
 
   def self.get_password(prompt,title=prompt)
     Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} )
@@ -31,7 +35,9 @@ module Gtk2Password
 
     def initialize(program)
       @program		= program
-      @passwords	= Gtk2Password::Passwords.new
+      @passwords	= Gtk2Password::Passwords.new(Configuration::PASSWORDS_FILE) do |prompt|
+        Gtk2Password.get_password(prompt)	|| exit
+      end
       @modified		= false
       self.build_menu
       program.window do |window|
@@ -60,8 +66,8 @@ module Gtk2Password
     end
 
     def _save
-      dumpfile = @passwords.save
-      Gtk2Password.passwords_updated(dumpfile)
+      @passwords.save
+      Gtk2Password.passwords_updated
       build_menu
     end
 
@@ -220,16 +226,16 @@ module Gtk2Password
         end
 
       when @gui[:datafile_button]
-        if pwd1 = Gtk2Password.get_password('New Password') then
-          if pwd2 = Gtk2Password.get_password('Verify') then
+        if pwd1 = Gtk2Password.get_password(Passwords::PROMPT[:password]) then
+          if pwd2 = Gtk2Password.get_password(Passwords::PROMPT[:again]) then
             while !(pwd1==pwd2) do
-              pwd1 = Gtk2Password.get_password('Try again!')
+              pwd1 = Gtk2Password.get_password(Passwords::PROMPT[:retry])
               return if !pwd1
-              pwd2 = Gtk2Password.get_password('Verify')
+              pwd2 = Gtk2Password.get_password(Passwords::PROMPT[:again])
               return if !pwd2
             end
-            dumpfile = @passwords.save(pwd1)
-            Gtk2Password.passwords_updated(dumpfile)
+            @passwords.save!(pwd1)
+            Gtk2Password.passwords_updated
           end
         end
 
