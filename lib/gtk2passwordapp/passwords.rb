@@ -5,7 +5,7 @@ class Passwords < PasswordsData
 
   def initialize(dump,pwd=nil)
     if pwd.nil? then
-      (pwd = yield('Password')) || exit
+      pwd = yield('Password')
       again = true
       while again do
         super(dump,pwd)
@@ -18,14 +18,14 @@ class Passwords < PasswordsData
             verify = nil
             while !(verify == pwd) do
               verify = pwd
-              (pwd = yield('Again')) || exit
+              pwd = yield('Again')
             end
             super(dump,pwd)
             self.save
           end
           again = false # good to go!
         rescue StandardError
-          (pwd = yield('Retry')) || exit
+          pwd = yield('Retry')
         end
       end
     else
