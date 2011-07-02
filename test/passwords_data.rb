@@ -125,6 +125,7 @@ require 'gtk2passwordapp/passwords_data'
     errors += 1
     puts "Expired?  I just set it!"
   end
+  # and the rest is fine.  :P
 
   puts "There were #{errors} errors."
 
