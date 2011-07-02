@@ -23,7 +23,7 @@ spec = Gem::Specification.new do |s|
 
   files = []
   # Rbs
-  Find.find('.'){|fn|
+  Find.find('./lib'){|fn|
     if fn=~/\.rb$/ then
 $stderr.puts fn
       files.push(fn)
