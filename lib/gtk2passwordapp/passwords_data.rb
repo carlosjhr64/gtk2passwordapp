@@ -56,7 +56,7 @@ class PasswordsData
   end
 
   def accounts
-    @data.keys.sort
+    @data.keys.sort{|a,b| a.upcase <=> b.upcase }
   end
 
   def include?(account)
