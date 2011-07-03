@@ -9,7 +9,7 @@ module Gtk2Password
 	'website'	=> 'https://sites.google.com/site/gtk2applib/home/gtk2applib-applications/gtk2passwordapp',
 	'website-label'	=> 'Ruby-Gnome Password Manager',
         'license'        => 'GPL',
-        'copyright'      => '2011-07-02 17:53:12',
+        'copyright'      => '2011-07-03 09:52:12',
   }
 
   PRIMARY	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::CLIPBOARD: Gdk::Selection::PRIMARY)
@@ -38,6 +38,7 @@ module Gtk2Password
       @passwords	= Gtk2Password::Passwords.new(Configuration::PASSWORDS_FILE) do |prompt|
         Gtk2Password.get_password(prompt)	|| exit
       end
+      @passwords.expired = Configuration::PASSWORD_EXPIRED
       @modified		= false
       self.build_menu
       program.window do |window|

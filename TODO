@@ -1,10 +1,10 @@
 TODO
 
-	The "saved" box is screwy? Just on my configuration.?
-	Get rid of passphrase file.
 
 DONE
 
+	Get rid of passphrase file.
+	The "saved" box is screwy? Just on my configuration.?
 	Have a command line option
 	want generator1.randnum(5, 0, 2657849) # 2657850 % <75,10,58,26,94> = <0..0>
 	Updated, Saved dialog need not be scrolled.
