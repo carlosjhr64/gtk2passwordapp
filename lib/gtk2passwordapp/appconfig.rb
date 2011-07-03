@@ -125,12 +125,12 @@ end
   def self.passwords_updated
     ## After the password files are saved, you have the option here to backup or mirror the files elsewhere.
     ## Here's an example:
-    # if system( "scp ~/.gtk2passwordapp-2/passwords.dat user@192.168.1.123:.gtk2passwordapp-2/passwords.dat")	then
-    #   Gtk2AppLib::DIALOGS.quick_message("Passwords saved on 192.168.1.123")
-    #   return
-    # end
-    # end
-    # Gtk2AppLib::DIALOGS.quick_message("Warning: Could not create backup on 192.168.1.123")
+    #n = '123'
+    #if system( "scp ~/.gtk2passwordapp-2/passwords.dat user@192.168.1.#{n}:.gtk2passwordapp-2/passwords.dat")   then
+    #  Gtk2AppLib::DIALOGS.quick_message("Passwords saved on 192.168.1.#{n}",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
+    #  return
+    #end
+    #Gtk2AppLib::DIALOGS.quick_message("Warning: Could not create backup on 192.168.1.#{n}",{:TITLE => 'Warning',:SCROLLED_WINDOW => false})
     Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
   end
 end
