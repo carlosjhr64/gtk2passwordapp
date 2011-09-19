@@ -9,11 +9,21 @@ module Gtk2Password
 	'website'	=> 'https://sites.google.com/site/gtk2applib/home/gtk2applib-applications/gtk2passwordapp',
 	'website-label'	=> 'Ruby-Gnome Password Manager',
         'license'        => 'GPL',
-        'copyright'      => '2011-07-03 09:52:12',
+        'copyright'      => '2011-09-19 12:00:24',
   }
 
   PRIMARY	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::CLIPBOARD: Gdk::Selection::PRIMARY)
   CLIPBOARD	= Gtk::Clipboard.get((Configuration::SWITCH_CLIPBOARDS)? Gdk::Selection::PRIMARY: Gdk::Selection::CLIPBOARD)
+
+  @@thread = nil
+  def self.clear_clipboard
+    @@thread.kill if !@@thread.nil?
+    @@thread = Thread.new do
+      sleep Configuration::CLIPBOARD_TIMEOUT
+      PRIMARY.text	= ''
+      CLIPBOARD.text	= ''
+    end
+  end
 
   Passwords::PROMPT[:password]	= Configuration::PASSWORD
   Passwords::PROMPT[:again]	= Configuration::AGAIN
@@ -54,6 +64,7 @@ module Gtk2Password
         @@index	= @passwords.accounts.index(account)
         PRIMARY.text	= @passwords.password_of(account)
         CLIPBOARD.text	= @passwords.username_of(account)
+        Gtk2Password.clear_clipboard
       end
       item.child.modify_fg(Gtk::STATE_NORMAL, Configuration::EXPIRED_COLOR)	if @passwords.expired?(account)
     end
@@ -244,12 +255,14 @@ module Gtk2Password
         if account then
           PRIMARY.text = @passwords.password_of(account)
           CLIPBOARD.text = @passwords.username_of(account)
+          Gtk2Password.clear_clipboard
         end
 
       when @gui[:previous_button]
         if account then
           PRIMARY.text = @passwords.previous_password_of(account)
           CLIPBOARD.text = @passwords.username_of(account)
+          Gtk2Password.clear_clipboard
         end
 
       when @gui[:save_button]	then yield(:save)

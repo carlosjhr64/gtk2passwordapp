@@ -83,6 +83,7 @@ module Configuration
   PASSWORDS_FILE = File.join( Gtk2AppLib::USERDIR, 'passwords.dat' )
   # Switches the roles of PRIMARY and CLIPBOARD when true
   SWITCH_CLIPBOARDS	= (Gtk2AppLib::HILDON || !Gtk2AppLib::Configuration::X)? true: false
+  CLIPBOARD_TIMEOUT	= 15 # clear clipboard after set number of seconds
   PASSWORD_EXPIRED	= 60*60*24*30*3 # 3 months
   URL_PATTERN		= Regexp.new('^https?:\/\/[^\s\']+$')
   DEFAULT_PASSWORD_LENGTH = 16
