@@ -17,13 +17,6 @@ module Test
 
   errors = 0
 
-  if Rnd::REALRAND then
-    puts "Got REALRAND"
-  else
-    errors += 1
-    puts "REALRAND not available"
-  end
-
   puts "Acceptable random numbers #{Rnd::NUMBERS.join(', ')}."
   puts "LCF = #{Rnd::LCF}"
 

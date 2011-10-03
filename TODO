@@ -1,5 +1,9 @@
 TODO
 
+DONE 2.1.1
+
+	real-rand broke under Ruby-1.9.2... replaced it with a open-uri call to Random.org.
+
 DONE 2.1.0
 
 	clear clipboard after a few seconds of being set

@@ -2,31 +2,32 @@ module Gtk2Password
   # This class combines realrand with rand such that
   # if either one is honest, we'll get honest random numbers.
   class Rnd
-    begin
-      raise "no command line realrand" if $options =~ /-no-gui/
-      gem 'realrand', '~> 1.0'
-      require 'random/online'
-      REALRAND = true
-    rescue Exception
-      $stderr.puts $!
-      REALRAND = false
-    end
 
     BUCKET_LENGTH = 100
     NUMBERS = [75,10,58,26,94]
     LCF = 2657850
+    RANDOM_ORG = 'http://www.random.org/integers/'
 
     attr_reader :bucket, :refilling
     def initialize
-      @bucket = []
-      @refilling = false
-      self.refill	if REALRAND
+      begin
+        raise "no command line realrand" if $options =~ /-no-gui/
+        # Checking if online refill of real random numbers available....
+        require 'open-uri'
+        require 'timeout'
+        @bucket = []
+        @refilling = false
+        self.refill_timeout
+      rescue Exception
+        $stderr.puts $!
+        @bucket = nil
+        @refilling = false
+      end
     end
 
     def refill_timeout
       Timeout.timeout(60) do
-        generator = Random::RandomOrg.new
-        @bucket += generator.randnum(BUCKET_LENGTH, 0, LCF - 1)
+        @bucket += open("#{RANDOM_ORG}?num=#{BUCKET_LENGTH}&min=0&max=#{LCF-1}&col=#{BUCKET_LENGTH}&format=plain&base=10&rnd=new").read.strip.split(/\s+/).map{|s| s.to_i}
       end
     end
 
@@ -67,7 +68,7 @@ module Gtk2Password
 
     def random(number)
       validate(number)
-      (REALRAND)? real_random(number) : rand(number)
+      (@bucket)? real_random(number) : rand(number)
     end
 
     RND = Rnd.new
