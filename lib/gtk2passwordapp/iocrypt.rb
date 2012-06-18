@@ -19,7 +19,14 @@ class IOCrypt
 
   def load(dumpfile)
     data = nil
-    File.open(dumpfile,'r'){|fh| data = YAML.load( @key.decrypt( fh.read ) ) }
+    begin
+      File.open(dumpfile,'r'){|fh| data = YAML.load( @key.decrypt( fh.read ) ) }
+    rescue Psych::SyntaxError
+      # assume it's syck
+      YAML::ENGINE.yamler = 'syck'
+      File.open(dumpfile,'r'){|fh| data = YAML.load( @key.decrypt( fh.read ) ) }
+      YAML::ENGINE.yamler = 'psych' # make it psych
+    end
     return data
   end
 
