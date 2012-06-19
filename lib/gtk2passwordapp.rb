@@ -29,10 +29,6 @@ module Gtk2Password
   Passwords::PROMPT[:again]	= Configuration::AGAIN
   Passwords::PROMPT[:retry]	= Configuration::RETRY
 
-  def self.get_password(prompt,title=prompt)
-    Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} )
-  end
-
   Configuration::GUI.each do |clss,spr,keys|
     code = Gtk2AppLib::Component.define(clss,spr,keys)
     $stderr.puts "<<<START CODE EVAL>>>\n#{code}\n<<<END CODE EVAL>>>" if $trace && $verbose

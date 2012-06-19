@@ -134,4 +134,15 @@ end
     #Gtk2AppLib::DIALOGS.quick_message("Warning: Could not create backup on 192.168.1.#{n}",{:TITLE => 'Warning',:SCROLLED_WINDOW => false})
     Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
   end
+
+  # HERE YOU CAN MODIFY THE CODE THAT WILL GIVE THE PASSWORD FOR YOU
+  def self.get_password(prompt,title=prompt)
+    password = Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} )
+    ## If no password is given, use a system given password
+    #if password.length == 0 then
+    #  password = `ssh user@192.168.1.123 cat password.txt`.strip
+    #end
+    return password
+  end
+
 end
