@@ -185,7 +185,7 @@ end
       if OTP then
         # to use the pad, the user just presses OK to pass an empty string.
         password = Gtk2Password.get_password_from_pad unless password.length > 0
-        Gtk2Password.set_password_to_pad(password) if otp
+        Gtk2Password.set_password_to_pad(password) if otp && password.length > 0
       end
     end
     return password
