@@ -123,26 +123,71 @@ module Configuration
   COMMAND_LINE_MSG2 = "Warning: selected passwords will be shown.\nEnter Account pattern:"
 end
 
-  def self.passwords_updated
-    ## After the password files are saved, you have the option here to backup or mirror the files elsewhere.
-    ## Here's an example:
-    #n = '123'
-    #if system( "scp ~/.gtk2passwordapp-2/passwords.dat user@192.168.1.#{n}:.gtk2passwordapp-2/passwords.dat")   then
-    #  Gtk2AppLib::DIALOGS.quick_message("Passwords saved on 192.168.1.#{n}",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
-    #  return
-    #end
-    #Gtk2AppLib::DIALOGS.quick_message("Warning: Could not create backup on 192.168.1.#{n}",{:TITLE => 'Warning',:SCROLLED_WINDOW => false})
-    Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
+  # Set OTP to true if you're going to use a one time pad
+  OTP = false
+
+  # Here you can modify how you store your passphrase for your passwords.
+  # It's now set up as a one time pad.
+  # Modify CYPHER to your remove-able media
+  # You'll need to create the directory in the media... make it rwx'able only by the user if possible.
+  CYPHER = '/media/3263-6638/.gtk2passwordapp-2/cypher.pad' # remove-able media
+  KEY = "#{Gtk2AppLib::USERDIR}/key.pad"
+
+  # Where do you want to backup your password files?
+  # This assumes you have a DropBox directory set up
+  BACKUP = File.expand_path('~/Dropbox/Backups/passwords.dat')
+
+  # Here you can set up your backup.
+  # The commented out section is set up to use DropBox
+  def self.passwords_updated(password=nil)
+    # Update your pad...
+    Gtk2Password.set_password_to_pad(password) if password && OTP
+    begin
+      if File.exist?(BACKUP) then
+        FileUtils.cp Configuration::PASSWORDS_FILE, BACKUP
+      end
+      Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
+    rescue Exception
+      Gtk2AppLib::DIALOGS.quick_message("Warning: Could not create backup.",{:TITLE => 'Warning',:SCROLLED_WINDOW => false})
+    end
   end
 
-  # HERE YOU CAN MODIFY THE CODE THAT WILL GIVE THE PASSWORD FOR YOU
-  def self.get_password(prompt,title=prompt)
-    password = Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} )
-    ## If no password is given, use a system given password
-    #if password.length == 0 then
-    #  password = `ssh user@192.168.1.123 cat password.txt`.strip
-    #end
+  def self.xor_cypher(key,cypher)
+    password = ''
+    cypher = cypher.bytes.inject([],:push)
+    key = key.bytes.inject([],:push)
+    ksize = key.length
+    cypher.length.times {|n| password += (cypher[n] ^ key[n.modulo ksize]).chr }
+    return password 
+  end
+
+  def self.get_password_from_pad
+    password = ''
+    if File.exist?(KEY) && File.exist?(CYPHER) then
+      key = File.read(KEY)
+      cypher = File.read(CYPHER)
+      password = Gtk2Password.xor_cypher(key,cypher)
+    end
     return password
   end
 
+  def self.set_password_to_pad(password)
+    if File.exist?(File.dirname(CYPHER)) then
+      key = 0.upto(password.length).inject(''){|k,c| k+(rand(256)).chr }
+      # Note that the media may ignore 0600
+      File.open(CYPHER,'w',0600){|fh| fh.print Gtk2Password.xor_cypher(key,password) }
+      File.open(KEY,'w',0600){|fh| fh.print key }
+    end
+  end
+
+  def self.get_password(prompt,title=prompt,otp=false)
+    if password = Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} ) then
+      if OTP then
+        # to use the pad, the user just presses OK to pass an empty string.
+        password = Gtk2Password.get_password_from_pad unless password.length > 0
+        Gtk2Password.set_password_to_pad(password) if otp
+      end
+    end
+    return password
+  end
 end

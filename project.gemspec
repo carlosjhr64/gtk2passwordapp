@@ -53,7 +53,6 @@ $stderr.puts fn
 
   s.add_dependency('crypt-tea','= 1.3.0')
   s.add_dependency('gtk2applib','~> 15.3')
-  s.add_dependency('gtk2')
+  s.requirements << 'gtk2'
 
-  #s.rubyforge_project = project
 end
