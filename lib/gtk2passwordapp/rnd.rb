@@ -46,8 +46,20 @@ module Gtk2Password
       end
     end
 
+    begin
+      require 'securerandom'
+      def self.random_number(number)
+        SecureRandom.random_number(number)
+      end
+    rescue Exception
+      $stderr.puts $! unless $quiet
+      def self.random_number(number)
+        rand(number)
+      end
+    end
+
     def self.randomize(rnd,number)
-      ((rnd + rand(number)) % number)
+      ((rnd + Rnd.random_number(number)) % number)
     end
 
     def real_random(number)
@@ -55,7 +67,7 @@ module Gtk2Password
       if rnd = @bucket.shift then
         return Rnd.randomize(rnd,number)
       else
-        return rand(number)
+        return Rnd.random_number(number)
       end
     end
 
@@ -68,7 +80,7 @@ module Gtk2Password
 
     def random(number)
       validate(number)
-      (@bucket)? real_random(number) : rand(number)
+      (@bucket)? real_random(number) : Rnd.random_number(number)
     end
 
     RND = Rnd.new
