@@ -123,69 +123,74 @@ module Configuration
   COMMAND_LINE_MSG2 = "Warning: selected passwords will be shown.\nEnter Account pattern:"
 end
 
-  # Set OTP to true if you're going to use a one time pad
+  # Set OTP to true if you're going to use otpr (search for it in rubygems.org)
   OTP = false
 
-  # Here you can modify how you store your passphrase for your passwords.
-  # It's now set up as a one time pad.
-  # Modify CYPHER to your remove-able media
-  # You'll need to create the directory in the media... make it rwx'able only by the user if possible.
-  CYPHER = '/media/3263-6638/.gtk2passwordapp-2/cypher.pad' # remove-able media
-  KEY = "#{Gtk2AppLib::USERDIR}/key.pad"
+  # arguments for otpr
+  BUCKET	= 'YourBucket' # <== put the name of your google cloud storage bucket here.
+  PADNAME	= 'gtk2passwordapp' # <== suggested pad name, you can change it.
+  OTPBACKUP	= '/media/1234-5678/.gtk2passwordapp-2/cipher.pad' # <== edit to your backup file on removable media.
 
-  # Where do you want to backup your password files?
-  # This assumes you have a DropBox directory set up
-  BACKUP = File.expand_path('~/Dropbox/Backups/passwords.dat')
+  # Do yoy have a custom backup script to run?
+  BACKUPSCRIPT	= nil # File.expand_path('~/bin/backup') 
 
-  # Here you can set up your backup.
-  # The commented out section is set up to use DropBox
+  # Here you can edit in your own backups.
   def self.passwords_updated(password=nil)
-    # Update your pad...
-    Gtk2Password.set_password_to_pad(password) if password && OTP
     begin
-      if File.exist?(BACKUP) then
-        FileUtils.cp Configuration::PASSWORDS_FILE, BACKUP
-      end
+      # you might want to backup your passwords file here
+      # here, backup is a custom script to backup passwords.dat
+      system("#{BACKUPSCRIPT} passwords &")	if BACKUPSCRIPT
+      Gtk2Password.set_password_to_pad(password) if password && OTP
+      # you might want to backup your otp here
+      # here, backup is a custom script to backup the .otpr directory
+      system("#{BACKUPSCRIPT} otpr &")		if BACKUPSCRIPT
       Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
     rescue Exception
-      Gtk2AppLib::DIALOGS.quick_message("Warning: Could not create backup.",{:TITLE => 'Warning',:SCROLLED_WINDOW => false})
+      Gtk2AppLib::DIALOGS.quick_message("Warning: #{$!}",{:TITLE => 'Warning',:SCROLLED_WINDOW => false})
     end
-  end
-
-  def self.xor_cypher(key,cypher)
-    password = ''
-    cypher = cypher.bytes.inject([],:push)
-    key = key.bytes.inject([],:push)
-    ksize = key.length
-    cypher.length.times {|n| password += (cypher[n] ^ key[n.modulo ksize]).chr }
-    return password 
-  end
-
-  def self.get_password_from_pad
-    password = ''
-    if File.exist?(KEY) && File.exist?(CYPHER) then
-      key = File.read(KEY)
-      cypher = File.read(CYPHER)
-      password = Gtk2Password.xor_cypher(key,cypher)
-    end
-    return password
   end
 
   def self.set_password_to_pad(password)
-    if File.exist?(File.dirname(CYPHER)) then
-      key = 0.upto(password.length).inject(''){|k,c| k+(rand(256)).chr }
-      # Note that the media may ignore 0600
-      File.open(CYPHER,'w',0600){|fh| fh.print Gtk2Password.xor_cypher(key,password) }
-      File.open(KEY,'w',0600){|fh| fh.print key }
+    begin
+      IO.popen("otpr --new #{BUCKET} #{PADNAME} #{OTPBACKUP}",'w+') do |pipe|
+        raise "WUT?" unless pipe.gets.strip == 'Password:'
+        pipe.puts password
+        return pipe.gets.strip
+      end
+    rescue Exception
+      return ''
+    end
+  end
+
+  def self.get_password_from_pad(pin)
+    begin
+      IO.popen("otpr #{BUCKET} #{PADNAME} #{OTPBACKUP}",'w+') do |pipe|
+        raise "WUT?" unless pipe.gets.strip == 'Pin:'
+        pipe.puts pin
+        return pipe.gets.strip
+      end
+    rescue Exception
+      return ''
     end
   end
 
   def self.get_password(prompt,title=prompt,otp=false)
     if password = Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} ) then
+      password.strip!
       if OTP then
-        # to use the pad, the user just presses OK to pass an empty string.
-        password = Gtk2Password.get_password_from_pad unless password.length > 0
-        Gtk2Password.set_password_to_pad(password) if otp && password.length > 0
+        if password.length == 3 then
+          # the user sent the pin
+          password = Gtk2Password.get_password_from_pad(password)
+          # You might want to back up your otp here
+          # here, backup is a custom written script to backup the .otpr directory
+          system("#{BACKUPSCRIPT} otpr &")	if BACKUPSCRIPT
+        elsif otp && password.length > 6 then
+          # the user wants to set a new password
+          Gtk2Password.set_password_to_pad(password)
+          # You might want to backup your otp here
+          # here, backup is a custom written script to backup the .otpr directory
+          system("#{BACKUPSCRIPT} otpr &")	if BACKUPSCRIPT
+        end
       end
     end
     return password
