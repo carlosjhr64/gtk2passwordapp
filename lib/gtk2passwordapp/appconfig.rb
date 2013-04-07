@@ -174,7 +174,7 @@ end
     end
   end
 
-  def self.get_password(prompt,title=prompt,otp=false)
+  def self.get_password(prompt,title=prompt)
     if password = Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} ) then
       password.strip!
       if OTP then
@@ -182,12 +182,6 @@ end
           # the user sent the pin
           password = Gtk2Password.get_password_from_pad(password)
           # You might want to back up your otp here
-          # here, backup is a custom written script to backup the .otpr directory
-          system("#{BACKUPSCRIPT} otpr &")	if BACKUPSCRIPT
-        elsif otp && password.length > 6 then
-          # the user wants to set a new password
-          Gtk2Password.set_password_to_pad(password)
-          # You might want to backup your otp here
           # here, backup is a custom written script to backup the .otpr directory
           system("#{BACKUPSCRIPT} otpr &")	if BACKUPSCRIPT
         end

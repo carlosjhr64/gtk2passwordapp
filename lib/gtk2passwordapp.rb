@@ -42,7 +42,7 @@ module Gtk2Password
     def initialize(program)
       @program		= program
       @passwords	= Gtk2Password::Passwords.new(Configuration::PASSWORDS_FILE) do |prompt|
-        Gtk2Password.get_password(prompt,prompt,Gtk2Password::OTP)	|| exit
+        Gtk2Password.get_password(prompt,prompt)	|| exit
       end
       @passwords.expired = Configuration::PASSWORD_EXPIRED
       @modified		= false
