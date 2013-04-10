@@ -36,7 +36,7 @@ module Configuration
   shorten_b = {:width_request= => entry - spin - check - 4*padding, :visibility= => false}
   go_width	= {:width_request= => go}
   check_width	= {:width_request= => check, :active= => true}
-  spin_width	= {:width_request= => spin, :set_range  => [3,30]}
+  spin_width	= {:width_request= => spin, :set_range  => [3,100]}
   clicked	= 'clicked'
 
   PARAMETERS[:Account_Label]		= ['Account:',label_width]
@@ -123,7 +123,7 @@ module Configuration
   COMMAND_LINE_MSG2 = "Warning: selected passwords will be shown.\nEnter Account pattern:"
 end
 
-  # Set OTP to true if you're going to use otpr (search for it in rubygems.org)
+  # Set OTP to true if you're going to use otpr, version 1 (search for it in rubygems.org)
   OTP = false
 
   # arguments for otpr
@@ -178,7 +178,7 @@ end
     if password = Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} ) then
       password.strip!
       if OTP then
-        if password.length == 3 then
+        if password.length == 7 then
           # the user sent the pin
           password = Gtk2Password.get_password_from_pad(password)
           # You might want to back up your otp here
