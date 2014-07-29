@@ -123,8 +123,8 @@ end
   # Here you can edit in your own backups.
   def self.passwords_updated(password=nil)
     begin
-      # you might want to backup your passwords file
-      # ...
+      ### you might want to backup your passwords file ###
+      # system('cp ~/.gtk2passwordapp-3/passwords.dat ~/Dropbox/Backups/passwords.dat')
       # Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
     rescue Exception
       Gtk2AppLib::DIALOGS.quick_message("Warning: #{$!}",{:TITLE => 'Warning',:SCROLLED_WINDOW => false})
@@ -134,8 +134,24 @@ end
   def self.get_password(prompt,title=prompt)
     if password = Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} ) then
       password.strip!
-      # Do your custom interventions to the password here
-      # ...
+      ### Do your custom interventions to the password here ###
+      ### For example ###
+      # if password.length == 0
+      #   # User wants to enter the password via QR code
+      #   qrc_png = File.join Gtk2AppLib::USERDIR, 'pngs', 'qrc.png'
+      #   system("fswebcam -q #{qrc_png}")
+      #   password = `zbarimg -q --raw #{qrc_png}`.strip
+      #   system("shred -u #{qrc_png}")
+      # end
+      # if password =~ /^[23]\-[0123456789abcdef]+$/
+      #   # User is using a shared secret, assuming 2 of 3....
+      #   Open3.popen2('ssss-combine -t 3 -Q 2> /dev/null') do |stdin, stdout|
+      #     stdin.puts '1-....' # script's shared secret
+      #     stdin.puts password # user's shared secret
+      #     stdin.close
+      #     password = stdout.read.strip
+      #   end
+      # end
     end
     return password
   end
