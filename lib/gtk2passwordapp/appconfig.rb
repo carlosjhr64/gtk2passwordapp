@@ -118,74 +118,24 @@ module Configuration
   AGAIN = 'Again' # for when verifying new passwords.
   RETRY = 'Retry' # for when you got your password wrong.
 
-  # These are the --no-gui dialogs...
-  COMMAND_LINE_MSG1 = "Warning: password will be shown.\nPassword:"
-  COMMAND_LINE_MSG2 = "Warning: selected passwords will be shown.\nEnter Account pattern:"
 end
-
-  # Set OTP to true if you're going to use otpr, version 1 (search for it in rubygems.org)
-  OTP = false
-
-  # arguments for otpr
-  BUCKET	= 'YourBucket' # <== put the name of your google cloud storage bucket here.
-  PADNAME	= 'gtk2passwordapp' # <== suggested pad name, you can change it.
-  OTPBACKUP	= '/media/1234-5678/.gtk2passwordapp-2/cipher.pad' # <== edit to your backup file on removable media.
-
-  # Do yoy have a custom backup script to run?
-  BACKUPSCRIPT	= nil # File.expand_path('~/bin/backup') 
 
   # Here you can edit in your own backups.
   def self.passwords_updated(password=nil)
     begin
-      # you might want to backup your passwords file here
-      # here, backup is a custom script to backup passwords.dat
-      system("#{BACKUPSCRIPT} passwords &")	if BACKUPSCRIPT
-      Gtk2Password.set_password_to_pad(password) if password && OTP
-      # you might want to backup your otp here
-      # here, backup is a custom script to backup the .otpr directory
-      system("#{BACKUPSCRIPT} otpr &")		if BACKUPSCRIPT
-      Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
+      # you might want to backup your passwords file
+      # ...
+      # Gtk2AppLib::DIALOGS.quick_message("Passwords Data Saved.",{:TITLE => 'Saved',:SCROLLED_WINDOW => false})
     rescue Exception
       Gtk2AppLib::DIALOGS.quick_message("Warning: #{$!}",{:TITLE => 'Warning',:SCROLLED_WINDOW => false})
-    end
-  end
-
-  def self.set_password_to_pad(password)
-    begin
-      IO.popen("otpr --new #{BUCKET} #{PADNAME} #{OTPBACKUP}",'w+') do |pipe|
-        raise "WUT?" unless pipe.gets.strip == 'Password:'
-        pipe.puts password
-        return pipe.gets.strip
-      end
-    rescue Exception
-      return ''
-    end
-  end
-
-  def self.get_password_from_pad(pin)
-    begin
-      IO.popen("otpr #{BUCKET} #{PADNAME} #{OTPBACKUP}",'w+') do |pipe|
-        raise "WUT?" unless pipe.gets.strip == 'Pin:'
-        pipe.puts pin
-        return pipe.gets.strip
-      end
-    rescue Exception
-      return ''
     end
   end
 
   def self.get_password(prompt,title=prompt)
     if password = Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} ) then
       password.strip!
-      if OTP then
-        if password.length == 7 then
-          # the user sent the pin
-          password = Gtk2Password.get_password_from_pad(password)
-          # You might want to back up your otp here
-          # here, backup is a custom written script to backup the .otpr directory
-          system("#{BACKUPSCRIPT} otpr &")	if BACKUPSCRIPT
-        end
-      end
+      # Do your custom inteventions the password here
+      # ...
     end
     return password
   end

@@ -13,9 +13,7 @@ class PasswordsData
   LAST_UPDATE	= 5
 
   def reset(password)
-    # MD5 digest length is 16 to match tiny encryption's block length
-    passphrase = Digest::MD5.digest( password )
-    @iocrypt =  IOCrypt.new(passphrase)
+    @iocrypt =  IOCrypt.new(password)
   end
 
   attr_reader :data
