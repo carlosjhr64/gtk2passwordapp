@@ -134,7 +134,7 @@ end
   def self.get_password(prompt,title=prompt)
     if password = Gtk2AppLib::DIALOGS.entry( prompt, {:TITLE=>title, :Entry => [{:visibility= => false},'activate']} ) then
       password.strip!
-      # Do your custom inteventions the password here
+      # Do your custom interventions to the password here
       # ...
     end
     return password
