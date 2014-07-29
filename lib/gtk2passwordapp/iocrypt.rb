@@ -8,8 +8,6 @@ YAML::ENGINE.yamler = 'psych' # ensure it's psych
 module Gtk2Password
 
 class IOCrypt
-  LENGTH = 16
-
   def initialize(passphrase)
     @key = Digest::SHA256.digest passphrase
   end

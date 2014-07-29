@@ -2,11 +2,6 @@ require 'gtk2passwordapp/iocrypt'
 
   include Gtk2Password
   errors = 0
-  puts "IOCrypt::LENGTH: #{IOCrypt::LENGTH}"
-  if !(IOCrypt::LENGTH == 16) then
-    errors += 1
-    puts "Expected 16"
-  end
   iocrypt = IOCrypt.new("IOCrypt Testing")
   data = ['This','is','a','test.']
   dump = './test.dump'

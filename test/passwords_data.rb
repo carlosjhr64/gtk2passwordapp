@@ -56,13 +56,13 @@ require 'gtk2passwordapp/passwords_data'
   begin
     pd.load
   rescue Exception
-    if $!.message == 'decryption error' then
+    if $!.message == 'bad decrypt' then
       got_it = true
     end
   end
   if !got_it then
     errors += 1
-    puts "Expected decryption error"
+    puts "Expected bad decrypt"
   end
 
   pd.save!('Good password')
@@ -129,6 +129,3 @@ require 'gtk2passwordapp/passwords_data'
 
   File.unlink(dump)
   puts "There were #{errors} errors."
-
-
-
