@@ -1,7 +1,7 @@
 Ruby-Gnome Password Manager
 
 A Ruby-Gnome password manager.
-Uses crypt-tea's Tiny Encryption Algorithm to encrypt the datafile.
+Uses Blowfish to encrypt the datafile.
 Features random password generator and clipboard use.
 
 

@@ -49,10 +49,9 @@ $stderr.puts fn
     end
   }
   s.executables = executables
-  s.default_executable = 'gtk2passwordapp2'
+  s.default_executable = 'gtk2passwordapp3'
 
-  s.add_dependency('crypt-tea','= 1.3.0')
   s.add_dependency('gtk2applib','~> 15.3')
-  s.requirements << 'gtk2'
+  s.add_dependency('gtk2')
 
 end
