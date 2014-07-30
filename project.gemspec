@@ -20,6 +20,7 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = false
   #s.rdoc_options = ['--main', 'gtk2applib/gtk2_app.rb']
   s.authors = ['carlosjhr64@gmail.com']
+  s.licenses = ['GPL']
 
   files = []
   # Rbs
@@ -52,6 +53,6 @@ $stderr.puts fn
   s.default_executable = 'gtk2passwordapp3'
 
   s.add_dependency('gtk2applib','~> 15.3')
-  s.add_dependency('gtk2')
+  s.add_dependency('gtk2','~> 2.2')
 
 end
