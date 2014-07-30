@@ -4,7 +4,7 @@ require 'gtk2passwordapp/rnd'
 module Gtk2Password
 
   ABOUT		= {
-	'name'		=> 'Ruby-Gnome Password Manager II',
+	'name'		=> 'Ruby-Gnome Password Manager III',
 	'authors'	=> ['carlosjhr64@gmail.com'],
 	'website'	=> 'https://sites.google.com/site/gtk2applib/home/gtk2applib-applications/gtk2passwordapp',
 	'website-label'	=> 'Ruby-Gnome Password Manager',
