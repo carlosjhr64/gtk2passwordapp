@@ -145,12 +145,25 @@ end
       # end
       # if password =~ /^[23]\-[0123456789abcdef]+$/
       #   # User is using a shared secret, assuming 2 of 3....
-      #   Open3.popen2('ssss-combine -t 3 -Q 2> /dev/null') do |stdin, stdout|
+      #   require 'open3'
+      #   Open3.popen2('ssss-combine -t 2 -Q') do |stdin, stdout, stderr|
       #     stdin.puts '1-....' # script's shared secret
       #     stdin.puts password # user's shared secret
       #     stdin.close
-      #     password = stdout.read.strip
+      #     # Weird, ssss currently using stderr instead of stdout for output.
+      #     password = stderr.read.strip.split.last # So get the last line of stderr.
       #   end
+      # end
+      # unless password.length > 7
+      #  if password.length == 0
+      #    Gtk2AppLib::DIALOGS.quick_message(
+      #    "Sorry, could not get password.",
+      #    {:TITLE => 'No Password',:SCROLLED_WINDOW => false})
+      #  else
+      #    Gtk2AppLib::DIALOGS.quick_message(
+      #    "Warning, weak password!",
+      #    {:TITLE => 'Weak!',:SCROLLED_WINDOW => false})
+      #  end
       # end
     end
     return password
