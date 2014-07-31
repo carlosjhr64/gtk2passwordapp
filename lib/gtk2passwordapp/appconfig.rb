@@ -146,7 +146,7 @@ end
       # if password =~ /^[23]\-[0123456789abcdef]+$/
       #   # User is using a shared secret, assuming 2 of 3....
       #   require 'open3'
-      #   Open3.popen2('ssss-combine -t 2 -Q') do |stdin, stdout, stderr|
+      #   Open3.popen3('ssss-combine -t 2 -Q') do |stdin, stdout, stderr|
       #     stdin.puts '1-....' # script's shared secret
       #     stdin.puts password # user's shared secret
       #     stdin.close
