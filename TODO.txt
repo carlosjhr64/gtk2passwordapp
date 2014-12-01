@@ -1,5 +1,9 @@
 TODO
 
+	Gtk3App
+	Top 3 passwords
+	Auto-quit?
+
 DONE 2.5.0
 
 	otpr integration

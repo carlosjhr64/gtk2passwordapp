@@ -1,0 +1,7 @@
+^(
+ (\.)|
+ (test\/)|
+ (TODO\.)|
+ (gtk2passwordapp.gemspec)|
+ (History\.)
+)
