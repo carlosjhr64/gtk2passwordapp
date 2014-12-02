@@ -1,0 +1,50 @@
+#! ruby
+require 'test/unit'
+require 'yaml_zlib_blowfish'
+require 'gtk2passwordapp/account'
+require 'gtk2passwordapp/accounts'
+
+class TestAccounts < Test::Unit::TestCase
+  def test_accounts()
+    assert_nothing_raised() do
+      dumpfile = './test/dump.yzb'
+
+      accounts = Gtk2passwordapp::Accounts.new('ThePassphrase', dumpfile)
+      assert_equal 0, accounts.names.length
+      accounts.add('Vanilla')
+      assert_equal 1, accounts.names.length
+      accounts.add('Chocolate')
+      assert_equal 2, accounts.names.length
+      assert accounts.include?('Chocolate')
+      refute accounts.include?('Strawberry')
+      accounts.add('Strawberry')
+      assert_equal 3, accounts.names.length
+      assert accounts.include?('Strawberry')
+      assert_raises(RuntimeError){ accounts.add('Strawberry') }
+      accounts.delete('Vanilla')
+      refute accounts.include?('Vanilla')
+      assert_raises(RuntimeError){ accounts.get('Vanilla') }
+      assert_equal dumpfile, accounts.dumpfile
+
+      chocolate = accounts.get('Chocolate')
+      assert_equal Gtk2passwordapp::Account, chocolate.class
+      vanilla = accounts.add('Vanilla')
+      assert_equal Gtk2passwordapp::Account, vanilla.class
+
+      accounts.save
+
+      accounts2 = Gtk2passwordapp::Accounts.new('ThePassphrase', dumpfile)
+      accounts2.load
+      assert_equal 3, accounts2.names.length
+      assert accounts2.include?('Chocolate')
+      assert accounts2.include?('Strawberry')
+      assert accounts2.include?('Vanilla')
+      assert_equal ['Chocolate','Strawberry','Vanilla'], accounts2.names.sort
+
+      assert_equal accounts.data, accounts2.data
+      assert_equal accounts.dumpfile, accounts2.dumpfile
+
+      File.unlink dumpfile
+    end
+  end
+end

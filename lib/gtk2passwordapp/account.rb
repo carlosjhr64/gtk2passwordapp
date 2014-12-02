@@ -3,10 +3,10 @@ class Account
 
   PASSWORD    = 0
   PREVIOUS    = 1
-  NOTE        = 2
-  USERNAME    = 3
-  URL         = 4
-  LAST_UPDATE = 5
+  USERNAME    = 2
+  URL         = 3
+  NOTE        = 4
+  UPDATED     = 5
 
   def initialize(name, data)
     unless data.has_key?(name)
@@ -30,10 +30,6 @@ class Account
     @data[PREVIOUS]
   end
 
-  def note
-    @data[NOTE]
-  end
-
   def username
     @data[USERNAME]
   end
@@ -42,10 +38,18 @@ class Account
     @data[URL]
   end
 
+  def note
+    @data[NOTE]
+  end
+
+  def updated
+    @data[UPDATED]
+  end
+
   ### WRITTERS ###
 
   def password=(password)
-    @data[LAST_UPDATE] = Time.now.to_i
+    @data[UPDATED] = Time.now.to_i
     @data[PREVIOUS] = @data[PASSWORD]
     @data[PASSWORD] = password
   end
@@ -69,7 +73,7 @@ class Account
   end
 
   def expired?
-    Time.now.to_i - @data[LAST_UPDATE] > CONFIG[:Expired]
+    Time.now.to_i - @data[UPDATED] > CONFIG[:Expired]
   end
 
 end

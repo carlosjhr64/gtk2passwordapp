@@ -1,0 +1,58 @@
+#! ruby
+require 'test/unit'
+require 'gtk2passwordapp/account'
+
+CONFIG = {}
+class TestAccount < Test::Unit::TestCase
+  DATA = {
+    'Chocolate'  =>  [ 'ThePassword', 'ThePreviousPassword', 'UserName', 'http://url', 'TheNote', 0 ],
+  }
+
+  def test_accounts()
+    assert_nothing_raised() do
+      account = Gtk2passwordapp::Account.new('Chocolate', DATA)
+
+      assert_equal 'Chocolate', account.name
+      assert_equal 'ThePassword', account.password
+      assert_equal 'ThePreviousPassword', account.previous
+      assert_equal 'UserName', account.username
+      assert_equal 'http://url', account.url
+      assert_equal 'TheNote', account.note
+      assert_equal 0, account.updated
+
+      t0 = Time.now.to_i
+      account.password = 'NewPassword'
+      t1 = Time.now.to_i
+      assert_equal 'NewPassword', account.password
+      assert_equal 'ThePassword', account.previous
+      assert account.updated >= t0
+      assert account.updated <= t1
+
+      assert account.verify? 'NewPassword'
+      refute account.verify? 'BadPassword'
+
+      # just a very simple sanity check
+      CONFIG[:Expired] = -1
+      assert account.expired?
+      CONFIG[:Expired] = 5
+      refute account.expired?
+
+      account.note = 'New Note'
+      assert_equal 'New Note', account.note
+
+      account.username = 'Different'
+      assert_equal 'Different', account.username
+
+      account.url = 'ftp://file'
+      assert_equal 'ftp://file', account.url
+
+      # Enforces String objects for keys
+      assert_raises(RuntimeError){ account = Gtk2passwordapp::Account.new(:Key, DATA)}
+
+      account = Gtk2passwordapp::Account.new('NewAccount', DATA)
+      assert_equal 'NewAccount', account.name
+      assert_equal '', account.password
+      assert_equal 0, account.updated
+    end
+  end
+end

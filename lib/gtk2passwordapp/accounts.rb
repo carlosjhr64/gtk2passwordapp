@@ -5,6 +5,7 @@ class Accounts
     @yzb =  YamlZlibBlowfish.new(password)
   end
 
+  attr_reader :dumpfile, :data
   def initialize(password, dumpfile)
     reset(password) # sets @yzb
     @dumpfile = dumpfile
@@ -24,7 +25,7 @@ class Accounts
     File.chmod(0600, @dumpfile)
   end
 
-  def accounts
+  def names
     @data.keys
   end
 
