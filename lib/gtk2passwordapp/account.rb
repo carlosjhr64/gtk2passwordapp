@@ -49,6 +49,8 @@ class Account
   ### WRITTERS ###
 
   def password=(password)
+    raise 'Password must be all graph.' unless password=~/^[[:graph:]]+$/
+    raise 'Password cannot have quotes.' if password=~/[`'"]/
     @data[UPDATED] = Time.now.to_i
     @data[PREVIOUS] = @data[PASSWORD]
     @data[PASSWORD] = password
@@ -59,6 +61,7 @@ class Account
   end
 
   def username=(username)
+    raise 'Username must be all word.' unless username=~/^\w+$/
     @data[USERNAME]=username
   end
 
