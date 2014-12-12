@@ -10,7 +10,7 @@ class Account
 
   def initialize(name, data)
     unless data.has_key?(name)
-      raise "Account name must be a String." unless name.class==String
+      raise "Account name must be a non-empty String." unless name.class==String and name.length > 0
       data[name] = [ '', '', '', '', '', 0 ]
     end
     @name, @data = name, data[name]
@@ -51,9 +51,11 @@ class Account
   def password=(password)
     raise 'Password must be all graph.' unless password=~/^[[:graph:]]+$/
     raise 'Password cannot have quotes.' if password=~/[`'"]/
-    @data[UPDATED] = Time.now.to_i
-    @data[PREVIOUS] = @data[PASSWORD]
-    @data[PASSWORD] = password
+    if @data[PASSWORD] != password
+      @data[UPDATED] = Time.now.to_i
+      @data[PREVIOUS] = @data[PASSWORD]
+      @data[PASSWORD] = password
+    end
   end
 
   def note=(note)
@@ -66,6 +68,7 @@ class Account
   end
 
   def url=(url)
+    raise 'Must be like http://site' unless url=='' or url=~/^\w+:\/\/\S+$/
     @data[URL]=url
   end
 

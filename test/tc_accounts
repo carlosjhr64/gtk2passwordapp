@@ -9,7 +9,7 @@ class TestAccounts < Test::Unit::TestCase
     assert_nothing_raised() do
       dumpfile = './test/dump.yzb'
 
-      accounts = Gtk2passwordapp::Accounts.new('ThePassphrase', dumpfile)
+      accounts = Gtk2passwordapp::Accounts.new(dumpfile, 'ThePassphrase')
       assert_equal 0, accounts.names.length
       accounts.add('Vanilla')
       assert_equal 1, accounts.names.length
@@ -33,7 +33,7 @@ class TestAccounts < Test::Unit::TestCase
 
       accounts.save
 
-      accounts2 = Gtk2passwordapp::Accounts.new('ThePassphrase', dumpfile)
+      accounts2 = Gtk2passwordapp::Accounts.new(dumpfile, 'ThePassphrase')
       accounts2.load
       assert_equal 3, accounts2.names.length
       assert accounts2.include?('Chocolate')

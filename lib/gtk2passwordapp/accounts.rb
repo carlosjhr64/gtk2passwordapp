@@ -6,14 +6,19 @@ class Accounts
   end
 
   attr_reader :dumpfile, :data
-  def initialize(password, dumpfile)
-    reset(password) # sets @yzb
+  def initialize(dumpfile, password=nil)
+    reset(password) if password # sets @yzb
     @dumpfile = dumpfile
     @data = {}
   end
 
+  def exist?
+    File.exist? @dumpfile
+  end
+
   # will raise an exception on failed decryption
-  def load
+  def load(password=nil)
+    reset(password) if password
     data = @yzb.load(@dumpfile)
     raise "Decryption error." unless data.class == Hash
     @data = data
