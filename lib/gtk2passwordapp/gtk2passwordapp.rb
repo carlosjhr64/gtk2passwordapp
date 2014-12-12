@@ -52,7 +52,7 @@ class Gtk2PasswordApp
     @program = program
     window = program.window
     @page = Such::Box.new window, :vbox!
-    password_page
+    password_page((ACCOUNTS.exist?)? :load : :init)
     window.show
   end
 
@@ -69,17 +69,18 @@ class Gtk2PasswordApp
     @page.each{|w|w.destroy}
   end
 
-  def password_page(reset = !ACCOUNTS.exist?)
+  # mode can be :init, :load, or :reset
+  def password_page(mode)
     clear_page
 
     password_label  = Such::Label.new @page, :password_label!
     password_entry1 = Such::Entry.new @page, :password_entry!
-    password_entry2 = reset ? Such::Entry.new(@page, :password_entry!) : nil
+    password_entry2 = (mode==:load)? nil : Such::Entry.new(@page, :password_entry!)
 
     action = Such::AbButtons.new(@page, :hbox!) do |button, *_|
       case button
       when action.a_Button
-        @program.quit!
+        (mode==:reset)? view_page : @program.quit!
       when action.b_Button
         begin
           pwd1 = password_entry1.text.strip
@@ -88,7 +89,9 @@ class Gtk2PasswordApp
             ACCOUNTS.save pwd1
           else
             ACCOUNTS.load pwd1
-            # TODO: add reset password menu item to program's menu.
+          end
+          unless mode==:reset
+            @program.app_menu.append_menu_item(:reset!){password_page(:reset)}
           end
           view_page
         rescue StandardError
@@ -99,7 +102,7 @@ class Gtk2PasswordApp
         end
       end
     end
-    action.a_Button.label = CONFIG[:Quit]
+    action.a_Button.label = CONFIG[:Cancel]
     action.b_Button.label = CONFIG[:Go]
 
     @page.show_all
@@ -156,7 +159,7 @@ class Gtk2PasswordApp
       end
     end
     clip_box.a_Button.label = CONFIG[:Current]
-    clip_box.b_Button.label = CONFIG[:Previous] # TODO: previous clip functionality, maybe resequence.
+    clip_box.b_Button.label = CONFIG[:Previous]
     clip_box.c_Button.label = CONFIG[:Show]
 
     edit_box = Such::AbcButtons.new(@page, :hbox!) do |button, *_|

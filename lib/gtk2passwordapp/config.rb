@@ -17,7 +17,6 @@ module Gtk2passwordapp
     CustomDigits: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
 
     # Button Labels
-    Quit:     'Quit',
     Go:       'Go',
     Edit:     'Edit',
     Add:      'Add',
@@ -108,6 +107,7 @@ module Gtk2passwordapp
       HelpFile: 'https://github.com/carlosjhr64/gtk2passwordapp',
       Logo: "#{XDG['DATA']}/gtk3app/gtk2passwordapp/logo.png",
 
+      reset!: [['Reset Master Password'], 'activate'],
     }
   }
 end
