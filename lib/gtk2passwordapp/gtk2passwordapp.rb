@@ -102,10 +102,31 @@ class Gtk2PasswordApp
         end
       end
     end
-    action.a_Button.label = CONFIG[:Cancel]
-    action.b_Button.label = CONFIG[:Go]
+    action.labels :Cancel, :Go
 
     @page.show_all
+  end
+
+  def create_combo
+    combo = Such::PromptedCombo.new @page, :hbox!
+    combo.prompt_Label.text = CONFIG[:Name]
+    names = ACCOUNTS.names.sort{|a,b|a.upcase<=>b.upcase}
+    names.each do |name|
+      combo.prompted_ComboBoxText.append_text name
+    end
+    combo.prompted_ComboBoxText.set_active names.index(@account.name)
+    return combo
+  end
+
+  def create_entries
+    entries = {}
+    CONFIG[:FIELDS].each do |field, text|
+      entry = Such::PromptedLabel.new @page, :hbox!
+      entry.prompt_Label.text = text
+      entry.prompted_Label.text = @account.method(field).call
+      entries[field] = entry
+    end
+    return entries
   end
 
   def view_page
@@ -115,25 +136,11 @@ class Gtk2PasswordApp
     end
 
     clear_page
-    @account ||= ACCOUNTS.get ACCOUNTS.names.shuffle.first
+    @account ||= ACCOUNTS.get ACCOUNTS.names.sample
 
     Such::Label.new @page, :view_label!
-
-    combo = Such::PromptedCombo.new @page, :hbox!
-    combo.prompt_Label.text = CONFIG[:Name]
-    names = ACCOUNTS.names.sort{|a,b|a.upcase<=>b.upcase}
-    names.each do |name|
-      combo.prompted_ComboBoxText.append_text name
-    end
-    combo.prompted_ComboBoxText.set_active names.index(@account.name)
-
-    entries = {}
-    CONFIG[:FIELDS].each do |field, text|
-      entry = Such::PromptedLabel.new @page, :hbox!
-      entry.prompt_Label.text = text
-      entry.prompted_Label.text = @account.method(field).call
-      entries[field] = entry
-    end
+    combo = create_combo
+    entries = create_entries
 
     label, hidden = entries[:password].prompted_Label, CONFIG[:HiddenPwd]
     label.text = hidden
@@ -158,23 +165,17 @@ class Gtk2PasswordApp
         label.text = hidden
       end
     end
-    clip_box.a_Button.label = CONFIG[:Current]
-    clip_box.b_Button.label = CONFIG[:Previous]
-    clip_box.c_Button.label = CONFIG[:Show]
+    clip_box.labels :Current, :Previous, :Show
 
     edit_box = Such::AbcButtons.new(@page, :hbox!) do |button, *_|
       case button
       when edit_box.a_Button then edit_page
       when edit_box.b_Button then edit_page(:add)
       when edit_box.c_Button
-        if @account.url.length > 0
-          system "#{Gtk3App::CONFIG[:Open]} '#{@account.url}'"
-        end
+        system("#{Gtk3App::CONFIG[:Open]} '#{@account.url}'") if @account.url.length > 0
       end
     end
-    edit_box.a_Button.label = CONFIG[:Edit]
-    edit_box.b_Button.label = CONFIG[:Add]
-    edit_box.c_Button.label = CONFIG[:Goto]
+    edit_box.labels :Edit, :Add, :Goto
 
     @page.show_all
   end
@@ -229,10 +230,7 @@ class Gtk2PasswordApp
         pwd.text = truncate.call H2C.convert hex
       end
     end
-
-    generators.a_Button.label = CONFIG[:Random]
-    generators.b_Button.label = CONFIG[:AlphaNumeric]
-    generators.c_Button.label = CONFIG[:Custom]
+    generators.labels :Random, :AlphaNumeric, :Custom
 
     cb = Such::CheckButton.new(generators, :pwd_size_check!, 'toggled') do
       pwd.text = (cb.active?) ? truncate.call(password) : password
@@ -291,9 +289,7 @@ class Gtk2PasswordApp
         end
       end
     end
-    action.a_Button.label = CONFIG[:Cancel]
-    action.b_Button.label = CONFIG[:Delete]
-    action.c_Button.label = CONFIG[:Save]
+    action.labels :Cancel, :Delete, :Save
 
     @page.show_all
     if mode==:add

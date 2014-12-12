@@ -9,6 +9,7 @@ require 'base_convert'
 # This Gem.
 require_relative 'gtk2passwordapp/version.rb'
 require_relative 'gtk2passwordapp/config.rb'
+require_relative 'gtk2passwordapp/such_parts.rb'
 require_relative 'gtk2passwordapp/account.rb'
 require_relative 'gtk2passwordapp/accounts.rb'
 require_relative 'gtk2passwordapp/gtk2passwordapp.rb'

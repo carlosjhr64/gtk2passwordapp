@@ -74,7 +74,7 @@ module Gtk2passwordapp
       },
 
       password_label!: [['Password:'], :label],
-      password_entry!: [a0, {set_visibility: false}],
+      password_entry!: [a0, :entry, {set_visibility: false}],
 
       edit_label!:     [['Edit Account'], :label],
       add_label!:      [['Add Account'],  :label],
@@ -111,11 +111,3 @@ module Gtk2passwordapp
     }
   }
 end
-
-Such::Parts.make('AbButtons', 'Box', :a_Button, :b_Button)
-Such::Parts.make('AbcButtons', 'Box', :a_Button, :b_Button, :c_Button)
-
-Such::Parts.make('PromptedEntryLabel', 'Box', :prompt_Label, :prompted_Entry, :prompted_Label)
-Such::Parts.make('PromptedEntry', 'Box', :prompt_Label, :prompted_Entry)
-Such::Parts.make('PromptedLabel', 'Box', :prompt_Label, :prompted_Label)
-Such::Parts.make('PromptedCombo', 'Box', :prompt_Label, :prompted_ComboBoxText)
