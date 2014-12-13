@@ -9,6 +9,8 @@ module Gtk2passwordapp
 
     # Password Data File
     PwdFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/passwords.dat",
+    # Shared Secret File
+    SharedSecretFile: "/run/media/fox/88DE-EC38/.gtk2passwordapp.ssss",
 
     # Password Generators
     Random:       'Random',
@@ -49,6 +51,12 @@ module Gtk2passwordapp
       [:password, 'Password:'],
     ],
 
+    # Command Line
+    QrcTimeOut: 3,
+    QrcCommand: 'zbarcam --nodisplay --raw --prescale=800x800',
+    SsssCombine: 'ssss-combine -t 2 -Q',
+
+    # Such::Thing::PARAMETERS
     thing: {
 
       box:    h0,

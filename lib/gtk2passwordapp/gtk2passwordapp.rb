@@ -58,26 +58,31 @@ class Gtk2PasswordApp
 
     # Because accounts are editable from the main window,
     # minime's menu needs to be updated each time.
-    mini, mini_menu = program.mini, program.mini_menu
-    mini.signal_connect('show') do
-      item = Gtk::SeparatorMenuItem.new
+    mini = program.mini
+    mini.signal_connect('show'){generate_menu_items}
+    mini.signal_connect('hide'){destroy_menu_items}
+  end
+
+  def generate_menu_items
+    mini_menu = @program.mini_menu
+    item = Gtk::SeparatorMenuItem.new
+    mini_menu.append item
+    item.show
+    names = ACCOUNTS.names.sort{|a,b|a.upcase<=>b.upcase}
+    names.each do |name|
+      account = ACCOUNTS.get name
+      pwd, user = account.password, account.username
+      item = Such::MenuItem.new([name], 'activate'){copy2clipboard(pwd, user)}
       mini_menu.append item
       item.show
-      names = ACCOUNTS.names.sort{|a,b|a.upcase<=>b.upcase}
-      names.each do |name|
-        account = ACCOUNTS.get name
-        pwd, user = account.password, account.username
-        item = Such::MenuItem.new([name], 'activate'){copy2clipboard(pwd, user)}
-        mini_menu.append item
-        item.show
-      end
     end
-    mini.signal_connect('hide') do
-      sep = false
-      mini_menu.each do |item|
-        sep = true if item.class == Gtk::SeparatorMenuItem
-        item.destroy if sep
-      end
+  end
+
+  def destroy_menu_items
+    sep = false
+    @program.mini_menu.each do |item|
+      sep = true if item.class == Gtk::SeparatorMenuItem
+      item.destroy if sep
     end
   end
 
@@ -104,32 +109,77 @@ class Gtk2PasswordApp
 
     action = Such::AbButtons.new(@page, :hbox!) do |button, *_|
       case button
-      when action.a_Button
+      when action.a_Button # Cancel
         (mode==:reset)? view_page : @program.quit!
-      when action.b_Button
-        begin
-          pwd1 = password_entry1.text.strip
-          if password_entry2
-            raise 'Passwords did not match' unless password_entry2.text.strip==pwd1
-            ACCOUNTS.save pwd1
-          else
-            ACCOUNTS.load pwd1
-          end
+      when action.b_Button # Go
+        if process_pwd_entries password_entry1, password_entry2
           unless mode==:reset
             @program.app_menu.append_menu_item(:reset!){password_page(:reset)}
           end
           view_page
-        rescue StandardError
-          $!.puts
-          password_entry1.text = ''
-          password_entry2.text = '' if password_entry2
-          password_label.text  = CONFIG[:ReTry]
+        else
+          password_label.text = CONFIG[:ReTry]
         end
       end
     end
     action.labels :Cancel, :Go
 
     @page.show_all
+  end
+
+  def get_qrcode
+    qrcode = ''
+    IO.popen(CONFIG[:QrcCommand], 'r') do |io|
+      begin
+        Timeout.timeout(CONFIG[:QrcTimeOut]) do
+          qrcode = io.gets.strip
+        end
+      rescue Timeout::Error
+        $!.puts 'QrcTimeOut'
+      ensure
+        Process.kill('INT', io.pid)
+      end
+    end
+    qrcode
+  end
+
+  def get_ssss_combine(pwd0, pwd1)
+    pwd = ''
+    Open3.popen3(CONFIG[:SsssCombine]) do |stdin, stdout, stderr|
+      stdin.puts pwd0
+      stdin.puts pwd1
+      stdin.close
+      # Weird, ssss currently using stderr instead of stdout for output.
+      pwd = stderr.read.strip.split.last # So get the last line of stderr.
+    end
+    return pwd
+  end
+
+  def process_pwd_entries(entry1, entry2)
+    begin
+      pwd1 = entry1.text.strip
+      pwd1 = get_qrcode if pwd1 == ''
+      raise 'No password given.' if pwd1 == ''
+      if entry2
+        raise 'Passwords did not match' unless entry2.text.strip==pwd1
+        ACCOUNTS.save pwd1
+      else
+        if pwd1=~/^\d+\-[\dabcdef]+$/ # then we probably have a shared secret...
+          if File.exist? CONFIG[:SharedSecretFile] # and looks like we really do...
+            pwd0 = File.read(CONFIG[:SharedSecretFile]).strip
+            pwd = get_ssss_combine(pwd0, pwd1)
+            pwd1 = pwd unless pwd=='' # but maybe not.
+          end
+        end
+        ACCOUNTS.load pwd1
+      end
+      true
+    rescue StandardError
+      $!.puts
+      entry1.text = ''
+      entry2.text = '' if entry2
+      false
+    end
   end
 
   def create_combo
