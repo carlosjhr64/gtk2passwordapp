@@ -47,6 +47,21 @@ class Dialog < Such::Dialog
   end
 end
 
+class BackupDialog < Gtk::FileChooserDialog
+  def initialize(parent)
+    super title: CONFIG[:thing][:BACKUP].first, parent: parent, action: Gtk::FileChooser::Action::SAVE
+    add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
+    add_button(Gtk::Stock::OPEN, Gtk::ResponseType::ACCEPT)
+    if CONFIG[:BackupFile]
+      set_filename CONFIG[:BackupFile]
+      set_current_name File.basename CONFIG[:BackupFile]
+    end
+    show_all
+    yield(filename) if run == Gtk::ResponseType::ACCEPT
+    destroy
+  end
+end
+
 class Gtk2PasswordApp
   def initialize(program)
     @program = program
@@ -115,6 +130,7 @@ class Gtk2PasswordApp
         if process_pwd_entries password_entry1, password_entry2
           unless mode==:reset
             @program.app_menu.append_menu_item(:reset!){password_page(:reset)}
+            @program.app_menu.append_menu_item(:backup!){backup}
           end
           view_page
         else
@@ -125,6 +141,12 @@ class Gtk2PasswordApp
     action.labels :Cancel, :Go
 
     @page.show_all
+  end
+
+  def backup
+    BackupDialog.new(@program.window) do |filename|
+      FileUtils.cp CONFIG[:PwdFile], filename
+    end
   end
 
   def process_pwd_entries(entry1, entry2)

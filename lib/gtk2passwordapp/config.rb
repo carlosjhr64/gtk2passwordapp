@@ -5,12 +5,17 @@ module Gtk2passwordapp
   h0 = Rafini::Empty::HASH
   a0 = Rafini::Empty::ARRAY
 
+  bak = File.join ENV['HOME'], 'Dropbox'
+  bak = (File.exist? bak)? File.join(bak, 'gtk2passwordapp.bak') : nil
+
   CONFIG = {
 
     # Password Data File
     PwdFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/passwords.dat",
     # Shared Secret File
-    SharedSecretFile: "/run/media/fox/88DE-EC38/.gtk2passwordapp.ssss",
+    # Consider using a file found in a removable flashdrive.
+    SharedSecretFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/key.ssss",
+    BackupFile: bak,
 
     # Timeout for qr-code read.
     QrcTimeOut: 3,
@@ -114,6 +119,9 @@ module Gtk2passwordapp
       Logo: "#{XDG['DATA']}/gtk3app/gtk2passwordapp/logo.png",
 
       reset!: [['Reset Master Password'], 'activate'],
+
+      BACKUP: ['Backup Passwords Data'], # used directly by BackupDialog
+      backup!: [:BACKUP, 'activate'],
     }
   }
 end
