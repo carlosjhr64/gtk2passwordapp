@@ -127,38 +127,12 @@ class Gtk2PasswordApp
     @page.show_all
   end
 
-  def get_qrcode
-    qrcode = ''
-    IO.popen(CONFIG[:QrcCommand], 'r') do |io|
-      begin
-        Timeout.timeout(CONFIG[:QrcTimeOut]) do
-          qrcode = io.gets.strip
-        end
-      rescue Timeout::Error
-        $!.puts 'QrcTimeOut'
-      ensure
-        Process.kill('INT', io.pid)
-      end
-    end
-    qrcode
-  end
-
-  def get_ssss_combine(pwd0, pwd1)
-    pwd = ''
-    Open3.popen3(CONFIG[:SsssCombine]) do |stdin, stdout, stderr|
-      stdin.puts pwd0
-      stdin.puts pwd1
-      stdin.close
-      # Weird, ssss currently using stderr instead of stdout for output.
-      pwd = stderr.read.strip.split.last # So get the last line of stderr.
-    end
-    return pwd
-  end
-
   def process_pwd_entries(entry1, entry2)
     begin
       pwd1 = entry1.text.strip
-      pwd1 = get_qrcode if pwd1 == ''
+      if pwd1 == '' and pwd = Helpema::ZBar.qrcode(CONFIG[:QrcTimeOut])
+        pwd1 = pwd
+      end
       raise 'No password given.' if pwd1 == ''
       if entry2
         raise 'Passwords did not match' unless entry2.text.strip==pwd1
@@ -167,7 +141,7 @@ class Gtk2PasswordApp
         if pwd1=~/^\d+\-[\dabcdef]+$/ # then we probably have a shared secret...
           if File.exist? CONFIG[:SharedSecretFile] # and looks like we really do...
             pwd0 = File.read(CONFIG[:SharedSecretFile]).strip
-            pwd = get_ssss_combine(pwd0, pwd1)
+            pwd = Helpema::SSSS.combine(pwd0, pwd1)
             pwd1 = pwd unless pwd=='' # but maybe not.
           end
         end

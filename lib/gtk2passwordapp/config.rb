@@ -12,6 +12,9 @@ module Gtk2passwordapp
     # Shared Secret File
     SharedSecretFile: "/run/media/fox/88DE-EC38/.gtk2passwordapp.ssss",
 
+    # Timeout for qr-code read.
+    QrcTimeOut: 3,
+
     # Password Generators
     Random:       'Random',
     AlphaNumeric: 'Alpha-Numeric',
@@ -50,11 +53,6 @@ module Gtk2passwordapp
       [:username, 'Username:'],
       [:password, 'Password:'],
     ],
-
-    # Command Line
-    QrcTimeOut: 3,
-    QrcCommand: 'zbarcam --nodisplay --raw --prescale=800x800',
-    SsssCombine: 'ssss-combine -t 2 -Q',
 
     # Such::Thing::PARAMETERS
     thing: {

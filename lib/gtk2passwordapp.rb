@@ -8,6 +8,7 @@ require 'gtk3app'
 require 'yaml_zlib_blowfish'
 require 'super_random'
 require 'base_convert'
+require 'helpema'
 
 # This Gem.
 require_relative 'gtk2passwordapp/version.rb'
