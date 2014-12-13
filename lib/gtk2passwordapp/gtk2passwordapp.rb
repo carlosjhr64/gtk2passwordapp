@@ -50,10 +50,35 @@ end
 class Gtk2PasswordApp
   def initialize(program)
     @program = program
+
     window = program.window
     @page = Such::Box.new window, :vbox!
     password_page((ACCOUNTS.exist?)? :load : :init)
     window.show
+
+    # Because accounts are editable from the main window,
+    # minime's menu needs to be updated each time.
+    mini, mini_menu = program.mini, program.mini_menu
+    mini.signal_connect('show') do
+      item = Gtk::SeparatorMenuItem.new
+      mini_menu.append item
+      item.show
+      names = ACCOUNTS.names.sort{|a,b|a.upcase<=>b.upcase}
+      names.each do |name|
+        account = ACCOUNTS.get name
+        pwd, user = account.password, account.username
+        item = Such::MenuItem.new([name], 'activate'){copy2clipboard(pwd, user)}
+        mini_menu.append item
+        item.show
+      end
+    end
+    mini.signal_connect('hide') do
+      sep = false
+      mini_menu.each do |item|
+        sep = true if item.class == Gtk::SeparatorMenuItem
+        item.destroy if sep
+      end
+    end
   end
 
   def copy2clipboard(pwd, user)
