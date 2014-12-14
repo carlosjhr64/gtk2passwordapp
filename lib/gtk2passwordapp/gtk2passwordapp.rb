@@ -40,10 +40,12 @@ class Dialog < Such::Dialog
 
   def runs
     show_all
-    response = run
-    response = yield(response)
+    value = false
+    if run == Gtk::ResponseType::OK
+      value = true
+    end
     destroy
-    return response
+    return value
   end
 end
 
@@ -56,9 +58,16 @@ class BackupDialog < Gtk::FileChooserDialog
       set_filename CONFIG[:BackupFile]
       set_current_name File.basename CONFIG[:BackupFile]
     end
+  end
+
+  def runs
     show_all
-    yield(filename) if run == Gtk::ResponseType::ACCEPT
+    value = nil
+    if run == Gtk::ResponseType::ACCEPT
+     value = filename
+    end
     destroy
+    return value
   end
 end
 
@@ -144,8 +153,20 @@ class Gtk2PasswordApp
   end
 
   def backup
-    BackupDialog.new(@program.window) do |filename|
-      FileUtils.cp CONFIG[:PwdFile], filename
+    if filename = BackupDialog.new(@program.window).runs
+      begin
+        FileUtils.cp CONFIG[:PwdFile], filename
+      rescue
+        $!.puts
+        md = Such::MessageDialog.new([
+          parent: @program.window,
+          flags: :modal,
+          type: :error,
+          buttons_type: :close,
+          message: $!.message,
+        ])
+        md.run; md.destroy
+      end
     end
   end
 
@@ -322,7 +343,7 @@ class Gtk2PasswordApp
       when action.b_Button # Delete
         dialog = Dialog.new [parent: @program.window], :delete_dialog!
         Such::Label.new dialog.child, [CONFIG[:Delete?]]
-        if dialog.runs{|response| (response==Gtk::ResponseType::OK)}
+        if dialog.runs
           ACCOUNTS.delete @account.name
           ACCOUNTS.save
           @account = nil
