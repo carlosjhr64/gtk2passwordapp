@@ -279,7 +279,7 @@ class Gtk2PasswordApp
     end
 
     cb = sb = nil
-    password = @account.password
+    password = @account ? @account.password : ''
     truncate = Proc.new do |p|
       password = p
       if cb.active?
