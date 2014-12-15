@@ -72,6 +72,7 @@ class BackupDialog < Gtk::FileChooserDialog
 end
 
 class Gtk2PasswordApp
+  CURRENT, PREVIOUS  = [], []
 
   def initialize(program)
     @program = program
@@ -86,6 +87,10 @@ class Gtk2PasswordApp
     mini = program.mini
     mini.signal_connect('show'){generate_menu_items}
     mini.signal_connect('hide'){destroy_menu_items}
+
+    @good  = Gdk::RGBA.parse(CONFIG[:GoodColor])
+    @bad   = Gdk::RGBA.parse(CONFIG[:BadColor])
+    @black = Gdk::RGBA.parse('#000')
   end
 
   def copy2clipboard(pwd, user)
@@ -97,23 +102,46 @@ class Gtk2PasswordApp
     end
   end
 
+  def color_code(selected)
+    CURRENT.unshift selected; CURRENT.uniq!
+    if CURRENT.length > CONFIG[:Recent]
+      popped = CURRENT.pop
+      popped.override_color :normal, @black
+    end
+    selected.override_color :normal, @good
+  end
+
   def generate_menu_items
     mini_menu = @program.mini_menu
-    item = Gtk::SeparatorMenuItem.new
-    mini_menu.append item
-    item.show
+    sep = Gtk::SeparatorMenuItem.new
+    mini_menu.append sep
+    sep.show
+    now   = Time.now.to_i
     names = ACCOUNTS.names.sort{|a,b|a.upcase<=>b.upcase}
     names.each do |name|
       account = ACCOUNTS.get name
-      pwd, user = account.password, account.username
-      item = Such::MenuItem.new([name], 'activate'){copy2clipboard(pwd, user)}
-      mini_menu.append item
-      item.show
+      pwd, user, updated = account.password, account.username, account.updated
+      too_old = ((now - updated) > CONFIG[:TooOld])
+      selected = Such::MenuItem.new([name], 'activate') do
+        color_code selected unless too_old
+        copy2clipboard pwd, user
+      end
+      if too_old
+        selected.override_color :normal, @bad
+      elsif PREVIOUS.include? name
+        CURRENT[PREVIOUS.index(name)] = selected
+        selected.override_color :normal, @good
+      end
+      mini_menu.append selected
+      selected.show
     end
+    CURRENT.delete_if{|a|a.nil?}
+    PREVIOUS.clear
   end
 
   def destroy_menu_items
     sep = false
+    CURRENT.each{|item| PREVIOUS.push item.label}; CURRENT.clear
     @program.mini_menu.each do |item|
       sep = true if item.class == Gtk::SeparatorMenuItem
       item.destroy if sep
@@ -327,7 +355,6 @@ class Gtk2PasswordApp
       pwd.text = truncate.call password  if cb.active?
     end
 
-    good, bad = Gdk::RGBA.parse(CONFIG[:GoodColor]),  Gdk::RGBA.parse(CONFIG[:BadColor])
     action = Such::AbcButtons.new(@page, :hbox!) do |button, *_|
       case button
       when action.a_Button # Cancel
@@ -353,18 +380,18 @@ class Gtk2PasswordApp
             name.prompted_Label.text = @account.name
             name.prompted_Entry.hide
             name.prompted_Label.show
-            name.prompt_Label.override_color :normal, good
+            name.prompt_Label.override_color :normal, @good
             mode = :edit
           end
           errors = 0
           entries.each do |field, entry|
             begin
               @account.method("#{field}=".to_sym).call(entry.prompted_Entry.text.strip)
-              entry.prompt_Label.override_color :normal, good
+              entry.prompt_Label.override_color :normal, @good
             rescue RuntimeError
               $!.puts
               errors += 1
-              entry.prompt_Label.override_color :normal, bad
+              entry.prompt_Label.override_color :normal, @bad
             end
           end
           if errors == 0
@@ -373,7 +400,7 @@ class Gtk2PasswordApp
           end
         rescue RuntimeError
           $!.puts
-          name.prompt_Label.override_color :normal, bad
+          name.prompt_Label.override_color :normal, @bad
         end
       end
     end

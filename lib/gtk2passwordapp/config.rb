@@ -14,6 +14,12 @@ module Gtk2passwordapp
     SharedSecretFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/key.ssss",
     BackupFile: "#{ENV['HOME']}/Dropbox/gtk2passwordapp.bak",
 
+    # Mark Recent Selections
+    Recent: 7,
+
+    # Mark Old Passwords
+    TooOld: 60*60*24*365, # Year
+
     # Timeout for qr-code read.
     QrcTimeOut: 3,
 
