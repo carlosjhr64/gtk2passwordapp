@@ -1,41 +1,6 @@
-TODO
+DONE 4.0.0
 
 	Gtk3App
-          backups
-	Top 3 passwords
-	Auto-quit?
+        backups
+	Top 7 passwords
 
-DONE 2.5.0
-
-	otpr integration
-
-DONE 2.2.0
-
-	Now the user can configure how the password is entered.
-
-DONE 2.1.4
-
-	Missed a commit... 2.1.2.  Added those changes.
-
-DONE 2.1.3
-
-	Ruby 1.9.3 uses psych instead of syck.  Handle the upgrade automatically.
-
-DONE 2.1.1
-
-	real-rand broke under Ruby-1.9.2... replaced it with a open-uri call to Random.org.
-
-DONE 2.1.0
-
-	clear clipboard after a few seconds of being set
-
-DONE
-
-	Get rid of passphrase file.
-	The "saved" box is screwy? Just on my configuration.?
-	Have a command line option
-	want generator1.randnum(5, 0, 2657849) # 2657850 % <75,10,58,26,94> = <0..0>
-	Updated, Saved dialog need not be scrolled.
-	This app DOES NEED TO KILL the duplicate instance, and IT'S DAEMON.
-	Give the option to reverse PRIMARY/CLIPBOARD functions
-	Need a hildon mode for icon menu
