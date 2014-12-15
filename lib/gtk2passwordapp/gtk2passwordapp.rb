@@ -91,6 +91,8 @@ class Gtk2PasswordApp
     @good  = Gdk::RGBA.parse(CONFIG[:GoodColor])
     @bad   = Gdk::RGBA.parse(CONFIG[:BadColor])
     @black = Gdk::RGBA.parse('#000')
+
+    @names = @combo = nil
   end
 
   def copy2clipboard(pwd, user)
@@ -124,6 +126,7 @@ class Gtk2PasswordApp
       too_old = ((now - updated) > CONFIG[:TooOld])
       selected = Such::MenuItem.new([name], 'activate') do
         color_code selected unless too_old
+        @combo.set_active @names.index name if @combo
         copy2clipboard pwd, user
       end
       if too_old
@@ -226,12 +229,13 @@ class Gtk2PasswordApp
   def create_combo
     combo = Such::PromptedCombo.new @page, :hbox!
     combo.prompt_Label.text = CONFIG[:Name]
-    names = ACCOUNTS.names.sort{|a,b|a.upcase<=>b.upcase}
-    names.each do |name|
-      combo.prompted_ComboBoxText.append_text name
+    @combo= combo.prompted_ComboBoxText
+    @names = ACCOUNTS.names.sort{|a,b|a.upcase<=>b.upcase}
+    @names.each do |name|
+      @combo.append_text name
     end
-    combo.prompted_ComboBoxText.set_active names.index(@account.name)
-    return combo
+    @combo.set_active @names.index(@account.name)
+    @combo.signal_connect('destroy'){@names = @combo = nil}
   end
 
   def create_entries
@@ -255,14 +259,14 @@ class Gtk2PasswordApp
     @account ||= ACCOUNTS.get ACCOUNTS.names.sample
 
     Such::Label.new @page, :view_label!
-    combo = create_combo
+    create_combo
     entries = create_entries
 
     label, hidden = entries[:password].prompted_Label, CONFIG[:HiddenPwd]
     label.text = hidden
 
-    combo.prompted_ComboBoxText.signal_connect('changed') do
-      @account = ACCOUNTS.get combo.prompted_ComboBoxText.active_text
+    @combo.signal_connect('changed') do
+      @account = ACCOUNTS.get @combo.active_text
       CONFIG[:FIELDS].each do |field, _|
         entries[field].prompted_Label.text = @account.method(field).call
       end
