@@ -72,6 +72,7 @@ class BackupDialog < Gtk::FileChooserDialog
 end
 
 class Gtk2PasswordApp
+
   def initialize(program)
     @program = program
 
@@ -85,6 +86,15 @@ class Gtk2PasswordApp
     mini = program.mini
     mini.signal_connect('show'){generate_menu_items}
     mini.signal_connect('hide'){destroy_menu_items}
+  end
+
+  def copy2clipboard(pwd, user)
+    PRIMARY.text = pwd
+    CLIPBOARD.text = user
+    GLib::Timeout.add_seconds(CONFIG[:ClipboardTimeout]) do
+      PRIMARY.request_text{  |_, text| PRIMARY.text   = ''  if text == pwd  }
+      CLIPBOARD.request_text{|_, text| CLIPBOARD.text = ''  if text == user }
+    end
   end
 
   def generate_menu_items
@@ -110,64 +120,8 @@ class Gtk2PasswordApp
     end
   end
 
-  def copy2clipboard(pwd, user)
-    PRIMARY.text = pwd
-    CLIPBOARD.text = user
-    GLib::Timeout.add_seconds(CONFIG[:ClipboardTimeout]) do
-      PRIMARY.request_text{  |_, text| PRIMARY.text   = ''  if text == pwd  }
-      CLIPBOARD.request_text{|_, text| CLIPBOARD.text = ''  if text == user }
-    end
-  end
-
   def clear_page
     @page.each{|w|w.destroy}
-  end
-
-  # mode can be :init, :load, or :reset
-  def password_page(mode)
-    clear_page
-
-    password_label  = Such::Label.new @page, :password_label!
-    password_entry1 = Such::Entry.new @page, :password_entry!
-    password_entry2 = (mode==:load)? nil : Such::Entry.new(@page, :password_entry!)
-
-    action = Such::AbButtons.new(@page, :hbox!) do |button, *_|
-      case button
-      when action.a_Button # Cancel
-        (mode==:reset)? view_page : @program.quit!
-      when action.b_Button # Go
-        if process_pwd_entries password_entry1, password_entry2
-          unless mode==:reset
-            @program.app_menu.append_menu_item(:reset!){password_page(:reset)}
-            @program.app_menu.append_menu_item(:backup!){backup}
-          end
-          view_page
-        else
-          password_label.text = CONFIG[:ReTry]
-        end
-      end
-    end
-    action.labels :Cancel, :Go
-
-    @page.show_all
-  end
-
-  def backup
-    if filename = BackupDialog.new(@program.window).runs
-      begin
-        FileUtils.cp CONFIG[:PwdFile], filename
-      rescue
-        $!.puts
-        md = Such::MessageDialog.new([
-          parent: @program.window,
-          flags: :modal,
-          type: :error,
-          buttons_type: :close,
-          message: $!.message,
-        ])
-        md.run; md.destroy
-      end
-    end
   end
 
   def process_pwd_entries(entry1, entry2)
@@ -197,6 +151,48 @@ class Gtk2PasswordApp
       entry2.text = '' if entry2
       false
     end
+  end
+
+  def backup
+    if filename = BackupDialog.new(@program.window).runs
+      begin
+        FileUtils.cp CONFIG[:PwdFile], filename
+      rescue
+        $!.puts
+        md = Such::MessageDialog.new :BACKUP_ERROR
+        md.set_secondary_text $!.message
+        md.run; md.destroy
+      end
+    end
+  end
+
+  # mode can be :init, :load, or :reset
+  def password_page(mode)
+    clear_page
+
+    password_label  = Such::Label.new @page, :password_label!
+    password_entry1 = Such::Entry.new @page, :password_entry!
+    password_entry2 = (mode==:load)? nil : Such::Entry.new(@page, :password_entry!)
+
+    action = Such::AbButtons.new(@page, :hbox!) do |button, *_|
+      case button
+      when action.a_Button # Cancel
+        (mode==:reset)? view_page : @program.quit!
+      when action.b_Button # Go
+        if process_pwd_entries password_entry1, password_entry2
+          unless mode==:reset
+            @program.app_menu.append_menu_item(:reset!){password_page(:reset)}
+            @program.app_menu.append_menu_item(:backup!){backup}
+          end
+          view_page
+        else
+          password_label.text = CONFIG[:ReTry]
+        end
+      end
+    end
+    action.labels :Cancel, :Go
+
+    @page.show_all
   end
 
   def create_combo

@@ -5,9 +5,6 @@ module Gtk2passwordapp
   h0 = Rafini::Empty::HASH
   a0 = Rafini::Empty::ARRAY
 
-  bak = File.join ENV['HOME'], 'Dropbox'
-  bak = (File.exist? bak)? File.join(bak, 'gtk2passwordapp.bak') : nil
-
   CONFIG = {
 
     # Password Data File
@@ -15,7 +12,7 @@ module Gtk2passwordapp
     # Shared Secret File
     # Consider using a file found in a removable flashdrive.
     SharedSecretFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/key.ssss",
-    BackupFile: bak,
+    BackupFile: "#{ENV['HOME']}/Dropbox/gtk2passwordapp.bak",
 
     # Timeout for qr-code read.
     QrcTimeOut: 3,
@@ -51,6 +48,7 @@ module Gtk2passwordapp
     SwitchClipboard: false,
     ClipboardTimeout: 15,
 
+    # Fields' Labels
     Name: 'Account:',
     FIELDS: [
       [:url,      'Url:'     ],
@@ -122,6 +120,13 @@ module Gtk2passwordapp
 
       BACKUP: ['Backup Passwords Data'], # used directly by BackupDialog
       backup!: [:BACKUP, 'activate'],
+
+      BACKUP_ERROR: [
+        flags: :modal,
+        type: :error,
+        buttons_type: :close,
+        message: 'Backup Error',
+      ],
     }
   }
 end
