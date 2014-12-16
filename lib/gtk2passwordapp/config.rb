@@ -1,4 +1,10 @@
 module Gtk2passwordapp
+  help = <<-HELP
+Usage:
+  gtk3app gtk2passwordapp [--help] [--version]
+  gtk2passwordapp [--no-gui [--dump [--verbose]] account]
+  HELP
+
   APPDIR = File.dirname File.dirname __dir__
 
   s0 = Rafini::Empty::STRING
@@ -6,6 +12,7 @@ module Gtk2passwordapp
   a0 = Rafini::Empty::ARRAY
 
   CONFIG = {
+    Help: help,
 
     # Password Data File
     PwdFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/passwords.dat",
