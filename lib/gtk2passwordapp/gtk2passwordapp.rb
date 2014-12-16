@@ -2,8 +2,6 @@ module Gtk2passwordapp
   using Rafini::Exception
   using Rafini::Array
 
-  ACCOUNTS = Accounts.new(CONFIG[:PwdFile])
-
   if CONFIG[:SwitchClipboard]
     CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
     PRIMARY   = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
@@ -80,7 +78,8 @@ class Gtk2PasswordApp
 
     window = program.window
     @page = Such::Box.new window, :vbox!
-    password_page((ACCOUNTS.exist?)? :load : :init)
+    @accounts = Accounts.new(CONFIG[:PwdFile])
+    password_page((@accounts.exist?)? :load : :init)
     window.show
 
     # Because accounts are editable from the main window,
@@ -120,9 +119,9 @@ class Gtk2PasswordApp
     mini_menu.append sep
     sep.show
     now   = Time.now.to_i
-    names = ACCOUNTS.names.sort{|a,b|a.upcase<=>b.upcase}
+    names = @accounts.names.sort{|a,b|a.upcase<=>b.upcase}
     names.each do |name|
-      account = ACCOUNTS.get name
+      account = @accounts.get name
       pwd, user, updated = account.password, account.username, account.updated
       too_old = ((now - updated) > CONFIG[:TooOld])
       selected = Such::MenuItem.new([name], 'activate') do
@@ -165,7 +164,7 @@ class Gtk2PasswordApp
       raise 'No password given.' if pwd1 == ''
       if entry2
         raise 'Passwords did not match' unless entry2.text.strip==pwd1
-        ACCOUNTS.save pwd1
+        @accounts.save pwd1
       else
         if pwd1=~/^\d+\-[\dabcdef]+$/ # then we probably have a shared secret...
           if File.exist? CONFIG[:SharedSecretFile] # and looks like we really do...
@@ -174,7 +173,7 @@ class Gtk2PasswordApp
             pwd1 = pwd unless pwd=='' # but maybe not.
           end
         end
-        ACCOUNTS.load pwd1
+        @accounts.load pwd1
       end
       true
     rescue StandardError
@@ -231,7 +230,7 @@ class Gtk2PasswordApp
     combo = Such::PromptedCombo.new @page, :hbox!
     combo.prompt_Label.text = CONFIG[:Name]
     @combo= combo.prompted_ComboBoxText
-    @names = ACCOUNTS.names.sort{|a,b|a.upcase<=>b.upcase}
+    @names = @accounts.names.sort{|a,b|a.upcase<=>b.upcase}
     @names.each do |name|
       @combo.append_text name
     end
@@ -251,7 +250,7 @@ class Gtk2PasswordApp
   end
 
   def any_name
-    names = ACCOUNTS.names
+    names = @accounts.names
     if name = ARGV.shift
       unless names.include? name
         like = Regexp.new name
@@ -263,11 +262,11 @@ class Gtk2PasswordApp
   end
 
   def view_page
-    if ACCOUNTS.data.length == 0
+    if @accounts.data.length == 0
       edit_page(:add)
       return
     end
-    @account ||= ACCOUNTS.get any_name
+    @account ||= @accounts.get any_name
 
     clear_page
 
@@ -279,7 +278,7 @@ class Gtk2PasswordApp
     label.text = hidden
 
     @combo.signal_connect('changed') do
-      @account = ACCOUNTS.get @combo.active_text
+      @account = @accounts.get @combo.active_text
       CONFIG[:FIELDS].each do |field, _|
         entries[field].prompted_Label.text = @account.method(field).call
       end
@@ -376,16 +375,16 @@ class Gtk2PasswordApp
       case button
       when action.a_Button # Cancel
         if edited
-          ACCOUNTS.load
-          @account = previous ? ACCOUNTS.get(previous) : nil
+          @accounts.load
+          @account = previous ? @accounts.get(previous) : nil
         end
         view_page
       when action.b_Button # Delete
         dialog = Dialog.new [parent: @program.window], :delete_dialog!
         Such::Label.new dialog.child, [CONFIG[:Delete?]]
         if dialog.runs
-          ACCOUNTS.delete @account.name
-          ACCOUNTS.save
+          @accounts.delete @account.name
+          @accounts.save
           @account = nil
           view_page
         end
@@ -393,7 +392,7 @@ class Gtk2PasswordApp
         edited = true
         begin
           if mode==:add
-            @account = ACCOUNTS.add(name.prompted_Entry.text.strip)
+            @account = @accounts.add(name.prompted_Entry.text.strip)
             name.prompted_Label.text = @account.name
             name.prompted_Entry.hide
             name.prompted_Label.show
@@ -412,7 +411,7 @@ class Gtk2PasswordApp
             end
           end
           if errors == 0
-            ACCOUNTS.save
+            @accounts.save
             view_page
           end
         rescue RuntimeError
