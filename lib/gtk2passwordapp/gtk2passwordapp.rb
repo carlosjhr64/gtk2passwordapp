@@ -14,10 +14,6 @@ module Gtk2passwordapp
   H2Q = BaseConvert::FromTo.new(:hex, :qgraph)
   H2W = BaseConvert::FromTo.new(:hex, :word)
 
-  _ = CONFIG[:CustomDigits]
-  H2C = BaseConvert::FromTo.new(:hex, _.length)
-  H2C.to_digits = _
-
   def self.options=(opts)
     @@options=opts
   end
@@ -93,6 +89,10 @@ class Gtk2PasswordApp
     @black = Gdk::RGBA.parse('#000')
 
     @names = @combo = nil
+
+    _ = CONFIG[:CustomDigits]
+    @h2c = BaseConvert::FromTo.new(:hex, _.length)
+    @h2c.to_digits = _
   end
 
   def copy2clipboard(pwd, user)
@@ -359,7 +359,7 @@ class Gtk2PasswordApp
       when generators.b_Button
         pwd.text = truncate.call H2W.convert hex
       when generators.c_Button
-        pwd.text = truncate.call H2C.convert hex
+        pwd.text = truncate.call @h2c.convert hex
       end
     end
     generators.labels :Random, :AlphaNumeric, :Custom
