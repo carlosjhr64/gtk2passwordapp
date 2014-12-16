@@ -2,14 +2,6 @@ module Gtk2passwordapp
   using Rafini::Exception
   using Rafini::Array
 
-  if CONFIG[:SwitchClipboard]
-    CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
-    PRIMARY   = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
-  else
-    PRIMARY   = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
-    CLIPBOARD = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
-  end
-
   RND = SuperRandom.new
   H2Q = BaseConvert::FromTo.new(:hex, :qgraph)
   H2W = BaseConvert::FromTo.new(:hex, :word)
@@ -71,6 +63,23 @@ class Gtk2PasswordApp
 
   def initialize(program)
     @program = program
+    @names = @combo = nil
+
+    @good  = Gdk::RGBA.parse(CONFIG[:GoodColor])
+    @bad   = Gdk::RGBA.parse(CONFIG[:BadColor])
+    @black = Gdk::RGBA.parse('#000')
+
+    _ = CONFIG[:CustomDigits]
+    @h2c = BaseConvert::FromTo.new(:hex, _.length)
+    @h2c.to_digits = _
+
+    if CONFIG[:SwitchClipboard]
+      @clipboard = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
+      @primary   = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
+    else
+      @primary   = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
+      @clipboard = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
+    end
 
     window = program.window
     @page = Such::Box.new window, :vbox!
@@ -83,24 +92,14 @@ class Gtk2PasswordApp
     mini = program.mini
     mini.signal_connect('show'){generate_menu_items}
     mini.signal_connect('hide'){destroy_menu_items}
-
-    @good  = Gdk::RGBA.parse(CONFIG[:GoodColor])
-    @bad   = Gdk::RGBA.parse(CONFIG[:BadColor])
-    @black = Gdk::RGBA.parse('#000')
-
-    @names = @combo = nil
-
-    _ = CONFIG[:CustomDigits]
-    @h2c = BaseConvert::FromTo.new(:hex, _.length)
-    @h2c.to_digits = _
   end
 
   def copy2clipboard(pwd, user)
-    PRIMARY.text = pwd
-    CLIPBOARD.text = user
+    @primary.text = pwd
+    @clipboard.text = user
     GLib::Timeout.add_seconds(CONFIG[:ClipboardTimeout]) do
-      PRIMARY.request_text{  |_, text| PRIMARY.text   = ''  if text == pwd  }
-      CLIPBOARD.request_text{|_, text| CLIPBOARD.text = ''  if text == user }
+      @primary.request_text{  |_, text| @primary.text   = ''  if text == pwd  }
+      @clipboard.request_text{|_, text| @clipboard.text = ''  if text == user }
     end
   end
 
