@@ -1,5 +1,6 @@
 module Gtk2passwordapp
   using Rafini::Exception
+  using Rafini::Array
 
   ACCOUNTS = Accounts.new(CONFIG[:PwdFile])
 
@@ -249,14 +250,26 @@ class Gtk2PasswordApp
     return entries
   end
 
+  def any_name
+    names = ACCOUNTS.names
+    if name = ARGV.shift
+      unless names.include? name
+        like = Regexp.new name
+        name = names.which{|nm|nm=~like}
+      end
+    end
+    name = names.sample unless name
+    return name
+  end
+
   def view_page
     if ACCOUNTS.data.length == 0
       edit_page(:add)
       return
     end
+    @account ||= ACCOUNTS.get any_name
 
     clear_page
-    @account ||= ACCOUNTS.get ACCOUNTS.names.sample
 
     Such::Label.new @page, :view_label!
     create_combo

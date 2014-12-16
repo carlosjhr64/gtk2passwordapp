@@ -2,7 +2,7 @@ module Gtk2passwordapp
   help = <<-HELP
 Usage:
   gtk3app gtk2passwordapp [--help] [--version]
-  gtk2passwordapp [--no-gui [--dump [--verbose]] account]
+  gtk2passwordapp [--no-gui [--dump [--verbose]]] [account]
   HELP
 
   APPDIR = File.dirname File.dirname __dir__
