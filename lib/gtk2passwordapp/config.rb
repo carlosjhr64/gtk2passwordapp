@@ -51,7 +51,6 @@ Usage:
     # Labels
     ReTry:   'Try Again!',
     HiddenPwd: ' * * * ',
-    Delete?: 'Delete?',
 
     # Colors
     GoodColor: '#00F',
@@ -101,6 +100,7 @@ Usage:
       edit_label!:     [['Edit Account'], :label],
       add_label!:      [['Add Account'],  :label],
       view_label!:     [['View Account'], :label],
+      delete_label!:   [['Delete?'],      :label],
 
       pwd_size_check!: [:check_button],
       pwd_size_spin!: [
@@ -112,11 +112,8 @@ Usage:
         },
       ],
 
-      delete_dialog: {
-        set_window_position: :center_on_parent,
-        set_keep_above: true,
-      },
-      delete_dialog!: [a0, :delete_dialog],
+      reset!:  [['Reset Master Password'], 'activate'],
+      backup!: [['Backup Passwords'],      'activate'],
 
       about_dialog: {
         set_program_name: 'Password Manager',
@@ -129,17 +126,19 @@ Usage:
       HelpFile: 'https://github.com/carlosjhr64/gtk2passwordapp',
       Logo: "#{XDG['DATA']}/gtk3app/gtk2passwordapp/logo.png",
 
-      reset!: [['Reset Master Password'], 'activate'],
+      backup_dialog: {
+        set_title: 'Backup Passwords Title',
+      },
 
-      BACKUP: ['Backup Passwords Data'], # used directly by BackupDialog
-      backup!: [:BACKUP, 'activate'],
+      error_dialog: {
+        set_text: 'Backup Error',
+      },
 
-      BACKUP_ERROR: [
-        flags: :modal,
-        type: :error,
-        buttons_type: :close,
-        message: 'Backup Error',
-      ],
+      delete_dialog: {
+        set_window_position: :center_on_parent,
+        set_keep_above: true,
+      },
+
     }
   }
 end

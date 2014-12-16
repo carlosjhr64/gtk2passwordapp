@@ -18,11 +18,12 @@ module Gtk2passwordapp
     Gtk2PasswordApp.new(program)
   end
 
-class Dialog < Such::Dialog
-  def initialize(*par)
-    super
+class DeleteDialog < Such::Dialog
+  def initialize(parent)
+    super([parent: parent], :delete_dialog)
     add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
     add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
+    Such::Label.new child, :delete_label!
   end
 
   def runs
@@ -36,9 +37,10 @@ class Dialog < Such::Dialog
   end
 end
 
-class BackupDialog < Gtk::FileChooserDialog
+class BackupDialog < Such::FileChooserDialog
   def initialize(parent)
-    super title: CONFIG[:thing][:BACKUP].first, parent: parent, action: Gtk::FileChooser::Action::SAVE
+    super([parent: parent], :backup_dialog)
+    set_action Gtk::FileChooser::Action::SAVE
     add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
     add_button(Gtk::Stock::OPEN, Gtk::ResponseType::ACCEPT)
     if CONFIG[:BackupFile]
@@ -55,6 +57,18 @@ class BackupDialog < Gtk::FileChooserDialog
     end
     destroy
     return value
+  end
+end
+
+class ErrorDialog < Such::MessageDialog
+  def initialize(parent)
+    super([parent: parent, flags: :modal, type: :error, buttons_type: :close], :error_dialog)
+  end
+
+  def runs
+    set_secondary_text $!.message
+    run
+    destroy
   end
 end
 
@@ -189,9 +203,7 @@ class Gtk2PasswordApp
         FileUtils.cp CONFIG[:PwdFile], filename
       rescue
         $!.puts
-        md = Such::MessageDialog.new :BACKUP_ERROR
-        md.set_secondary_text $!.message
-        md.run; md.destroy
+        ErrorDialog.new(@program.window).runs
       end
     end
   end
@@ -379,8 +391,7 @@ class Gtk2PasswordApp
         end
         view_page
       when action.b_Button # Delete
-        dialog = Dialog.new [parent: @program.window], :delete_dialog!
-        Such::Label.new dialog.child, [CONFIG[:Delete?]]
+        dialog = DeleteDialog.new(@program.window)
         if dialog.runs
           @accounts.delete @account.name
           @accounts.save
