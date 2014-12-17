@@ -1,6 +1,3 @@
-# Standard Libraries
-require 'open3'
-
 # This is a Gtk3App.
 require 'gtk3app'
 

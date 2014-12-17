@@ -100,7 +100,6 @@ Usage:
       edit_label!:     [['Edit Account'], :label],
       add_label!:      [['Add Account'],  :label],
       view_label!:     [['View Account'], :label],
-      delete_label!:   [['Delete?'],      :label],
 
       pwd_size_check!: [:check_button],
       pwd_size_spin!: [
@@ -127,17 +126,19 @@ Usage:
       Logo: "#{XDG['DATA']}/gtk3app/gtk2passwordapp/logo.png",
 
       backup_dialog: {
-        set_title: 'Backup Passwords Title',
+        set_title: 'Backup Passwords',
+        set_window_position: :center_on_parent,
       },
 
       error_dialog: {
         set_text: 'Backup Error',
+        set_window_position: :center_on_parent,
       },
 
       delete_dialog: {
         set_window_position: :center_on_parent,
-        set_keep_above: true,
       },
+      delete_label!:   [['Delete?'],      :label],
 
     }
   }
