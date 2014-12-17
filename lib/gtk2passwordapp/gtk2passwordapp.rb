@@ -73,7 +73,6 @@ class ErrorDialog < Such::MessageDialog
 end
 
 class Gtk2PasswordApp
-  CURRENT, PREVIOUS  = [], []
 
   def initialize(program)
     @program = program
@@ -94,6 +93,8 @@ class Gtk2PasswordApp
       @primary   = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)
       @clipboard = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
     end
+
+    @current, @previous  = [], []
 
     window = program.window
     @page = Such::Box.new window, :vbox!
@@ -118,9 +119,9 @@ class Gtk2PasswordApp
   end
 
   def color_code(selected)
-    CURRENT.unshift selected; CURRENT.uniq!
-    if CURRENT.length > CONFIG[:Recent]
-      popped = CURRENT.pop
+    @current.unshift selected; @current.uniq!
+    if @current.length > CONFIG[:Recent]
+      popped = @current.pop
       popped.override_color :normal, @black
     end
     selected.override_color :normal, @good
@@ -144,20 +145,20 @@ class Gtk2PasswordApp
       end
       if too_old
         selected.override_color :normal, @bad
-      elsif PREVIOUS.include? name
-        CURRENT[PREVIOUS.index(name)] = selected
+      elsif @previous.include? name
+        @current[@previous.index(name)] = selected
         selected.override_color :normal, @good
       end
       mini_menu.append selected
       selected.show
     end
-    CURRENT.delete_if{|a|a.nil?}
-    PREVIOUS.clear
+    @current.delete_if{|a|a.nil?}
+    @previous.clear
   end
 
   def destroy_menu_items
     sep = false
-    CURRENT.each{|item| PREVIOUS.push item.label}; CURRENT.clear
+    @current.each{|item| @previous.push item.label}; @current.clear
     @program.mini_menu.each do |item|
       sep = true if item.class == Gtk::SeparatorMenuItem
       item.destroy if sep
