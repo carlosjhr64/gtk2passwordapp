@@ -256,6 +256,7 @@ class Gtk2PasswordApp
       entry = Such::PromptedLabel.new @page, :hbox!
       entry.prompt_Label.text = text
       entry.prompted_Label.text = @account.method(field).call
+      entry.prompted_Label.set_alignment(*CONFIG[:FIELD_ALIGNMENT])
       entries[field] = entry
     end
     return entries
@@ -342,6 +343,7 @@ class Gtk2PasswordApp
       name.prompt_Label.text = CONFIG[:Name]
       name.prompted_Label.text = @account.name
     end
+    name.prompted_Label.set_alignment(*CONFIG[:FIELD_ALIGNMENT])
 
     entries = {}
     CONFIG[:FIELDS].each do |field, text|

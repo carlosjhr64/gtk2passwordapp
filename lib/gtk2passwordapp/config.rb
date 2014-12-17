@@ -68,22 +68,34 @@ Usage:
       [:username, 'Username:'],
       [:password, 'Password:'],
     ],
+    FIELD_ALIGNMENT: [0.0, 0.5],
 
     # Such::Thing::PARAMETERS
     thing: {
 
-      box:    h0,
-      label:  h0,
-      entry:  h0,
-      button: h0,
+      box:          h0,
+      label:        h0,
       check_button: h0,
-      spin_button: h0,
+      entry:        h0,
+
+      button:       {
+        set_width_request: 75,
+      },
 
       vbox!: [[:vertical],   :box, s0],
       hbox!: [[:horizontal], :box, s0],
 
-      prompt!:   [a0, h0],
-      prompted!: [a0, h0],
+      prompt: {
+        set_width_request: 75,
+        set_alignment: [1.0, 0.5],
+        set_padding: [4,4],
+      },
+      prompt!:   [a0, :prompt],
+
+      prompted: {
+        set_width_request: 325,
+      },
+      prompted!: [a0, :prompted],
 
       a!: [a0, :button],
       b!: [a0, :button],
