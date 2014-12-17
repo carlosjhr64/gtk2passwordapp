@@ -42,3 +42,10 @@ https://sites.google.com/site/gtk2applib/home/gtk2applib-applications/gtk2passwo
 For a command line access to your passwords, use --no-gui option.
 
 carlosjhr64@gmail.com
+
+== HELP:
+
+   Usage:
+     gtk3app gtk2passwordapp [--help] [--version]
+     gtk2passwordapp [--no-gui [--dump [--verbose]]] [account]
+
