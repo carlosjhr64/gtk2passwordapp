@@ -38,7 +38,6 @@ lib/gtk2passwordapp/config.rb
 lib/gtk2passwordapp/gtk2passwordapp.rb
 lib/gtk2passwordapp/such_parts.rb
 lib/gtk2passwordapp/version.rb
-project.gemspec
   )
   s.executables << 'gtk2passwordapp'
   s.add_runtime_dependency 'rafini', '~> 0.5', '>= 0.5.0'

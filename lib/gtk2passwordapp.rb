@@ -16,4 +16,4 @@ require_relative 'gtk2passwordapp/accounts.rb'
 require_relative 'gtk2passwordapp/gtk2passwordapp.rb'
 
 # Requires:
-# `ruby`
+#`ruby`
