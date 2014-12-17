@@ -1,9 +1,13 @@
-Ruby-Gnome Password Manager
+= Such
 
-A Ruby-Gnome password manager.
+== DESCRIPTION:
+
+Ruby-Gnome Password Manager.
+
 Uses Blowfish to encrypt the datafile.
 Features random password generator and clipboard use.
 
+== MORE:
 
 To add an account, enter the new account name in the "Account:" entry/combo box.
 For the account, write the associated url, a note about the account, and the username in the appropriate entry boxes.
