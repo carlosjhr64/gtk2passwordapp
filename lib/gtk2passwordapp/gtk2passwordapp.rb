@@ -78,9 +78,9 @@ class Gtk2PasswordApp
     @program = program
     @names = @combo = nil
 
-    @good  = Gdk::RGBA.parse(CONFIG[:GoodColor])
-    @bad   = Gdk::RGBA.parse(CONFIG[:BadColor])
-    @black = Gdk::RGBA.parse('#000')
+    @blue  = Gdk::RGBA.parse(CONFIG[:Blue])
+    @red   = Gdk::RGBA.parse(CONFIG[:Red])
+    @black = Gdk::RGBA.parse(CONFIG[:Black])
 
     _ = CONFIG[:CustomDigits]
     @h2c = BaseConvert::FromTo.new(:hex, _.length)
@@ -124,7 +124,7 @@ class Gtk2PasswordApp
       popped = @current.pop
       popped.override_color :normal, @black
     end
-    selected.override_color :normal, @good
+    selected.override_color :normal, @blue
   end
 
   def generate_menu_items
@@ -144,10 +144,10 @@ class Gtk2PasswordApp
         copy2clipboard pwd, user
       end
       if too_old
-        selected.override_color :normal, @bad
+        selected.override_color :normal, @red
       elsif @previous.include? name
         @current[@previous.index(name)] = selected
-        selected.override_color :normal, @good
+        selected.override_color :normal, @blue
       end
       mini_menu.append selected
       selected.show
@@ -409,18 +409,18 @@ class Gtk2PasswordApp
             name.prompted_Label.text = @account.name
             name.prompted_Entry.hide
             name.prompted_Label.show
-            name.prompt_Label.override_color :normal, @good
+            name.prompt_Label.override_color :normal, @blue
             mode = :edit
           end
           errors = 0
           entries.each do |field, entry|
             begin
               @account.method("#{field}=".to_sym).call(entry.prompted_Entry.text.strip)
-              entry.prompt_Label.override_color :normal, @good
+              entry.prompt_Label.override_color :normal, @blue
             rescue RuntimeError
               $!.puts
               errors += 1
-              entry.prompt_Label.override_color :normal, @bad
+              entry.prompt_Label.override_color :normal, @red
             end
           end
           if errors == 0
@@ -429,7 +429,7 @@ class Gtk2PasswordApp
           end
         rescue RuntimeError
           $!.puts
-          name.prompt_Label.override_color :normal, @bad
+          name.prompt_Label.override_color :normal, @red
         end
       end
     end

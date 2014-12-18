@@ -53,8 +53,9 @@ Usage:
     HiddenPwd: ' * * * ',
 
     # Colors
-    GoodColor: '#00F',
-    BadColor:  '#F00',
+    Blue:  '#00F',
+    Red:   '#F00',
+    Black: '#000',
 
     # Clipboard
     SwitchClipboard: false,
