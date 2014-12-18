@@ -26,8 +26,8 @@ See:
 
 You may want to reset the following values:
 
-   Help:: Add any notes to yourself you want.
-   SharedSecretFile:: You may prefer it to be a file in some removable media.
-   TooOld:: I have this set for a year (in seconds).
-   CustomDigits:: I have this as CAPS.
-   Custom:: I have this as CAPS.
+[Help] Add any notes to yourself you want.
+[SharedSecretFile] You may prefer it to be a file in some removable media.
+[TooOld] I have this set for a year (in seconds).
+[CustomDigits] I have this as CAPS.
+[Custom] I have this as CAPS.
