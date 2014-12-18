@@ -104,9 +104,9 @@ class Gtk2PasswordApp
 
     # Because accounts are editable from the main window,
     # minime's menu needs to be updated each time.
-    mini = program.mini
-    mini.signal_connect('show'){generate_menu_items}
-    mini.signal_connect('hide'){destroy_menu_items}
+    destroy_menu_items
+    program.mini.signal_connect('show'){generate_menu_items}
+    program.mini.signal_connect('hide'){destroy_menu_items}
   end
 
   def copy2clipboard(pwd, user)
@@ -129,9 +129,6 @@ class Gtk2PasswordApp
 
   def generate_menu_items
     mini_menu = @program.mini_menu
-    sep = Gtk::SeparatorMenuItem.new
-    mini_menu.append sep
-    sep.show
     now   = Time.now.to_i
     names = @accounts.names.sort{|a,b|a.upcase<=>b.upcase}
     names.each do |name|
@@ -157,12 +154,8 @@ class Gtk2PasswordApp
   end
 
   def destroy_menu_items
-    sep = false
     @current.each{|item| @previous.push item.label}; @current.clear
-    @program.mini_menu.each do |item|
-      sep = true if item.class == Gtk::SeparatorMenuItem
-      item.destroy if sep
-    end
+    @program.mini_menu.each{|item|item.destroy}
   end
 
   def clear_page
