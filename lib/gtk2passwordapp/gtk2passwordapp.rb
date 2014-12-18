@@ -356,6 +356,10 @@ class Gtk2PasswordApp
     end
 
     pwd = entries[:password].prompted_Entry
+    pwd.set_visibility false
+    pwd.signal_connect('focus-in-event' ){pwd.set_visibility true}
+    pwd.signal_connect('focus-out-event'){pwd.set_visibility false}
+
     generators = Such::AbcButtons.new(@page, :hbox!) do |button,*e,s|
       hex = RND.hexadecimal
       case button
