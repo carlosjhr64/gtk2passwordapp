@@ -235,9 +235,7 @@ class Gtk2PasswordApp
     combo.prompt_Label.text = CONFIG[:Name]
     @combo= combo.prompted_ComboBoxText
     @names = @accounts.names.sort{|a,b|a.upcase<=>b.upcase}
-    @names.each do |name|
-      @combo.append_text name
-    end
+    @names.each{|name|@combo.append_text name}
     @combo.set_active @names.index(@account.name)
     @combo.signal_connect('destroy'){@names = @combo = nil}
   end
@@ -345,6 +343,7 @@ class Gtk2PasswordApp
       entries[field] = entry
     end
 
+    # cb and sb will be a CheckButton and SpinButton respectively.
     cb = sb = nil
     password = @account ? @account.password : ''
     truncate = Proc.new do |p|
@@ -404,18 +403,18 @@ class Gtk2PasswordApp
             name.prompt_Label.override_color :normal, @blue
             mode = :edit
           end
-          errors = 0
+          errors = false
           entries.each do |field, entry|
             begin
               @account.method("#{field}=".to_sym).call(entry.prompted_Entry.text.strip)
               entry.prompt_Label.override_color :normal, @blue
             rescue RuntimeError
               $!.puts
-              errors += 1
+              errors ||= true
               entry.prompt_Label.override_color :normal, @red
             end
           end
-          if errors == 0
+          unless errors
             @accounts.save
             view_page
           end
