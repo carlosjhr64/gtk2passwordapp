@@ -1,4 +1,4 @@
-= Such
+= Gtk2passwordapp
 
 {<img src="https://badge.fury.io/rb/gtk2passwordapp.svg" alt="Gem Version" />}[http://badge.fury.io/rb/gtk2passwordapp]
 
