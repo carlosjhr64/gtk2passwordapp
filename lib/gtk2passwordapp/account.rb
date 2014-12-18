@@ -72,15 +72,5 @@ class Account
     @data[URL]=url
   end
 
-  ### HELPERS ###
-
-  def verify?(password)
-    @data[PASSWORD]==password
-  end
-
-  def expired?
-    Time.now.to_i - @data[UPDATED] > CONFIG[:Expired]
-  end
-
 end
 end
