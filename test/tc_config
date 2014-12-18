@@ -1,0 +1,48 @@
+#! ruby
+require 'test/unit'
+require 'xdg'
+require 'rafini'
+require 'gtk2passwordapp/version'
+require 'gtk2passwordapp/config'
+
+class TestConfig < Test::Unit::TestCase
+  def test_config
+    assert_nothing_raised() do
+
+      dir = File.dirname __dir__
+      assert_equal dir, Gtk2passwordapp::APPDIR
+
+      assert_equal Hash, Gtk2passwordapp::CONFIG.class
+      help = Gtk2passwordapp::CONFIG[:Help].strip
+      assert_not_nil help
+      assert_equal String, help.class
+      assert_match /Usage:/, help
+      hlp = `ruby -I ./lib ./bin/gtk2passwordapp -h`.strip
+      assert_equal help, hlp
+
+      thing = Gtk2passwordapp::CONFIG[:thing]
+      assert_not_nil thing
+      assert_equal Hash, thing.class
+
+      # Checking convention use
+      thing.each do |k,v|
+        case k
+        when /^[A-Z_]+$/
+          assert_equal Array, v.class
+        when /^[a-z_]+$/
+          assert_equal Hash, v.class
+        when /^[a-zA-Z]+$/
+          assert((v.class==String) || (v.class==Fixnum))
+        when /^\w+\!$/
+          assert_equal Array, v.class
+        else
+          raise "Got bad thing key :#{k}."
+        end
+      end
+
+      # sanity checks
+      assert_equal Gtk2passwordapp::VERSION, thing[:about_dialog][:set_version]
+      assert_equal 'Password Manager', thing[:about_dialog][:set_program_name]
+    end
+  end
+end
