@@ -15,14 +15,14 @@ class TestAccounts < Test::Unit::TestCase
       assert_equal 1, accounts.names.length
       accounts.add('Chocolate')
       assert_equal 2, accounts.names.length
-      assert accounts.include?('Chocolate')
-      refute accounts.include?('Strawberry')
+      assert accounts.data.has_key?('Chocolate')
+      refute accounts.data.has_key?('Strawberry')
       accounts.add('Strawberry')
       assert_equal 3, accounts.names.length
-      assert accounts.include?('Strawberry')
+      assert accounts.data.has_key?('Strawberry')
       assert_raises(RuntimeError){ accounts.add('Strawberry') }
       accounts.delete('Vanilla')
-      refute accounts.include?('Vanilla')
+      refute accounts.data.has_key?('Vanilla')
       assert_raises(RuntimeError){ accounts.get('Vanilla') }
       assert_equal dumpfile, accounts.dumpfile
 
@@ -36,9 +36,9 @@ class TestAccounts < Test::Unit::TestCase
       accounts2 = Gtk2passwordapp::Accounts.new(dumpfile, 'ThePassphrase')
       accounts2.load
       assert_equal 3, accounts2.names.length
-      assert accounts2.include?('Chocolate')
-      assert accounts2.include?('Strawberry')
-      assert accounts2.include?('Vanilla')
+      assert accounts2.data.has_key?('Chocolate')
+      assert accounts2.data.has_key?('Strawberry')
+      assert accounts2.data.has_key?('Vanilla')
       assert_equal ['Chocolate','Strawberry','Vanilla'], accounts2.names.sort
 
       assert_equal accounts.data, accounts2.data

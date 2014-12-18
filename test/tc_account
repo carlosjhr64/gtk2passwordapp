@@ -28,15 +28,6 @@ class TestAccount < Test::Unit::TestCase
       assert account.updated >= t0
       assert account.updated <= t1
 
-      assert account.verify? 'NewPassword'
-      refute account.verify? 'BadPassword'
-
-      # just a very simple sanity check
-      CONFIG[:Expired] = -1
-      assert account.expired?
-      CONFIG[:Expired] = 5
-      refute account.expired?
-
       account.note = 'New Note'
       assert_equal 'New Note', account.note
 
