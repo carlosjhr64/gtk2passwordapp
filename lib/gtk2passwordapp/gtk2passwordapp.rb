@@ -128,10 +128,8 @@ class Gtk2PasswordApp
   end
 
   def generate_menu_items
-    mini_menu = @program.mini_menu
     now   = Time.now.to_i
-    names = @accounts.names.sort{|a,b|a.upcase<=>b.upcase}
-    names.each do |name|
+    @accounts.names.sort{|a,b|a.upcase<=>b.upcase}.each do |name|
       account = @accounts.get name
       pwd, user, updated = account.password, account.username, account.updated
       too_old = ((now - updated) > CONFIG[:TooOld])
@@ -146,7 +144,7 @@ class Gtk2PasswordApp
         @current[@previous.index(name)] = selected
         selected.override_color :normal, @blue
       end
-      mini_menu.append selected
+      @program.mini_menu.append selected
       selected.show
     end
     @current.delete_if{|a|a.nil?}
@@ -154,7 +152,8 @@ class Gtk2PasswordApp
   end
 
   def destroy_menu_items
-    @current.each{|item| @previous.push item.label}; @current.clear
+    @current.each{|item| @previous.push item.label}
+    @current.clear
     @program.mini_menu.each{|item|item.destroy}
   end
 
