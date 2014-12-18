@@ -35,10 +35,6 @@ class Accounts
     @data.keys
   end
 
-  def include?(account)
-    return @data.has_key?(account)
-  end
-
   def delete(account)
     @data.delete(account)
   end
