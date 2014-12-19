@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.author   = 'carlosjhr64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2014-12-18'
+  s.date     = '2014-12-19'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
@@ -44,7 +44,7 @@ lib/gtk2passwordapp/version.rb
   s.add_runtime_dependency 'xdg', '~> 2.2', '>= 2.2.3'
   s.add_runtime_dependency 'user_space', '~> 2.0', '>= 2.0.1'
   s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 0.0', '>= 0.0.0'
-  s.add_runtime_dependency 'gtk3app', '~> 1.0', '>= 1.0.0'
+  s.add_runtime_dependency 'gtk3app', '~> 1.2', '>= 1.2.0'
   s.add_runtime_dependency 'super_random', '~> 0.0', '>= 0.0.2'
   s.add_runtime_dependency 'base_convert', '~> 2.0', '>= 2.0.0'
   s.add_runtime_dependency 'helpema', '~> 0.0', '>= 0.0.1'
