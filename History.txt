@@ -1,0 +1,2 @@
+=== 4.0.0 / 2014-12-20 14:14:20 -0800
+dfa7ca9461c65e3d74cb1e307c3d73c6  pkg/gtk2passwordapp-4.0.0.gem
