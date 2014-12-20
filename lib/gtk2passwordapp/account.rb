@@ -62,7 +62,7 @@ class Account
   end
 
   def username=(username)
-    raise 'Password must be all graph.' unless password=~/^[[:graph:]]+$/
+    raise 'Username must be all graph.' unless username=~/^[[:graph:]]+$/
     @data[USERNAME]=username
   end
 
