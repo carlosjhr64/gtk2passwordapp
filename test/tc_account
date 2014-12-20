@@ -46,14 +46,10 @@ class TestAccount < Test::Unit::TestCase
       assert_equal 0, account.updated
 
       assert_raises(RuntimeError){account.username = 'Bad Username'}
-      assert_raises(RuntimeError){account.username = 'Bad#Username!'}
       account.username = 'GoodUsername'
       assert_equal 'GoodUsername', account.username
 
       assert_raises(RuntimeError){account.password = 'Bad Password'}
-      assert_raises(RuntimeError){account.password = 'Bad"Password'}
-      assert_raises(RuntimeError){account.password = 'Bad`Password'}
-      assert_raises(RuntimeError){account.password = "Bad'Password"}
 
       account.password = 'Good#Password!'
       assert_equal 'Good#Password!', account.password
