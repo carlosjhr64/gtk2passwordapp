@@ -403,6 +403,7 @@ class Gtk2PasswordApp
         view_page
       when action.b_Button # Delete
         dialog = DeleteDialog.new(@program.window)
+        dialog.set_title @account.name
         if dialog.runs
           @accounts.delete @account.name
           @accounts.save
