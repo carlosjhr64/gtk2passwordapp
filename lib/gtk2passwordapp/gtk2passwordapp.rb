@@ -227,6 +227,19 @@ class Gtk2PasswordApp
     end
     action.labels :Cancel, :Go
 
+    password_entry1.signal_connect('activate') do
+      if password_entry2
+        password_entry2.grab_focus
+      else
+        action.b_Button.clicked
+      end
+    end
+    if  password_entry2
+      password_entry2.signal_connect('activate') do
+        action.b_Button.clicked
+      end
+    end
+
     @page.show_all
   end
 
