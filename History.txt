@@ -2,3 +2,5 @@
 dfa7ca9461c65e3d74cb1e307c3d73c6  pkg/gtk2passwordapp-4.0.0.gem
 === 4.0.1 / 2014-12-21 10:42:39 -0800
 6b9fab18b4fda8fdfed2c43db977299e  pkg/gtk2passwordapp-4.0.1.gem
+=== 4.1.0 / 2014-12-28 18:49:18 -0800
+543cd10d9ffff8efb70b64632f8a87ff  pkg/gtk2passwordapp-4.1.0.gem
