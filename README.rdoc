@@ -15,9 +15,6 @@ Features random password generator and clipboard use.
 
 == HELP:
 
-   Usage:
-     gtk3app gtk2passwordapp [--help] [--version]
-     gtk2passwordapp [--no-gui [--dump [--verbose]]] [account]
 
 == MORE:
 
