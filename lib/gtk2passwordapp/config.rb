@@ -1,4 +1,6 @@
 module Gtk2passwordapp
+  using Rafini::String
+
   help = <<-HELP
 Usage:
   gtk3app gtk2passwordapp [--help] [--version]
@@ -129,7 +131,7 @@ Usage:
 
       about_dialog: {
         set_program_name: 'Password Manager',
-        set_version: VERSION,
+        set_version: VERSION.semantic(0..1),
         set_copyright: '(c) 2014 CarlosJHR64',
         set_comments: 'A Gtk3App Password Manager',
         set_website: 'https://github.com/carlosjhr64/gtk2passwordapp',
