@@ -11,6 +11,9 @@ Features random password generator and clipboard use.
 
 == INSTALL:
 
+Note that you need gtk3app installed:
+
+   sudo gem install gtk3app
    sudo gem install gtk2passwordapp
 
 == HELP:

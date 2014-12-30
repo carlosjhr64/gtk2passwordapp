@@ -18,22 +18,10 @@ module Gtk2passwordapp
     Gtk2PasswordApp.new(program)
   end
 
-class DeleteDialog < Such::Dialog
+class DeleteDialog < Gtk3App::Dialog::CancelOk
   def initialize(parent)
     super([parent: parent], :delete_dialog)
-    add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
-    add_button(Gtk::Stock::OK, Gtk::ResponseType::OK)
-    Such::Label.new child, :delete_label!
-  end
-
-  def runs
-    show_all
-    value = false
-    if run == Gtk::ResponseType::OK
-      value = true
-    end
-    destroy
-    return value
+    label :delete_label!
   end
 end
 
