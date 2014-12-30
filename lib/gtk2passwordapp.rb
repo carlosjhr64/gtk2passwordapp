@@ -1,5 +1,4 @@
 # This is a Gtk3App.
-require 'gtk3app'
 
 # Helper Gems.
 require 'yaml_zlib_blowfish'
@@ -17,3 +16,4 @@ require_relative 'gtk2passwordapp/gtk2passwordapp.rb'
 
 # Requires:
 #`ruby`
+#`gtk3app`
