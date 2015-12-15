@@ -29,7 +29,7 @@ I think the GUI is very intuitive.
 Anything I thought could be customized I made configurable.
 See:
 
-  ~/.config/gtk3app/gtk2passwordapp/config.yml
+  ~/.config/gtk3app/gtk2passwordapp/config-?.?.yml
 
 You may want to change the following settings:
 

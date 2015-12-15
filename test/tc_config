@@ -6,6 +6,7 @@ require 'gtk2passwordapp/version'
 require 'gtk2passwordapp/config'
 
 class TestConfig < Test::Unit::TestCase
+  using Rafini::String
   def test_config
     assert_nothing_raised() do
 
@@ -16,7 +17,7 @@ class TestConfig < Test::Unit::TestCase
       help = Gtk2passwordapp::CONFIG[:Help].strip
       assert_not_nil help
       assert_equal String, help.class
-      assert_match /Usage:/, help
+      assert_match(/Usage:/, help)
       hlp = `ruby -I ./lib ./bin/gtk2passwordapp -h`.strip
       assert_equal help, hlp
 
@@ -41,7 +42,7 @@ class TestConfig < Test::Unit::TestCase
       end
 
       # sanity checks
-      assert_equal Gtk2passwordapp::VERSION, thing[:about_dialog][:set_version]
+      assert_equal Gtk2passwordapp::VERSION.semantic(0..1), thing[:about_dialog][:set_version]
       assert_equal 'Password Manager', thing[:about_dialog][:set_program_name]
     end
   end
