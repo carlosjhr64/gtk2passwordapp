@@ -1,7 +1,9 @@
 TODO
 
-On the next version that changes config,
-will need to make a copy-over-file in config directory.
+DONE 4.2.0
+
+  On the next version that changes config,
+  will need to make a copy-over-file in config directory.
 
 DONE 4.0.0
 
