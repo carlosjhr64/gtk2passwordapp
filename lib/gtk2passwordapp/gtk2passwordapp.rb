@@ -101,8 +101,12 @@ class Gtk2PasswordApp
     @primary.text = pwd
     @clipboard.text = user
     GLib::Timeout.add_seconds(CONFIG[:ClipboardTimeout]) do
-      @primary.request_text{  |_, text| @primary.text   = ''  if text == pwd  }
-      @clipboard.request_text{|_, text| @clipboard.text = ''  if text == user }
+      if @primary.wait_for_text == pwd
+        @primary.text = ''
+        if @clipboard.wait_for_text == user
+          @clipboard.text = ''
+        end
+      end
       false
     end
   end

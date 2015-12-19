@@ -83,6 +83,7 @@ Usage:
 
       button:       {
         set_width_request: 75,
+        into: [:pack_start, expand:true, fill:true, padding:0],
       },
 
       vbox!: [[:vertical],   :box, s0],
@@ -118,8 +119,8 @@ Usage:
 
       pwd_size_check!: [:check_button],
       pwd_size_spin!: [
+        [4,64,1],
         {
-          set_range: [4,64],
           set_increments: [1,10],
           set_digits: 0,
           set_value: 14,
