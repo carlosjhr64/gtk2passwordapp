@@ -11,7 +11,7 @@ Features random password generator and clipboard use.
 
 == INSTALL:
 
-Note that you need gtk3app installed:
+Note that you'll need gtk3app installed:
 
    sudo gem install gtk3app
    sudo gem install gtk2passwordapp
@@ -24,7 +24,6 @@ Note that you need gtk3app installed:
 
 == MORE:
 
-I think the GUI is very intuitive.
 "Mouse Left Click" on window to get the application menu.
 Anything I thought could be customized I made configurable.
 See:
@@ -39,6 +38,11 @@ You may want to change the following settings:
 [TooOld]  I have this set for a year (in seconds).
 [CustomDigits]  I have this as "ABC...XYZ" for CAPS.
 [Custom]  I have this as CAPS.  Describes CustomDigits.
+
+If you're updating from a previous version,
+you may need to edit the new config file to match you're previously edited changes.
+Also, double check the requirements to ensure the versions of ruby and gems being used
+(gtk3app, etc...) are compatible.
 
 == LICENSE:
 
