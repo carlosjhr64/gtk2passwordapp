@@ -23,9 +23,9 @@ Ruby-Gnome Password Manager.
 SUMMARY
 
   s.extra_rdoc_files = ['README.rdoc']
-  s.rdoc_options     = ["--main", "README.rdoc"]
+  s.rdoc_options     = ['--main', 'README.rdoc']
 
-  s.require_paths = ["lib"]
+  s.require_paths = ['lib']
   s.files = %w(
 README.rdoc
 bin/gtk2passwordapp
@@ -40,17 +40,14 @@ lib/gtk2passwordapp/such_parts.rb
 lib/gtk2passwordapp/version.rb
   )
   s.executables << 'gtk2passwordapp'
-
-  s.add_runtime_dependency 'xdg', '= 2.2.3'
-
   s.add_runtime_dependency 'rafini', '~> 1.2', '>= 1.2.0'
-  s.add_runtime_dependency 'user_space', '~> 2.0', '>= 2.0.1'
+  s.add_runtime_dependency 'xdg', '~> 2.2', '>= 2.2.3'
+  s.add_runtime_dependency 'user_space', '~> 2.1', '>= 2.1.0'
   s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 0.0', '>= 0.0.1'
   s.add_runtime_dependency 'super_random', '~> 0.1', '>= 0.1.0'
   s.add_runtime_dependency 'base_convert', '~> 2.0', '>= 2.0.0'
   s.add_runtime_dependency 'helpema', '~> 0.1', '>= 0.1.0'
-  s.requirements << 'ruby 2.3.3p222 (2016-11-21 revision 56859) [x86_64-linux]'
-  s.requirements << 'gtk3app: 1.5.0'
-  s.requirements << 'system: linux/bash'
+  s.requirements << 'ruby: ruby 2.3.3p222 (2016-11-21 revision 56859) [x86_64-linux]'
+  s.requirements << 'gtk3app: 1.5.2'
 
 end
