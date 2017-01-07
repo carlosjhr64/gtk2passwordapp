@@ -1,14 +1,14 @@
 Gem::Specification.new do |s|
 
   s.name     = 'gtk2passwordapp'
-  s.version  = '4.2.0'
+  s.version  = '4.2.1'
 
   s.homepage = 'https://github.com/carlosjhr64/gtk2passwordapp'
 
   s.author   = 'carlosjhr64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2015-12-19'
+  s.date     = '2017-01-07'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
@@ -46,10 +46,10 @@ lib/gtk2passwordapp/version.rb
   s.add_runtime_dependency 'rafini', '~> 1.2', '>= 1.2.0'
   s.add_runtime_dependency 'user_space', '~> 2.0', '>= 2.0.1'
   s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 0.0', '>= 0.0.1'
-  s.add_runtime_dependency 'super_random', '~> 0.0', '>= 0.0.3'
+  s.add_runtime_dependency 'super_random', '~> 0.1', '>= 0.1.0'
   s.add_runtime_dependency 'base_convert', '~> 2.0', '>= 2.0.0'
   s.add_runtime_dependency 'helpema', '~> 0.1', '>= 0.1.0'
-  s.requirements << 'ruby: ruby 2.2.3p173 (2015-08-18 revision 51636) [x86_64-linux]'
+  s.requirements << 'ruby 2.3.3p222 (2016-11-21 revision 56859) [x86_64-linux]'
   s.requirements << 'gtk3app: 1.5.0'
   s.requirements << 'system: linux/bash'
 
