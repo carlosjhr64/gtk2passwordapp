@@ -125,17 +125,17 @@ class Gtk2PasswordApp
     @accounts.names.sort{|a,b|a.upcase<=>b.upcase}.each do |name|
       account = @accounts.get name
       pwd, user, updated = account.password, account.username, account.updated
-      too_old = ((now - updated) > CONFIG[:TooOld])
       selected = Such::MenuItem.new([name], 'activate') do
-        color_code selected unless too_old
+        color_code selected
         @combo.set_active @names.index name if @combo
         copy2clipboard pwd, user
+        @program.mini_menu.reorder_child(selected,0)
       end
-      if too_old
-        selected.override_color :normal, @red
-      elsif @previous.include? name
+      if @previous.include? name
         @current[@previous.index(name)] = selected
         selected.override_color :normal, @blue
+      elsif ((now - updated) > CONFIG[:TooOld])
+        selected.override_color :normal, @red
       end
       @program.mini_menu.append selected
       selected.show
@@ -158,7 +158,11 @@ class Gtk2PasswordApp
     begin
       pwd1 = entry1.text.strip
       if pwd1 == '' and pwd = Helpema::ZBar.qrcode(CONFIG[:QrcTimeOut])
-        pwd1 = pwd
+        if pwd.include?("\n")
+          pwd1 = BaseConvert::FromTo.new(:hex, :qgraph).convert Digest::SHA256.hexdigest pwd
+        else
+          pwd1 = pwd
+        end
       end
       raise 'No password given.' if pwd1 == ''
       if entry2

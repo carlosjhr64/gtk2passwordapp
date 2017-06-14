@@ -44,11 +44,16 @@ you may need to edit the new config file to match you're previously edited chang
 Also, double check the requirements to ensure the versions of ruby and gems being used
 (gtk3app, etc...) are compatible.
 
+If you use a qrcode to enter your password, and
+the result is a multiline string,
+gtk2passwordapp will assume you want the qgraph-sha256-digest.
+See gtk2passwordapp/gtk2passwordapp.rb's #process_pwd_entries to see how that's done.
+
 == LICENSE:
 
 (The MIT License)
 
-Copyright (c) 2014
+Copyright (c) 2017
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

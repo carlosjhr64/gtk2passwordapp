@@ -1,5 +1,9 @@
 TODO
 
+DONE 4.3.0
+
+  Default timeout for zcam need to be much higher.
+
 DONE 4.2.0
 
   On the next version that changes config,

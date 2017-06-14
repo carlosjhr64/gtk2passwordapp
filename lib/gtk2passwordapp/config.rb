@@ -30,7 +30,7 @@ Usage:
     TooOld: 60*60*24*365, # Year
 
     # Timeout for qr-code read.
-    QrcTimeOut: 3,
+    QrcTimeOut: 9,
 
     # Password Generators
     Random:       'Random',
