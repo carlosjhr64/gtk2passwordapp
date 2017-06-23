@@ -163,6 +163,9 @@ class Gtk2PasswordApp
         else
           pwd1 = pwd
         end
+        if salt = CONFIG[:Salt]
+          pwd1 = BaseConvert::FromTo.new(:hex, :qgraph).convert Digest::SHA256.hexdigest(pwd1+salt)
+        end
       end
       raise 'No password given.' if pwd1 == ''
       if entry2
