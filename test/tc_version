@@ -5,7 +5,7 @@ require 'gtk2passwordapp/version'
 class TestVersion < Test::Unit::TestCase
   def test_vesion()
     assert_nothing_raised() do
-      version = '4.3.0'
+      version = '4.4.0'
       assert_equal(version, Gtk2passwordapp::VERSION)
       assert_equal(version, File.read('./data/VERSION').strip)
       vrsn = `ruby -I ./lib ./bin/gtk2passwordapp -v`.strip
