@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+
+if ARGV.include?('--no-gui')
+  require 'pp'
+  require 'yaml_zlib_blowfish'
+  print "Enter password: "
+  PWD = $stdin.gets.strip
+  system('clear; clear')
+  F1 = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat')
+  unless File.exist?(F1)
+    F0 = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/passwords.dat')
+    if File.exist?(F0)
+      class YZB < YamlZlibBlowfish
+        def initialize(passphrase)
+          key = Digest::SHA256.digest(passphrase)[0..15]
+          @cipher = OpenSSL::Cipher::BF.new(:CBC)
+          @cipher.key = key
+        end
+      end
+      begin
+        YamlZlibBlowfish.new(PWD).dump(F1, YZB.new(PWD).load(F0))
+        $stderr.puts "Auto-exported:"
+        $stderr.puts "\t#{F0} =>"
+        $stderr.puts "\t#{F1}"
+      rescue OpenSSL::Cipher::CipherError
+        $stderr.puts "Bad password"
+        exit 65
+      end
+    else
+      $stderr.puts "No passwords file found."
+      $stderr.puts "Expected: #{F1}"
+    end
+  end
+  begin
+    LIST = YamlZlibBlowfish.new(PWD).load(F1)
+  rescue OpenSSL::Cipher::CipherError
+    $stderr.puts "Bad password"
+    exit 65
+  end
+  if pattern = (ARGV.last[0]=='-')? nil : Regexp.new(ARGV.last, Regexp::IGNORECASE)
+    pp LIST.select{|k,v|pattern.match(k)}
+  else
+    pp LIST
+  end
+end
+
