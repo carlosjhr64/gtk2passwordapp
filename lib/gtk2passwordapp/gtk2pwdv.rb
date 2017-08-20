@@ -125,7 +125,7 @@ class Gtk2PwdV
     @accounts.names.sort{|a,b|a.upcase<=>b.upcase}.each do |name|
       account = @accounts.get name
       pwd, user, updated = account.password, account.username, account.updated
-      selected = Such::MenuItem.new([name], 'activate') do
+      selected = Such::MenuItem.new([label: name], 'activate') do
         color_code selected
         @combo.set_active @names.index name if @combo
         copy2clipboard pwd, user

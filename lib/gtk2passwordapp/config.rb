@@ -120,8 +120,8 @@ module Gtk2PasswordApp
         },
       ],
 
-      reset!:  [['Reset Master Password'], 'activate'],
-      backup!: [['Backup Passwords'],      'activate'],
+      reset!:  [[label: 'Reset Master Password'], 'activate'],
+      backup!: [[label: 'Backup Passwords'],      'activate'],
 
       about_dialog: {
         set_program_name: 'Password Manager',
