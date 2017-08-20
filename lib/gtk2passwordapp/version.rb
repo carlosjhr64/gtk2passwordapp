@@ -1,3 +1,3 @@
-module Gtk2passwordapp
-  VERSION = '4.4.0'
+module Gtk2PasswordApp
+  VERSION = '5.0.0'
 end

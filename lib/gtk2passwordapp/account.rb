@@ -1,4 +1,4 @@
-module Gtk2passwordapp
+module Gtk2PasswordApp
 class Account
 
   PASSWORD    = 0

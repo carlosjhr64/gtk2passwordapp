@@ -1,11 +1,5 @@
-module Gtk2passwordapp
+module Gtk2PasswordApp
   using Rafini::String
-
-  help = <<-HELP
-Usage:
-  gtk3app gtk2passwordapp [--help] [--version]
-  gtk2passwordapp [--no-gui [--dump [--verbose]]] [account]
-  HELP
 
   APPDIR = File.dirname File.dirname __dir__
 
@@ -14,14 +8,13 @@ Usage:
   a0 = Rafini::Empty::ARRAY
 
   CONFIG = {
-    Help: help,
 
     # Password Data File
-    PwdFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/passwords.dat",
+    PwdFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/gtk2pwdV.dat",
     # Shared Secret File
     # Consider using a file found in a removable flashdrive.
     SharedSecretFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/key.ssss",
-    BackupFile: "#{ENV['HOME']}/Dropbox/gtk2passwordapp.bak",
+    BackupFile: "#{ENV['HOME']}/Dropbox/gtk2pwdV.bak",
 
     # Mark Recent Selections
     Recent: 7,
@@ -30,7 +23,7 @@ Usage:
     TooOld: 60*60*24*365, # Year
 
     # Timeout for qr-code read.
-    QrcTimeOut: 9,
+    QrcTimeOut: 15,
 
     # Password Generators
     Random:       'Random',

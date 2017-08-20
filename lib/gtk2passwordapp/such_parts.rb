@@ -8,15 +8,15 @@ Such::Parts.make('PromptedCombo', 'Box', :prompt_Label, :prompted_ComboBoxText)
 module Such
   class AbButtons
     def labels(a, b)
-      self.a_Button.label = Gtk2passwordapp::CONFIG[a]
-      self.b_Button.label = Gtk2passwordapp::CONFIG[b]
+      self.a_Button.label = Gtk2PasswordApp::CONFIG[a]
+      self.b_Button.label = Gtk2PasswordApp::CONFIG[b]
     end
   end
   class AbcButtons
     def labels(a, b, c)
-      self.a_Button.label = Gtk2passwordapp::CONFIG[a]
-      self.b_Button.label = Gtk2passwordapp::CONFIG[b]
-      self.c_Button.label = Gtk2passwordapp::CONFIG[c]
+      self.a_Button.label = Gtk2PasswordApp::CONFIG[a]
+      self.b_Button.label = Gtk2PasswordApp::CONFIG[b]
+      self.c_Button.label = Gtk2PasswordApp::CONFIG[c]
     end
   end
 end

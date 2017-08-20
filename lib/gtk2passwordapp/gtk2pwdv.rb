@@ -1,4 +1,4 @@
-module Gtk2passwordapp
+module Gtk2PasswordApp
   using Rafini::Exception
   using Rafini::Array
 
@@ -15,7 +15,7 @@ module Gtk2passwordapp
   end
 
   def self.run(program)
-    Gtk2PasswordApp.new(program)
+    Gtk2PwdV.new(program)
   end
 
 class DeleteDialog < Gtk3App::Dialog::CancelOk
@@ -60,7 +60,7 @@ class ErrorDialog < Such::MessageDialog
   end
 end
 
-class Gtk2PasswordApp
+class Gtk2PwdV
 
   def initialize(program)
     @program = program

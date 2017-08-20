@@ -1,3 +1,4 @@
+tmp
 *.swp
 test/error.log
 gtk2passwordapp-*.*.*.gem

@@ -11,16 +11,21 @@ Features random password generator and clipboard use.
 
 == INSTALL:
 
-Note that you'll need gtk3app installed:
-
-   sudo gem install gtk3app
    sudo gem install gtk2passwordapp
 
 == HELP:
 
-   Usage:
-     gtk3app gtk2passwordapp [--help] [--version]
-     gtk2passwordapp [--no-gui [--dump [--verbose]]] [account]
+    Usage:
+      gtk2pwdV [:options]
+      gtk2pwdV --nogui [<pattern>]
+    Options:
+      -v --version 	Show version and exit
+      -h --help    	Show help and exit
+    Notes:
+    With the --nogui option,
+    one can give a pattern to filter by account names.
+    On the first run, --nogui can be used to export
+    version's 4 password data into version's 5 password data.
 
 == MORE:
 
@@ -32,7 +37,6 @@ See:
 
 You may want to change the following settings:
 
-[Help]  Add any notes to yourself you want.
 [SharedSecretFile]  You may prefer it to be a file in some removable media.
 [BackupFile]  Although the GUI allows you to specify the file, this gives a default.
 [TooOld]  I have this set for a year (in seconds).
@@ -41,8 +45,6 @@ You may want to change the following settings:
 
 If you're updating from a previous version,
 you may need to edit the new config file to match you're previously edited changes.
-Also, double check the requirements to ensure the versions of ruby and gems being used
-(gtk3app, etc...) are compatible.
 
 If you use a qrcode to enter your master password, and
 the result is a multiline string,

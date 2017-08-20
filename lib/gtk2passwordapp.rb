@@ -12,8 +12,7 @@ require_relative 'gtk2passwordapp/config.rb'
 require_relative 'gtk2passwordapp/such_parts.rb'
 require_relative 'gtk2passwordapp/account.rb'
 require_relative 'gtk2passwordapp/accounts.rb'
-require_relative 'gtk2passwordapp/gtk2passwordapp.rb'
+require_relative 'gtk2passwordapp/gtk2pwdv.rb'
 
 # Requires:
 #`ruby`
-#`gtk3app`

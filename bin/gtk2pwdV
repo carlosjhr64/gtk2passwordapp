@@ -1,5 +1,28 @@
 #!/usr/bin/env ruby
 
+if ['-v', '--version'].any?{|_|ARGV.include?(_)}
+  require 'gtk2passwordapp/version'
+  puts Gtk2PasswordApp::VERSION
+  exit 0
+end
+
+if ['-h', '--help'].any?{|_|ARGV.include?(_)}
+  puts <<-HELP
+Usage:
+  gtk2pwdV [:options]
+  gtk2pwdV --nogui [<pattern>]
+Options:
+  -v --version \tShow version and exit
+  -h --help    \tShow help and exit
+Notes:
+With the --nogui option,
+one can give a pattern to filter by account names.
+On the first run, --nogui can be used to export
+version's 4 password data into version's 5 password data.
+  HELP
+  exit 0
+end
+
 if ARGV.include?('--no-gui')
   require 'pp'
   require 'yaml_zlib_blowfish'
@@ -42,5 +65,10 @@ if ARGV.include?('--no-gui')
   else
     pp LIST
   end
+  exit 0
 end
 
+require 'gtk3app'
+require 'gtk2passwordapp'
+
+Gtk3App.main(Gtk2PasswordApp)
