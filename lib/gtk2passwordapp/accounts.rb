@@ -6,8 +6,7 @@ class Accounts
   end
 
   attr_reader :data
-  attr_accessor :dumpfile
-  def initialize(dumpfile=nil, password=nil)
+  def initialize(dumpfile, password=nil)
     reset(password) if password # sets @yzb
     @dumpfile = dumpfile
     @data = {}
