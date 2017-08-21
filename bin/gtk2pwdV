@@ -76,6 +76,5 @@ Expected file is:
   exit 64
 end
 
-require 'gtk3app'
 require 'gtk2passwordapp'
 Gtk3App.main(Gtk2PasswordApp)

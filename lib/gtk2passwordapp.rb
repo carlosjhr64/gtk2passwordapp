@@ -1,4 +1,5 @@
 # This is a Gtk3App.
+require 'gtk3app'
 
 # Helper Gems.
 require 'yaml_zlib_blowfish'
