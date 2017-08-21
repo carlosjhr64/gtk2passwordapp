@@ -28,7 +28,7 @@ end
 class BackupDialog < Such::FileChooserDialog
   def initialize(parent)
     super([parent: parent], :backup_dialog)
-    set_action Gtk::FileChooser::Action::SAVE
+    set_action Gtk::FileChooserAction::SAVE
     add_button(Gtk::Stock::CANCEL, Gtk::ResponseType::CANCEL)
     add_button(Gtk::Stock::OPEN, Gtk::ResponseType::ACCEPT)
     if CONFIG[:BackupFile]
@@ -151,7 +151,10 @@ class Gtk2PwdV
   end
 
   def clear_page
-    @page.each{|w|w.destroy}
+    @page.each do |w|
+      w.text = '' if w.class == Such::Entry # Else gives warning.... :-??
+      w.destroy
+    end
   end
 
   def process_pwd_entries(entry1, entry2)
