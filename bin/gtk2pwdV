@@ -1,13 +1,14 @@
 #!/usr/bin/env ruby
 
-if ['-v', '--version'].any?{|_|ARGV.include?(_)}
-  require 'gtk2passwordapp/version'
-  puts Gtk2PasswordApp::VERSION
-  exit 0
-end
+if a0 = ARGV.shift
+  if ['-v', '--version'].include?(a0)
+    require 'gtk2passwordapp/version'
+    puts Gtk2PasswordApp::VERSION
+    exit 0
+  end
 
-if ['-h', '--help'].any?{|_|ARGV.include?(_)}
-  puts <<-HELP
+  if ['-h', '--help'].include?(a0)
+    puts <<-HELP
 Usage:
   gtk2pwdV [:options]
   gtk2pwdV --nogui [<pattern>]
@@ -19,56 +20,62 @@ With the --nogui option,
 one can give a pattern to filter by account names.
 On the first run, --nogui can be used to export
 version's 4 password data into version's 5 password data.
-  HELP
-  exit 0
-end
+Expected file is:
+  ~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat
+    HELP
+    exit 0
+  end
 
-if ARGV.include?('--no-gui')
-  require 'pp'
-  require 'yaml_zlib_blowfish'
-  print "Enter password: "
-  PWD = $stdin.gets.strip
-  system('clear; clear')
-  F1 = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat')
-  unless File.exist?(F1)
-    F0 = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/passwords.dat')
-    if File.exist?(F0)
-      class YZB < YamlZlibBlowfish
-        def initialize(passphrase)
-          key = Digest::SHA256.digest(passphrase)[0..15]
-          @cipher = OpenSSL::Cipher::BF.new(:CBC)
-          @cipher.key = key
+  if a0 == '--nogui'
+    require 'pp'
+    require 'yaml_zlib_blowfish'
+    print "Enter password: "
+    PWD = $stdin.gets.strip
+    system('clear; clear')
+    F1 = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat')
+    unless File.exist?(F1)
+      F0 = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/passwords.dat')
+      if File.exist?(F0)
+        class YZB < YamlZlibBlowfish
+          def initialize(passphrase)
+            key = Digest::SHA256.digest(passphrase)[0..15]
+            @cipher = OpenSSL::Cipher::BF.new(:CBC)
+            @cipher.key = key
+          end
         end
+        begin
+          YamlZlibBlowfish.new(PWD).dump(F1, YZB.new(PWD).load(F0))
+          $stderr.puts "Auto-exported:"
+          $stderr.puts "\t#{F0} =>"
+          $stderr.puts "\t#{F1}"
+        rescue OpenSSL::Cipher::CipherError
+          $stderr.puts "Bad password"
+          exit 65
+        end
+      else
+        $stderr.puts "No passwords file found."
+        $stderr.puts "Expected: #{F1}"
       end
-      begin
-        YamlZlibBlowfish.new(PWD).dump(F1, YZB.new(PWD).load(F0))
-        $stderr.puts "Auto-exported:"
-        $stderr.puts "\t#{F0} =>"
-        $stderr.puts "\t#{F1}"
-      rescue OpenSSL::Cipher::CipherError
-        $stderr.puts "Bad password"
-        exit 65
-      end
-    else
-      $stderr.puts "No passwords file found."
-      $stderr.puts "Expected: #{F1}"
+    end
+    begin
+      LIST = YamlZlibBlowfish.new(PWD).load(F1)
+    rescue OpenSSL::Cipher::CipherError
+      $stderr.puts "Bad password"
+      exit 65
+    end
+    if pattern = ARGV.shift
+      pattern = Regexp.new(pattern, Regexp::IGNORECASE)
+    end
+    unless ARGV.shift
+      pp (pattern)? LIST.select{|k,v|pattern.match(k)} : LIST
+      exit 0
     end
   end
-  begin
-    LIST = YamlZlibBlowfish.new(PWD).load(F1)
-  rescue OpenSSL::Cipher::CipherError
-    $stderr.puts "Bad password"
-    exit 65
-  end
-  if pattern = (ARGV.last[0]=='-')? nil : Regexp.new(ARGV.last, Regexp::IGNORECASE)
-    pp LIST.select{|k,v|pattern.match(k)}
-  else
-    pp LIST
-  end
-  exit 0
+
+  $stderr.puts "Please match usage."
+  exit 64
 end
 
 require 'gtk3app'
 require 'gtk2passwordapp'
-
 Gtk3App.main(Gtk2PasswordApp)
