@@ -6,14 +6,6 @@ module Gtk2PasswordApp
   H2Q = BaseConvert::FromTo.new(:hex, :qgraph)
   H2W = BaseConvert::FromTo.new(:hex, :word)
 
-  def self.options=(opts)
-    @@options=opts
-  end
-
-  def self.options
-    @@options
-  end
-
   def self.run(program)
     Gtk2PwdV.new(program)
   end
