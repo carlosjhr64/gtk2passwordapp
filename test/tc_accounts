@@ -9,7 +9,7 @@ class TestAccounts < Test::Unit::TestCase
     assert_nothing_raised() do
       dumpfile = './test/dump.yzb'
 
-      accounts = Gtk2passwordapp::Accounts.new(dumpfile, 'ThePassphrase')
+      accounts = Gtk2PasswordApp::Accounts.new(dumpfile, 'ThePassphrase')
       assert_equal 0, accounts.names.length
       accounts.add('Vanilla')
       assert_equal 1, accounts.names.length
@@ -24,16 +24,15 @@ class TestAccounts < Test::Unit::TestCase
       accounts.delete('Vanilla')
       refute accounts.data.has_key?('Vanilla')
       assert_raises(RuntimeError){ accounts.get('Vanilla') }
-      assert_equal dumpfile, accounts.dumpfile
 
       chocolate = accounts.get('Chocolate')
-      assert_equal Gtk2passwordapp::Account, chocolate.class
+      assert_equal Gtk2PasswordApp::Account, chocolate.class
       vanilla = accounts.add('Vanilla')
-      assert_equal Gtk2passwordapp::Account, vanilla.class
+      assert_equal Gtk2PasswordApp::Account, vanilla.class
 
       accounts.save
 
-      accounts2 = Gtk2passwordapp::Accounts.new(dumpfile, 'ThePassphrase')
+      accounts2 = Gtk2PasswordApp::Accounts.new(dumpfile, 'ThePassphrase')
       accounts2.load
       assert_equal 3, accounts2.names.length
       assert accounts2.data.has_key?('Chocolate')
@@ -42,7 +41,6 @@ class TestAccounts < Test::Unit::TestCase
       assert_equal ['Chocolate','Strawberry','Vanilla'], accounts2.names.sort
 
       assert_equal accounts.data, accounts2.data
-      assert_equal accounts.dumpfile, accounts2.dumpfile
 
       File.unlink dumpfile
     end

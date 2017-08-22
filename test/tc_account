@@ -10,7 +10,7 @@ class TestAccount < Test::Unit::TestCase
 
   def test_accounts()
     assert_nothing_raised() do
-      account = Gtk2passwordapp::Account.new('Chocolate', DATA)
+      account = Gtk2PasswordApp::Account.new('Chocolate', DATA)
 
       assert_equal 'Chocolate', account.name
       assert_equal 'ThePassword', account.password
@@ -38,9 +38,9 @@ class TestAccount < Test::Unit::TestCase
       assert_equal 'ftp://file', account.url
 
       # Enforces String objects for keys
-      assert_raises(RuntimeError){ account = Gtk2passwordapp::Account.new(:Key, DATA)}
+      assert_raises(RuntimeError){ account = Gtk2PasswordApp::Account.new(:Key, DATA)}
 
-      account = Gtk2passwordapp::Account.new('NewAccount', DATA)
+      account = Gtk2PasswordApp::Account.new('NewAccount', DATA)
       assert_equal 'NewAccount', account.name
       assert_equal '', account.password
       assert_equal 0, account.updated

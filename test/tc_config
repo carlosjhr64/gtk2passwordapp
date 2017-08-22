@@ -11,17 +11,11 @@ class TestConfig < Test::Unit::TestCase
     assert_nothing_raised() do
 
       dir = File.dirname __dir__
-      assert_equal dir, Gtk2passwordapp::APPDIR
+      assert_equal dir, Gtk2PasswordApp::APPDIR
 
-      assert_equal Hash, Gtk2passwordapp::CONFIG.class
-      help = Gtk2passwordapp::CONFIG[:Help].strip
-      assert_not_nil help
-      assert_equal String, help.class
-      assert_match(/Usage:/, help)
-      hlp = `ruby -I ./lib ./bin/gtk2passwordapp -h`.strip
-      assert_equal help, hlp
+      assert_equal Hash, Gtk2PasswordApp::CONFIG.class
 
-      thing = Gtk2passwordapp::CONFIG[:thing]
+      thing = Gtk2PasswordApp::CONFIG[:thing]
       assert_not_nil thing
       assert_equal Hash, thing.class
 
@@ -42,7 +36,7 @@ class TestConfig < Test::Unit::TestCase
       end
 
       # sanity checks
-      assert_equal Gtk2passwordapp::VERSION.semantic(0..1), thing[:about_dialog][:set_version]
+      assert_equal Gtk2PasswordApp::VERSION.semantic(0..1), thing[:about_dialog][:set_version]
       assert_equal 'Password Manager', thing[:about_dialog][:set_program_name]
     end
   end
