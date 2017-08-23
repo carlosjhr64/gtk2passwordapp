@@ -158,9 +158,6 @@ class Gtk2PwdV
         else
           pwd1 = pwd
         end
-        if salt = CONFIG[:Salt]
-          pwd1 = BaseConvert::FromTo.new(:hex, :qgraph).convert Digest::SHA256.hexdigest(pwd1+salt)
-        end
       end
       raise 'No password given.' if pwd1 == ''
       if entry2
@@ -173,6 +170,9 @@ class Gtk2PwdV
             pwd = Helpema::SSSS.combine(pwd0, pwd1)
             pwd1 = pwd unless pwd=='' # but maybe not.
           end
+        end
+        if salt = CONFIG[:Salt]
+          pwd1 = BaseConvert::FromTo.new(:hex, :qgraph).convert Digest::SHA256.hexdigest(pwd1+salt)
         end
         @accounts.load pwd1
       end

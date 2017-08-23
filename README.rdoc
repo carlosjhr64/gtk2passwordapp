@@ -50,9 +50,13 @@ If you use a qrcode to enter your master password, and
 the result is a multiline string,
 gtk2passwordapp will assume you want the qgraph-sha256-digest.
 See gtk2passwordapp/gtk2pwdv.rb's #process_pwd_entries to see how that's done.
-Furthermore, If you add :Salt to the configuration file, it'll use the qgraph-sha256-digest
+
+If you add :Salt to the configuration file, it'll use the qgraph-sha256-digest
 of the entry salted as can be seen in #process_pwd_entries.
-Note that the initial set up of the materpassword still needs to be done explicitly.
+
+Note that the initial set up of the mater-password still needs to be done explicitly.
+That is, you'll need to enter the final resulting string when setting the master-password.
+Again, see Gtk2PasswordApp::Gtk2PwdV#process_pwd_entries.
 
 == LICENSE:
 
