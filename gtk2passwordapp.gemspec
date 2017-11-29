@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.author   = 'carlosjhr64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2017-08-23'
+  s.date     = '2017-11-29'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
@@ -40,12 +40,11 @@ lib/gtk2passwordapp/such_parts.rb
 lib/gtk2passwordapp/version.rb
   )
 
-  s.executables << 'gtk2pwdV'
   s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 1.0', '>= 1.0.0'
-  s.add_runtime_dependency 'gtk3app', '~> 2.0', '>= 2.0.0'
+  s.add_runtime_dependency 'gtk3app', '~> 2.0', '>= 2.0.1'
   s.add_runtime_dependency 'super_random', '~> 1.0', '>= 1.0.0'
-  s.add_runtime_dependency 'base_convert', '~> 2.0', '>= 2.0.0'
-  s.add_runtime_dependency 'helpema', '~> 0.2', '>= 0.2.0'
-  s.requirements << 'ruby: ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-linux]'
+  s.add_runtime_dependency 'base_convert', '~> 2.2', '>= 2.2.0'
+  s.add_runtime_dependency 'helpema', '~> 1.0', '>= 1.0.1'
+  s.requirements << 'ruby: ruby 2.4.2p198 (2017-09-14 revision 59899) [x86_64-linux]'
 
 end
