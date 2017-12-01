@@ -1,13 +1,15 @@
 #!/usr/bin/env ruby
+module Gtk2PasswordApp
+  VERSION = '5.2.0'
+end
 
-if a0 = ARGV.shift
-  if ['-v', '--version'].include?(a0)
-    require 'gtk2passwordapp/version'
+if a1 = ARGV.shift
+  if ['-v', '--version'].include?(a1)
     puts Gtk2PasswordApp::VERSION
     exit 0
   end
 
-  if ['-h', '--help'].include?(a0)
+  if ['-h', '--help'].include?(a1)
     puts <<-HELP
 Usage:
   gtk2pwdV [:options]
@@ -18,47 +20,28 @@ Options:
 Notes:
 With the --nogui option,
 one can give a pattern to filter by account names.
-On the first run, --nogui can be used to export
-version's 4 password data into version's 5 password data.
-Expected file is:
+Expected passwords data file is:
   ~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat
     HELP
     exit 0
   end
 
-  if a0 == '--nogui'
+  if a1 == '--nogui'
+    dat = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat')
+    raise "Passwords data file missing: #{F1}" unless File.exist? dat
     require 'pp'
     require 'yaml_zlib_blowfish'
-    print "Enter password: "
-    PWD = $stdin.gets.strip
+    require 'base_convert'
     system('clear; clear')
-    F1 = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat')
-    unless File.exist?(F1)
-      F0 = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/passwords.dat')
-      if File.exist?(F0)
-        class YZB < YamlZlibBlowfish
-          def initialize(passphrase)
-            key = Digest::SHA256.digest(passphrase)[0..15]
-            @cipher = OpenSSL::Cipher::BF.new(:CBC)
-            @cipher.key = key
-          end
-        end
-        begin
-          YamlZlibBlowfish.new(PWD).dump(F1, YZB.new(PWD).load(F0))
-          $stderr.puts "Auto-exported:"
-          $stderr.puts "\t#{F0} =>"
-          $stderr.puts "\t#{F1}"
-        rescue OpenSSL::Cipher::CipherError
-          $stderr.puts "Bad password"
-          exit 65
-        end
-      else
-        $stderr.puts "No passwords file found."
-        $stderr.puts "Expected: #{F1}"
-      end
-    end
+    print "Enter password: "
+    pwd = $stdin.gets.strip
+    system('clear; clear')
+    print "Enter salt: "
+    pwd << $stdin.gets.strip
+    system('clear; clear')
+    pwd = BaseConvert::FromTo.new(:hex, :qgraph).convert Digest::SHA256.hexdigest pwd
     begin
-      LIST = YamlZlibBlowfish.new(PWD).load(F1)
+      lst = YamlZlibBlowfish.new(pwd).load(dat)
     rescue OpenSSL::Cipher::CipherError
       $stderr.puts "Bad password"
       exit 65
@@ -66,8 +49,8 @@ Expected file is:
     if pattern = ARGV.shift
       pattern = Regexp.new(pattern, Regexp::IGNORECASE)
     end
-    unless ARGV.shift
-      pp (pattern)? LIST.select{|k,v|pattern.match(k)} : LIST
+    if ARGV.empty? # if ARGV is not empty, it's bad usage.
+      pp (pattern)? lst.select{|k,v|pattern.match(k)} : lst
       exit 0
     end
   end
