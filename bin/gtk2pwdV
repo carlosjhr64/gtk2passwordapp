@@ -3,60 +3,65 @@ module Gtk2PasswordApp
   VERSION = '5.2.0'
 end
 
-if a1 = ARGV.shift
-  if ['-v', '--version'].include?(a1)
-    puts Gtk2PasswordApp::VERSION
-    exit 0
-  end
-
-  if ['-h', '--help'].include?(a1)
-    puts <<-HELP
-Usage:
-  gtk2pwdV [:options]
-  gtk2pwdV --nogui [<pattern>]
-Options:
-  -v --version \tShow version and exit
-  -h --help    \tShow help and exit
-Notes:
-With the --nogui option,
-one can give a pattern to filter by account names.
-Expected passwords data file is:
-  ~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat
-    HELP
-    exit 0
-  end
-
-  if a1 == '--nogui'
-    dat = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat')
-    raise "Passwords data file missing: #{F1}" unless File.exist? dat
-    require 'pp'
-    require 'yaml_zlib_blowfish'
-    require 'base_convert'
-    system('clear; clear')
-    print "Enter password: "
-    pwd = $stdin.gets.strip
-    system('clear; clear')
-    print "Enter salt: "
-    pwd << $stdin.gets.strip
-    system('clear; clear')
-    pwd = BaseConvert::FromTo.new(:hex, :qgraph).convert Digest::SHA256.hexdigest pwd
-    begin
-      lst = YamlZlibBlowfish.new(pwd).load(dat)
-    rescue OpenSSL::Cipher::CipherError
-      $stderr.puts "Bad password"
-      exit 65
-    end
-    if pattern = ARGV.shift
-      pattern = Regexp.new(pattern, Regexp::IGNORECASE)
-    end
-    if ARGV.empty? # if ARGV is not empty, it's bad usage.
-      pp (pattern)? lst.select{|k,v|pattern.match(k)} : lst
+begin
+  if a1 = ARGV.shift
+    if ['-v', '--version'].include?(a1)
+      puts Gtk2PasswordApp::VERSION
       exit 0
     end
-  end
 
-  $stderr.puts "Please match usage."
-  exit 64
+    if ['-h', '--help'].include?(a1)
+      puts <<-HELP
+  Usage:
+    gtk2pwdV [:options]
+    gtk2pwdV --nogui [<pattern>]
+  Options:
+    -v --version \tShow version and exit
+    -h --help    \tShow help and exit
+  Notes:
+  With the --nogui option,
+  one can give a pattern to filter by account names.
+  Expected passwords data file is:
+    ~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat
+      HELP
+      exit 0
+    end
+
+    if a1 == '--nogui'
+      dat = File.expand_path('~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat')
+      raise "Passwords data file missing: #{dat}" unless File.exist? dat
+      require 'pp'
+      require 'yaml_zlib_blowfish'
+      require 'base_convert'
+      system('clear; clear')
+      print "Enter password: "
+      pwd = $stdin.gets.strip
+      system('clear; clear')
+      print "Enter salt: "
+      pwd << $stdin.gets.strip
+      system('clear; clear')
+      pwd = BaseConvert::FromTo.new(:hex, :qgraph).convert Digest::SHA256.hexdigest pwd
+      begin
+        lst = YamlZlibBlowfish.new(pwd).load(dat)
+      rescue OpenSSL::Cipher::CipherError
+        $stderr.puts "Bad password"
+        exit 65
+      end
+      if pattern = ARGV.shift
+        pattern = Regexp.new(pattern, Regexp::IGNORECASE)
+      end
+      if ARGV.empty? # if ARGV is not empty, it's bad usage.
+        pp (pattern)? lst.select{|k,v|pattern.match(k)} : lst
+        exit 0
+      end
+    end
+
+    $stderr.puts "Please match usage."
+    exit 64
+  end
+rescue RuntimeError
+  $stderr.puts $!
+  exit 66
 end
 
 require 'gtk2passwordapp'
