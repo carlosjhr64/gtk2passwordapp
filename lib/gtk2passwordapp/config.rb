@@ -10,6 +10,7 @@ module Gtk2PasswordApp
   CONFIG = {
     Salt: s0, # Password Salt
     MinPwdLen: 14,
+    TOTP: /^[A-Z2-7]{16,}$/,
 
     # Password Data File
     PwdFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/gtk2pwdV.dat",

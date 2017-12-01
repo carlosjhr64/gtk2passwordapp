@@ -2,6 +2,8 @@
 require 'gtk3app'
 
 # Helper Gems.
+require 'base32'
+require 'totp'
 require 'yaml_zlib_blowfish'
 require 'super_random'
 require 'base_convert'

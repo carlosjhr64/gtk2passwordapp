@@ -291,9 +291,18 @@ class Gtk2PwdV
       when clip_box.b_Button # Previous
         copy2clipboard @account.previous, @account.password
       when clip_box.c_Button # Show
-        label.text == hidden ?
-        label.text = @account.password :
-        label.text = hidden
+        case label.text
+        when hidden
+          pwd = @account.password
+          if pwd=~/^[A-Z2-7]+$/
+            pwd = TOTP.passwords(pwd)[1].to_s
+          end
+          label.text = pwd
+        when @account.password
+          label.text = hidden
+        else
+          label.text = @account.password
+        end
       end
     end
     clip_box.labels :Current, :Previous, :Show
