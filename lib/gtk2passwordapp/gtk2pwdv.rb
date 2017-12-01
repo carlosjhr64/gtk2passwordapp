@@ -341,7 +341,7 @@ class Gtk2PwdV
 
     # cb and sb will be a CheckButton and SpinButton respectively.
     cb = sb = nil
-    password = @account ? @account.password : ''
+    password = (mode==:edit)? @account.password : ''
     truncate = Proc.new do |p|
       password = p
       if cb.active?
