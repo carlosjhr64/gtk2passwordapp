@@ -2,7 +2,10 @@
 require 'test/unit'
 require 'xdg'
 require 'rafini'
-require 'gtk2passwordapp/version'
+
+module Gtk2PasswordApp
+  VERSION = `ruby -I ./lib ./bin/gtk2pwdV -v`.strip
+end
 require 'gtk2passwordapp/config'
 
 class TestConfig < Test::Unit::TestCase
