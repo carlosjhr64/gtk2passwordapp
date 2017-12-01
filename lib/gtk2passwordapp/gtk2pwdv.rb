@@ -149,32 +149,20 @@ class Gtk2PwdV
     end
   end
 
+  def rehash(pwd)
+    pwd << CONFIG[:Salt] if pwd.length < CONFIG[:MinPwdLen]
+    BaseConvert::FromTo.new(:hex, :qgraph).convert Digest::SHA256.hexdigest(pwd)
+  end
+
   def process_pwd_entries(entry1, entry2)
     begin
-      pwd1 = entry1.text.strip
-      if pwd1 == '' and pwd = Helpema::ZBar.qrcode(CONFIG[:QrcTimeOut])
-        if pwd.include?("\n")
-          pwd1 = BaseConvert::FromTo.new(:hex, :qgraph).convert Digest::SHA256.hexdigest pwd
-        else
-          pwd1 = pwd
-        end
-      end
-      raise 'No password given.' if pwd1 == ''
+      pwd = entry1.text.strip
+      raise 'No password given.' if pwd == ''
       if entry2
-        raise 'Passwords did not match' unless entry2.text.strip==pwd1
-        @accounts.save pwd1
+        raise 'Passwords did not match' unless entry2.text.strip==pwd
+        @accounts.save rehash pwd
       else
-        if pwd1=~/^\d+\-[\dabcdef]+$/ # then we probably have a shared secret...
-          if File.exist? CONFIG[:SharedSecretFile] # and looks like we really do...
-            pwd0 = File.read(CONFIG[:SharedSecretFile]).strip
-            pwd = Helpema::SSSS.combine(pwd0, pwd1)
-            pwd1 = pwd unless pwd=='' # but maybe not.
-          end
-        end
-        if salt = CONFIG[:Salt]
-          pwd1 = BaseConvert::FromTo.new(:hex, :qgraph).convert Digest::SHA256.hexdigest(pwd1+salt)
-        end
-        @accounts.load pwd1
+        @accounts.load rehash pwd
       end
       true
     rescue StandardError

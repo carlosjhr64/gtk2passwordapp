@@ -8,6 +8,8 @@ module Gtk2PasswordApp
   a0 = Rafini::Empty::ARRAY
 
   CONFIG = {
+    Salt: s0, # Password Salt
+    MinPwdLen: 14,
 
     # Password Data File
     PwdFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/gtk2pwdV.dat",
