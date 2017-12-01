@@ -13,9 +13,6 @@ module Gtk2PasswordApp
 
     # Password Data File
     PwdFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/gtk2pwdV.dat",
-    # Shared Secret File
-    # Consider using a file found in a removable flashdrive.
-    SharedSecretFile: "#{XDG['CACHE']}/gtk3app/gtk2passwordapp/key.ssss",
     BackupFile: "#{ENV['HOME']}/Dropbox/gtk2pwdV.bak",
 
     # Mark Recent Selections
@@ -23,9 +20,6 @@ module Gtk2PasswordApp
 
     # Mark Old Passwords
     TooOld: 60*60*24*365, # Year
-
-    # Timeout for qr-code read.
-    QrcTimeOut: 15,
 
     # Password Generators
     Random:       'Random',
@@ -128,7 +122,7 @@ module Gtk2PasswordApp
       about_dialog: {
         set_program_name: 'Password Manager',
         set_version: VERSION.semantic(0..1),
-        set_copyright: '(c) 2014 CarlosJHR64',
+        set_copyright: '(c) 2017 CarlosJHR64',
         set_comments: 'A Gtk3App Password Manager',
         set_website: 'https://github.com/carlosjhr64/gtk2passwordapp',
         set_website_label: 'See it at GitHub!',
