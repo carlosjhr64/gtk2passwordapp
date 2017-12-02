@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name     = 'gtk2passwordapp'
-  s.version  = '5.2.0'
+  s.version  = '5.2.1'
 
   s.homepage = 'https://github.com/carlosjhr64/gtk2passwordapp'
 
@@ -24,6 +24,8 @@ SUMMARY
 
   s.extra_rdoc_files = ['README.rdoc']
   s.rdoc_options     = ['--main', 'README.rdoc']
+
+  s.executables << 'gtk2pwdV'
 
   s.require_paths = ['lib']
   s.files = %w(
