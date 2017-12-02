@@ -12,17 +12,17 @@ begin
 
     if ['-h', '--help'].include?(a1)
       puts <<-HELP
-  Usage:
-    gtk2pwdV [:options]
-    gtk2pwdV --nogui [<pattern>]
-  Options:
-    -v --version \tShow version and exit
-    -h --help    \tShow help and exit
-  Notes:
-  With the --nogui option,
-  one can give a pattern to filter by account names.
-  Expected passwords data file is:
-    ~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat
+Usage:
+  gtk2pwdV [:options]
+  gtk2pwdV --nogui [<pattern>]
+Options:
+  -v --version \tShow version and exit
+  -h --help    \tShow help and exit
+Notes:
+With the --nogui option,
+one can give a pattern to filter by account names.
+Expected passwords data file is:
+  ~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat
       HELP
       exit 0
     end

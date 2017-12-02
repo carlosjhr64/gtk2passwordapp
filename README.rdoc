@@ -1,19 +1,19 @@
-= Gtk2passwordapp
+= Gtk2PasswordApp
 
 {<img src="https://badge.fury.io/rb/gtk2passwordapp.svg" alt="Gem Version" />}[http://badge.fury.io/rb/gtk2passwordapp]
 
-== DESCRIPTION:
+== Description:
 
 Ruby-Gnome Password Manager.
 
 Uses Blowfish to encrypt the datafile.
-Features random password generator and clipboard use.
+Features random password generator, clipboard use, and TOTP.
 
-== INSTALL:
+== Install:
 
    sudo gem install gtk2passwordapp
 
-== HELP:
+== Help:
 
     Usage:
       gtk2pwdV [:options]
@@ -21,42 +21,21 @@ Features random password generator and clipboard use.
     Options:
       -v --version 	Show version and exit
       -h --help    	Show help and exit
-    Notes:
-    With the --nogui option,
-    one can give a pattern to filter by account names.
-    On the first run, --nogui can be used to export
-    version's 4 password data into version's 5 password data.
 
-== MORE:
+== More:
 
 "Mouse Left Click" on window to get the application menu.
-Anything I thought could be customized I made configurable.
-See:
+
+
+== Configuration:
 
   ~/.config/gtk3app/gtk2passwordapp/config-?.?.yml
 
-You may want to change the following settings:
-
-[SharedSecretFile]  You may prefer it to be a file in some removable media.
+[Salt]  If your master-password length is under 14(MinPwdLen), it'll append this Salt.
 [BackupFile]  Although the GUI allows you to specify the file, this gives a default.
 [TooOld]  I have this set for a year (in seconds).
 [CustomDigits]  I have this as "ABC...XYZ" for CAPS.
 [Custom]  I have this as CAPS.  Describes CustomDigits.
-
-If you're updating from a previous version,
-you may need to edit the new config file to match you're previously edited changes.
-
-If you use a qrcode to enter your master password, and
-the result is a multiline string,
-gtk2passwordapp will assume you want the qgraph-sha256-digest.
-See gtk2passwordapp/gtk2pwdv.rb's #process_pwd_entries to see how that's done.
-
-If you add :Salt to the configuration file, it'll use the qgraph-sha256-digest
-of the entry salted as can be seen in #process_pwd_entries.
-
-Note that the initial set up of the mater-password still needs to be done explicitly.
-That is, you'll need to enter the final resulting string when setting the master-password.
-Again, see Gtk2PasswordApp::Gtk2PwdV#process_pwd_entries.
 
 == LICENSE:
 
