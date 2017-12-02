@@ -241,8 +241,9 @@ class Gtk2PwdV
     CONFIG[:FIELDS].each do |field, text|
       entry = Such::PromptedLabel.new @page, :hbox!
       entry.prompt_Label.text = text
-      entry.prompted_Label.text = @account.method(field).call
-      entry.prompted_Label.set_alignment(*CONFIG[:FIELD_ALIGNMENT])
+      (_=entry.prompted_Label).text = @account.method(field).call
+      _.set_alignment(*CONFIG[:FIELD_ALIGNMENT])
+      _.selectable = true
       entries[field] = entry
     end
     return entries
