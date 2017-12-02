@@ -32,6 +32,7 @@ Features random password generator, clipboard use, and TOTP.
   ~/.config/gtk3app/gtk2passwordapp/config-?.?.yml
 
 [Salt]  If your master-password length is under 14(MinPwdLen), it'll append this Salt.
+[TOTP]  If password matches this pattern, it will show the time based one time code.
 [BackupFile]  Although the GUI allows you to specify the file, this gives a default.
 [TooOld]  I have this set for a year (in seconds).
 [CustomDigits]  I have this as "ABC...XYZ" for CAPS.
