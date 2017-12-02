@@ -25,8 +25,8 @@ module Gtk2PasswordApp
     # Password Generators
     Random:       'Random',
     AlphaNumeric: 'Alpha-Numeric',
-    Custom:       'Caps',
-    CustomDigits: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    Custom:       'Custom',
+    CustomDigits: '3479ACEFHJKLMNPRTUVWXYabcdefghijkmnopqrstuvwxyz',
 
     # Button Labels
     Go:       'Go',
