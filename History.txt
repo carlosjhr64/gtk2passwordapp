@@ -20,3 +20,5 @@ b60ccdab485c855b7af8e534ce947f08  pkg/gtk2passwordapp-4.3.0.gem
 80cde9b33d7f68e3fb6a200072344510  pkg/gtk2passwordapp-5.0.0.gem
 === 5.1.0 / 2017-08-23 09:00:33 -0700
 e37e51a842420228acd58e6ca91952b4  pkg/gtk2passwordapp-5.1.0.gem
+=== 5.2.0 / 2017-12-02 11:57:32 -0800
+7c5af7d62956e5f46b32a8288140ffa1  pkg/gtk2passwordapp-5.2.0.gem
