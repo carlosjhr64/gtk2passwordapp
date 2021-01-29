@@ -1,5 +1,5 @@
-tmp
-*.swp
-test/error.log
-gtk2passwordapp-*.*.*.gem
 TODO.txt
+*.swp
+pkg
+tags
+tmp

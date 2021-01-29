@@ -1,7 +1,10 @@
 ^(
  (\.)|
+ (\w+\.gemspec)|
+ (cucumber\.)|
+ (examples\/)|
+ (features\/)|
+ (History\.)|
  (test\/)|
- (TODO\.)|
- (gtk2passwordapp.gemspec)|
- (History\.)
+ (TODO\.)
 )
