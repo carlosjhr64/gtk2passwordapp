@@ -1,14 +1,14 @@
 Gem::Specification.new do |s|
 
   s.name     = 'gtk2passwordapp'
-  s.version  = '5.2.1'
+  s.version  = '6.0.210129'
 
   s.homepage = 'https://github.com/carlosjhr64/gtk2passwordapp'
 
   s.author   = 'carlosjhr64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2017-12-02'
+  s.date     = '2021-01-29'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
@@ -30,23 +30,22 @@ SUMMARY
   s.require_paths = ['lib']
   s.files = %w(
 README.rdoc
-bin/gtk2pwdV
-data/VERSION
+bin/gtk2passwordapp
 data/logo.png
 lib/gtk2passwordapp.rb
 lib/gtk2passwordapp/account.rb
 lib/gtk2passwordapp/accounts.rb
+lib/gtk2passwordapp/cli.rb
 lib/gtk2passwordapp/config.rb
-lib/gtk2passwordapp/gtk2pwdv.rb
-lib/gtk2passwordapp/such_parts.rb
+lib/gtk2passwordapp/gui.rb
   )
 
-  s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 1.0', '>= 1.0.0'
-  s.add_runtime_dependency 'base_convert', '~> 2.2', '>= 2.2.0'
-  s.add_runtime_dependency 'gtk3app', '~> 2.0', '>= 2.0.1'
-  s.add_runtime_dependency 'base32', '~> 0.3', '= 0.3.2'
+  s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 2.0', '>= 2.0.21027'
+  s.add_runtime_dependency 'base_convert', '~> 5.0', '>= 5.0.210126'
+  s.add_runtime_dependency 'gtk3app', '~> 4.0', '>= 4.0.210128,'
+  s.add_runtime_dependency 'base32', '~> 0.3', '= 0.3.4'
   s.add_runtime_dependency 'totp', '~> 1.0', '= 1.0.0'
-  s.add_runtime_dependency 'super_random', '~> 1.0', '>= 1.0.0'
-  s.requirements << 'ruby: ruby 2.4.2p198 (2017-09-14 revision 59899) [x86_64-linux]'
+  s.add_runtime_dependency 'super_random', '~> 2.0', '>= 2.0.210126'
+  s.requirements << 'ruby: ruby 3.0.0p0 (2020-12-25 revision 95aff21468) [x86_64-linux]'
 
 end
