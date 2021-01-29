@@ -1,4 +1,4 @@
-module Gtk2PasswordApp
+class Gtk2PasswordApp
 class Accounts
 
   def reset(password)
@@ -20,6 +20,7 @@ class Accounts
   def load(password=nil)
     reset(password) if password
     data = @yzb.load(@dumpfile)
+    # Sanity check... load will raise CipherError on decription error.
     raise "Decryption error." unless data.class == Hash
     @data = data
   end
