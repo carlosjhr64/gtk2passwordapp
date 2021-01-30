@@ -5,6 +5,24 @@ class Gtk2PasswordApp
   CONFIG = {
     HelpFile: 'https://github.com/carlosjhr64/gtk2passwordapp',
     Logo: "#{UserSpace::XDG['data']}/gtk3app/gtk2passwordapp/logo.png",
+    HiddenPwd: ' * * * ',
+
+    # Tools Button
+
+    tool_button: h0,
+
+    # Tools Labels
+
+    SHOW:     [label: 'Show'],
+  # Go:       'Go',
+  # Edit:     'Edit',
+  # Add:      'Add',
+  # Goto:     'Goto',
+  # Current:  'Current',
+  # Previous: 'Previous',
+  # Cancel:   'Cancel',
+  # Delete:   'Delete',
+  # Save:     'Save',
 
     # Initialize
     # Stage and Toolbar
@@ -92,7 +110,7 @@ class Gtk2PasswordApp
     USERNAME: ['Username:'],
     PASSWORD: ['Password:'],
 
-    SUBMIT_BUTTON: [label:'Submit'],
+    SUBMIT_BUTTON: [label:'Submit'], # TODO: probably goes away
     submit_button: h0,
     submit_button!: [:SUBMIT_BUTTON,:submit_button],
 

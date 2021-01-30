@@ -5,7 +5,7 @@ class Gtk2PasswordApp
     @accounts  = Accounts.new(CONFIG[:PwdFile])
     @toolbox   = Such::Box.new toolbar, :toolbox!
     @pages     = Such::Box.new stage, :pages!
-    @password_page = @edit_page = nil
+    @tools = @password_page = @edit_page = nil
     build_password_page
     Gtk3App.logo_press_event do #|button|
       unless @accounts.data.empty?
@@ -66,6 +66,7 @@ class Gtk2PasswordApp
       build_add_page  unless @add_page
       build_edit_page unless @edit_page
       build_main_page unless @main_page
+      build_tools     unless @tools
       if @accounts.data.empty?
         @add_page.show_all
       else
@@ -73,6 +74,7 @@ class Gtk2PasswordApp
         account = @accounts.get names[rand(names.length)]
         setup_main_page(account)
         @main_page.show_all
+        @toolbox.show_all
       end
     rescue
       error_label.text = $!.message
@@ -120,6 +122,7 @@ class Gtk2PasswordApp
       @edit_page.hide
       setup_main_page(account)
       @main_page.show_all
+      @toolbox.show_all
     rescue
       error_label.text = $!.message
     end
@@ -150,7 +153,18 @@ class Gtk2PasswordApp
     @url.text      = account.url
     @note.text     = account.note
     @username.text = account.username
-    @password.text = account.password
+    @password.text = CONFIG[:HiddenPwd]
+  end
+
+  def build_tools
+    @tools = true
+    Such::Button.new @toolbox, :SHOW, :tool_button do
+      if @password.text == CONFIG[:HiddenPwd]
+        @password.text = @accounts.get(@name.text).password
+      else
+        @password.text = CONFIG[:HiddenPwd]
+      end
+    end
   end
 
   def self.run = Gtk3App.run(klass:Gtk2PasswordApp)
