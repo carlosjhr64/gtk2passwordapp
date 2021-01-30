@@ -13,11 +13,10 @@ class Gtk2PasswordApp
 
     # Tools Labels
 
-    SHOW:     [label: 'Show'],
-  # Go:       'Go',
-  # Edit:     'Edit',
-  # Add:      'Add',
-  # Goto:     'Goto',
+    ADD:  [label: 'Add'],
+    EDIT: [label: 'Edit'],
+    SHOW: [label: 'Show'],
+    GO:   [label: 'Go'],
   # Current:  'Current',
   # Previous: 'Previous',
   # Cancel:   'Cancel',

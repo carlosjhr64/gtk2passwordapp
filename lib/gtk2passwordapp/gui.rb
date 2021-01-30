@@ -158,6 +158,20 @@ class Gtk2PasswordApp
 
   def build_tools
     @tools = true
+    Such::Button.new @toolbox, :ADD, :tool_button do
+      @main_page.hide
+      @toolbox.hide
+      @add_page.show_all
+    end
+    Such::Button.new @toolbox, :EDIT, :tool_button do
+      @main_page.hide
+      @toolbox.hide
+      @edit_page.show_all
+    end
+    Such::Button.new @toolbox, :GO, :tool_button do
+      url = @accounts.get(@name.text).url
+      system(Gtk3App::CONFIG[:Open], url) unless url.empty? # TODO Gtk3App :-???
+    end
     Such::Button.new @toolbox, :SHOW, :tool_button do
       if @password.text == CONFIG[:HiddenPwd]
         @password.text = @accounts.get(@name.text).password
