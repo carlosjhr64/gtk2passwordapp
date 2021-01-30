@@ -1,18 +1,26 @@
 class Gtk2PasswordApp
   def initialize(stage, toolbar, options)
-    @accounts = Accounts.new(CONFIG[:PwdFile])
-    @toolbox = Such::Box.new toolbar, :toolbox!
-    @pages = Such::Box.new stage, :pages!
+    @primary   = Gtk::Clipboard.get(Gdk::Selection::PRIMARY)  
+    @clipboard = Gtk::Clipboard.get(Gdk::Selection::CLIPBOARD)
+    @accounts  = Accounts.new(CONFIG[:PwdFile])
+    @toolbox   = Such::Box.new toolbar, :toolbox!
+    @pages     = Such::Box.new stage, :pages!
     @password_page = @edit_page = nil
     build_password_page
     Gtk3App.logo_press_event do #|button|
       unless @accounts.data.empty?
-        menu = Such::Menu.new :main_menu!, 'delete-event' do menu.destroy end
+        menu = Such::Menu.new :main_menu!
         @accounts.data.keys.sort{|a,b|a.upcase<=>b.upcase}.each do |name|
           menu_item = Such::MenuItem.new [label:name], :main_menu_item, 'activate' do
             account = @accounts.get name
             setup_main_page account
             setup_edit_page account
+            @primary.text = pwd = account.password
+            @clipboard.text = account.username
+            GLib::Timeout.add_seconds(CONFIG[:ClipboardTimeout]) do
+              @primary.text = '' if @primary.wait_for_text == pwd
+              false
+            end
           end
           menu.append menu_item
         end
@@ -58,7 +66,14 @@ class Gtk2PasswordApp
       build_add_page  unless @add_page
       build_edit_page unless @edit_page
       build_main_page unless @main_page
-      @add_page.show_all
+      if @accounts.data.empty?
+        @add_page.show_all
+      else
+        names = @accounts.data.keys
+        account = @accounts.get names[rand(names.length)]
+        setup_main_page(account)
+        @main_page.show_all
+      end
     rescue
       error_label.text = $!.message
       password_entry.text = ''
@@ -127,7 +142,7 @@ class Gtk2PasswordApp
     @url      = view_row @main_page, :URL
     @note     = view_row @main_page, :NOTE
     @username = view_row @main_page, :USERNAME
-    @password = view_row @main_page, :PASSWORD #, :password_entry!
+    @password = view_row @main_page, :PASSWORD
   end
 
   def setup_main_page(account)
