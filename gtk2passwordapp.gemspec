@@ -15,21 +15,16 @@ Gem::Specification.new do |s|
 Ruby-Gnome Password Manager.
 
 Uses Blowfish to encrypt the datafile.
-Features random password generator and clipboard use.
+Features random password generator, clipboard use, and TOTP.
 DESCRIPTION
 
   s.summary = <<SUMMARY
 Ruby-Gnome Password Manager.
 SUMMARY
 
-  s.extra_rdoc_files = ['README.rdoc']
-  s.rdoc_options     = ['--main', 'README.rdoc']
-
-  s.executables << 'gtk2pwdV'
-
   s.require_paths = ['lib']
   s.files = %w(
-README.rdoc
+README.md
 bin/gtk2passwordapp
 data/logo.png
 lib/gtk2passwordapp.rb
@@ -39,12 +34,12 @@ lib/gtk2passwordapp/cli.rb
 lib/gtk2passwordapp/config.rb
 lib/gtk2passwordapp/gui.rb
   )
-
-  s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 2.0', '>= 2.0.21027'
+  s.executables << 'gtk2passwordapp'
+  s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 2.0', '>= 2.0.210127'
   s.add_runtime_dependency 'base_convert', '~> 5.0', '>= 5.0.210126'
-  s.add_runtime_dependency 'gtk3app', '~> 4.0', '>= 4.0.210128,'
-  s.add_runtime_dependency 'base32', '~> 0.3', '= 0.3.4'
-  s.add_runtime_dependency 'totp', '~> 1.0', '= 1.0.0'
+  s.add_runtime_dependency 'gtk3app', '~> 4.0', '>= 4.0.210128'
+  s.add_runtime_dependency 'base32', '= 0.3.4'
+  s.add_runtime_dependency 'totp', '= 1.0.0'
   s.add_runtime_dependency 'super_random', '~> 2.0', '>= 2.0.210126'
   s.requirements << 'ruby: ruby 3.0.0p0 (2020-12-25 revision 95aff21468) [x86_64-linux]'
 
