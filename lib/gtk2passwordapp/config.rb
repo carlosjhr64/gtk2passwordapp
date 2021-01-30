@@ -7,21 +7,21 @@ class Gtk2PasswordApp
     Logo: "#{UserSpace::XDG['data']}/gtk3app/gtk2passwordapp/logo.png",
     HiddenPwd: ' * * * ',
 
-    # Tools Button
+    # Buttons
 
     tool_button: h0,
 
     # Tools Labels
 
-    ADD:  [label: 'Add'],
-    EDIT: [label: 'Edit'],
-    SHOW: [label: 'Show'],
-    GO:   [label: 'Go'],
+    ADD:    [label: 'Add'],
+    EDIT:   [label: 'Edit'],
+    SHOW:   [label: 'Show'],
+    GO:     [label: 'Go'],
+    CANCEL: [label: 'Cancel'],
+    DELETE: [label: 'Delete'],
+    SAVE:   [label: 'Save'],
   # Current:  'Current',
   # Previous: 'Previous',
-  # Cancel:   'Cancel',
-  # Delete:   'Delete',
-  # Save:     'Save',
 
     # Initialize
     # Stage and Toolbar
@@ -109,10 +109,6 @@ class Gtk2PasswordApp
     USERNAME: ['Username:'],
     PASSWORD: ['Password:'],
 
-    SUBMIT_BUTTON: [label:'Submit'], # TODO: probably goes away
-    submit_button: h0,
-    submit_button!: [:SUBMIT_BUTTON,:submit_button],
-
     # Errors
 
     BadUrl: 'URL must be like http://site.',
@@ -130,6 +126,10 @@ class Gtk2PasswordApp
       set_website: 'https://github.com/carlosjhr64/gtk2passwordapp',
       set_website_label: 'See it at GitHub!',
     },
+
+    DELETE_URSURE: a0,
+    delete_ursure: {add_label: 'Delete?'},
+    delete_ursure!: [:DELETE_URSURE,:delete_ursure],
 
   }
 end

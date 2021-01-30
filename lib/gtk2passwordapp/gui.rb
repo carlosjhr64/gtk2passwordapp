@@ -49,6 +49,18 @@ class Gtk2PasswordApp
     Such::Entry.new(row, entry, ((block)? 'activate' : ''), &block)
   end
 
+  def show_main_page
+    @main_page.show_all
+    @toolbox.show_all
+  end
+
+  def bootstrap_setups
+    names = @accounts.data.keys
+    account = (names.empty?)? nil : @accounts.get(names[rand(names.length)])
+    setup_edit_page(account) if account
+    setup_main_page(account)
+  end
+
   def build_password_page
     @password_page = Such::Box.new @pages, :page!
     # TODO: :PASSWORD_PAGE_LABEL ?
@@ -67,15 +79,8 @@ class Gtk2PasswordApp
       build_edit_page unless @edit_page
       build_main_page unless @main_page
       build_tools     unless @tools
-      if @accounts.data.empty?
-        @add_page.show_all
-      else
-        names = @accounts.data.keys
-        account = @accounts.get names[rand(names.length)]
-        setup_main_page(account)
-        @main_page.show_all
-        @toolbox.show_all
-      end
+      bootstrap_setups
+      show_main_page
     rescue
       error_label.text = $!.message
       password_entry.text = ''
@@ -93,10 +98,17 @@ class Gtk2PasswordApp
       @accounts.add name
       account = @accounts.get name
       setup_edit_page(account)
+      setup_main_page(account)
       @add_page.hide
+      add_account_entry.text = ''
       @edit_page.show_all
     rescue
       error_label.text = $!.message
+    end
+    Such::Button.new @add_page, :CANCEL, :tool_button do
+      @add_page.hide
+      add_account_entry.text = ''
+      show_main_page
     end
     error_label = Such::Label.new @add_page, :error_label!
   end
@@ -111,8 +123,10 @@ class Gtk2PasswordApp
     @edit_username = field_row @edit_page, :USERNAME
     @edit_password = field_row @edit_page, :PASSWORD, :password_entry!
 
-    error_label = nil # updated below
-    Such::Button.new @edit_page, :submit_button! do
+    toolbox     = Such::Box.new @edit_page,   :toolbox!
+    error_label = Such::Label.new @edit_page, :error_label!
+
+    Such::Button.new toolbox, :SAVE, :tool_button do
       account          = @accounts.get @edit_name.text.strip
       account.url      = @edit_url.text.strip
       account.note     = @edit_note.text.strip
@@ -121,12 +135,27 @@ class Gtk2PasswordApp
       @accounts.save
       @edit_page.hide
       setup_main_page(account)
-      @main_page.show_all
-      @toolbox.show_all
+      show_main_page
     rescue
       error_label.text = $!.message
     end
-    error_label = Such::Label.new @edit_page, :error_label!
+    Such::Button.new toolbox, :CANCEL, :tool_button do
+      account = @accounts.get @edit_name.text # TODO wut?
+      setup_edit_page(account) # restore values
+      @edit_page.hide
+      show_main_page
+    end
+    Such::Button.new toolbox, :DELETE, :tool_button do
+      ursure = Gtk3App::YesNoDialog.new :delete_ursure!
+      Gtk3App.transient ursure
+      if ursure.ok?
+        @accounts.delete @edit_name.text
+        @accounts.save
+        @edit_page.hide
+        bootstrap_setups
+        show_main_page
+      end
+    end
   end
 
   def setup_edit_page(account)
@@ -149,11 +178,11 @@ class Gtk2PasswordApp
   end
 
   def setup_main_page(account)
-    @name.text     = account.name
-    @url.text      = account.url
-    @note.text     = account.note
-    @username.text = account.username
-    @password.text = CONFIG[:HiddenPwd]
+    @name.text     = account&.name     || ''
+    @url.text      = account&.url      || ''
+    @note.text     = account&.note     || ''
+    @username.text = account&.username || ''
+    @password.text = (account)? CONFIG[:HiddenPwd] : ''
   end
 
   def build_tools
@@ -164,19 +193,25 @@ class Gtk2PasswordApp
       @add_page.show_all
     end
     Such::Button.new @toolbox, :EDIT, :tool_button do
-      @main_page.hide
-      @toolbox.hide
-      @edit_page.show_all
+      unless (name=@name.text).empty?
+        @main_page.hide
+        @toolbox.hide
+        @edit_page.show_all
+      end
     end
     Such::Button.new @toolbox, :GO, :tool_button do
-      url = @accounts.get(@name.text).url
-      system(Gtk3App::CONFIG[:Open], url) unless url.empty? # TODO Gtk3App :-???
+      unless (name=@name.text).empty?
+        url = @accounts.get(name).url
+        system(Gtk3App::CONFIG[:Open], url) unless url.empty? # TODO Gtk3App :-???
+      end
     end
     Such::Button.new @toolbox, :SHOW, :tool_button do
-      if @password.text == CONFIG[:HiddenPwd]
-        @password.text = @accounts.get(@name.text).password
-      else
-        @password.text = CONFIG[:HiddenPwd]
+      unless (name=@name.text).empty?
+        if @password.text == CONFIG[:HiddenPwd]
+          @password.text = @accounts.get(@name.text).password
+        else
+          @password.text = CONFIG[:HiddenPwd]
+        end
       end
     end
   end

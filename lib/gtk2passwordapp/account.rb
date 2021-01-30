@@ -49,7 +49,7 @@ class Account
   ### WRITTERS ###
 
   def password=(password)
-    raise CONFIG[:BadPassword] unless password=~/^[[:graph:]]+$/
+    raise CONFIG[:BadPassword] unless password=~/^[[:graph:]]*$/
     if @data[PASSWORD] != password
       @data[UPDATED] = Time.now.to_i
       @data[PREVIOUS] = @data[PASSWORD]
