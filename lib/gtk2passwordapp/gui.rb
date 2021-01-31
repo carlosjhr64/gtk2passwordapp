@@ -18,13 +18,7 @@ class Gtk2PasswordApp
       next unless @main_page&.visible?
       case button
       when 1
-        unless @accounts.data.empty?
-          @menu = Such::Menu.new :main_menu!
-          @recent.each do |name| add_menu_item(name, @green) end
-          @accounts.data.keys.sort{|a,b|a.upcase<=>b.upcase}.each do |name| add_menu_item(name) end
-          @menu.show_all
-          @menu.popup_at_pointer
-        end
+        popup_accounts_menu unless @accounts.data.empty?
       when 2
         reset_password
       when 3
@@ -41,6 +35,14 @@ class Gtk2PasswordApp
       hide_main_page
       @password_page.show
     end
+  end
+
+  def popup_accounts_menu
+    @menu = Such::Menu.new :main_menu!
+    @recent.each do |name| add_menu_item(name, @green) end
+    @accounts.data.keys.sort{|a,b|a.upcase<=>b.upcase}.each do |name| add_menu_item(name) end
+    @menu.show_all
+    @menu.popup_at_pointer
   end
 
   def add_menu_item(name, color=nil)
