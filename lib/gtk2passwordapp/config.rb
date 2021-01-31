@@ -2,6 +2,9 @@ class Gtk2PasswordApp
   using Rafini::String
   extend Rafini::Empty
 
+  H2Q = BaseConvert::FromTo.new(base: 16, digits: '0123456789ABCDEF', to_base:91, to_digits: :qgraph)
+  RND = SuperRandom.new
+
   CONFIG = {
     HelpFile: 'https://github.com/carlosjhr64/gtk2passwordapp',
     Logo: "#{UserSpace::XDG['data']}/gtk3app/gtk2passwordapp/logo.png",
@@ -15,13 +18,13 @@ class Gtk2PasswordApp
 
     ADD:      [label: 'Add'],
     EDIT:     [label: 'Edit'],
-    SHOW:     [label: 'Show'],
     GO:       [label: 'Go'],
     CANCEL:   [label: 'Cancel'],
     DELETE:   [label: 'Delete'],
     SAVE:     [label: 'Save'],
     CURRENT:  [label: 'Current'],
     PREVIOUS: [label: 'Previous'],
+    RAND:     [label: 'Random'],
 
     # Initialize
     # Stage and Toolbar

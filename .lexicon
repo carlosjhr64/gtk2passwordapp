@@ -1,3 +1,4 @@
+_
 a
 a0
 about_dialog
@@ -30,6 +31,7 @@ build_edit_page
 build_main_page
 build_password_page
 build_tools
+button
 Button
 CANCEL
 chmod
@@ -54,6 +56,7 @@ Digest
 digits
 dump
 dumpfile
+e
 each
 EDIT
 EDIT_PAGE_LABEL
@@ -76,6 +79,7 @@ FIELD_ROW
 File
 FromTo
 Gdk
+generator
 get
 gets
 GLib
@@ -87,10 +91,13 @@ Gtk3App
 gui
 h0
 h2q
+H2Q
 Hash
 has_key
 HELP
 HelpFile
+hex
+hexadecimal
 hexdigest
 HiddenPwd
 hide
@@ -155,12 +162,14 @@ qgraph
 Rafini
 raise
 rand
+RAND
 Regexp
 RegexpError
 rehash
 require
 require_relative
 reset
+RND
 row
 Ruby30
 run
@@ -182,14 +191,16 @@ set_visibility
 set_website
 set_website_label
 SHA256
-SHOW
 show_all
 show_main_page
+show_toggleling
+signal_connect
 sort
 stage
 String
 strip
 Such
+SuperRandom
 system
 text
 Time
@@ -219,6 +230,7 @@ v
 VERSION
 vertical
 view_row
+visibility_toggleling
 wait_for_text
 XDG
 YamlZlibBlowfish

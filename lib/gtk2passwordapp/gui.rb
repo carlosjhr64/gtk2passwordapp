@@ -37,8 +37,7 @@ class Gtk2PasswordApp
   def rehash(pwd)
     pwd += CONFIG[:Salt] if pwd.length < CONFIG[:LongPwd]
     pwd = Digest::SHA256.hexdigest(pwd).upcase
-    h2q = BaseConvert::FromTo.new(base: 16, digits: '0123456789ABCDEF', to_base:91, to_digits: :qgraph)
-    h2q.convert pwd
+    H2Q.convert pwd
   end
 
   def view_row(page, label)
@@ -117,6 +116,27 @@ class Gtk2PasswordApp
     error_label = Such::Label.new @add_page, :error_label!
   end
 
+  def visibility_toggleling(entry)
+    entry.signal_connect('enter-notify-event') do
+      entry.set_visibility true
+    end
+    entry.signal_connect('leave-notify-event') do
+      entry.set_visibility false
+    end
+  end
+
+  def show_toggleling(label)
+    label.signal_connect('button-press-event') do |_,e|
+      if e.button==1 and not (pwd=label.text).empty?
+        if pwd==CONFIG[:HiddenPwd]
+          label.text = @accounts.get(@name.text).password
+        else
+          label.text = CONFIG[:HiddenPwd]
+        end
+      end
+    end
+  end
+
   def build_edit_page
     @edit_page = Such::Box.new @pages, :page!
     Such::Label.new @edit_page, :EDIT_PAGE_LABEL, :page_label
@@ -126,6 +146,14 @@ class Gtk2PasswordApp
     @edit_note     = field_row @edit_page, :NOTE
     @edit_username = field_row @edit_page, :USERNAME
     @edit_password = field_row @edit_page, :PASSWORD, :password_entry!
+
+    visibility_toggleling @edit_password
+
+    generator = Such::Box.new @edit_page, :toolbox!
+    Such::Button.new generator, :RAND, :tool_button do
+      hex = RND.hexadecimal
+      @edit_password.text = hex
+    end
 
     toolbox     = Such::Box.new @edit_page,   :toolbox!
     error_label = Such::Label.new @edit_page, :error_label!
@@ -179,6 +207,8 @@ class Gtk2PasswordApp
     @note     = view_row @main_page, :NOTE
     @username = view_row @main_page, :USERNAME
     @password = view_row @main_page, :PASSWORD
+
+    show_toggleling @password
   end
 
   def setup_main_page(account)
@@ -186,7 +216,7 @@ class Gtk2PasswordApp
     @url.text      = account&.url      || ''
     @note.text     = account&.note     || ''
     @username.text = account&.username || ''
-    @password.text = (account)? CONFIG[:HiddenPwd] : ''
+    @password.text =(account&.password&.>'')? CONFIG[:HiddenPwd] : ''
   end
 
   def build_tools
@@ -207,15 +237,6 @@ class Gtk2PasswordApp
       unless (name=@name.text).empty?
         url = @accounts.get(name).url
         system(Gtk3App::CONFIG[:Open], url) unless url.empty? # TODO Gtk3App :-???
-      end
-    end
-    Such::Button.new @toolbox, :SHOW, :tool_button do
-      unless (name=@name.text).empty?
-        if @password.text == CONFIG[:HiddenPwd]
-          @password.text = @accounts.get(name).password
-        else
-          @password.text = CONFIG[:HiddenPwd]
-        end
       end
     end
     Such::Button.new @toolbox, :CURRENT, :tool_button do
