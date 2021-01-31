@@ -6,10 +6,12 @@ class Gtk2PasswordApp
     @toolbox   = Such::Box.new toolbar, :toolbox!
     @pages     = Such::Box.new stage, :pages!
     @tools = @password_page = @edit_page = nil
+    @red,@green,@blue = [:Red,:Green,:Blue].map{Gdk::RGBA.parse(CONFIG[_1])}
     build_password_page
     Gtk3App.logo_press_event do #|button|
       unless @accounts.data.empty?
         menu = Such::Menu.new :main_menu!
+        now,old = Time.now.to_i,CONFIG[:TooOld]
         @accounts.data.keys.sort{|a,b|a.upcase<=>b.upcase}.each do |name|
           menu_item = Such::MenuItem.new [label:name], :main_menu_item, 'activate' do
             account = @accounts.get name
@@ -17,6 +19,9 @@ class Gtk2PasswordApp
             setup_edit_page account
             copy2clipboard(account.password, account.username)
           end
+          account = @accounts.get name
+          color = (now - account.updated > old)? @red : @blue
+          menu_item.override_color :normal, color
           menu.append menu_item
         end
         menu.show_all

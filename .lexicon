@@ -1,4 +1,5 @@
 _
+_1
 a
 a0
 about_dialog
@@ -24,6 +25,7 @@ BadUsername
 base
 BaseConvert
 block
+Blue
 bootstrap_setups
 Box
 build_add_page
@@ -42,6 +44,7 @@ cli
 Clipboard
 CLIPBOARD
 ClipboardTimeout
+color
 CONFIG
 Confirm
 convert
@@ -85,6 +88,7 @@ gets
 GLib
 GO
 graph
+Green
 Gtk
 Gtk2PasswordApp
 Gtk3App
@@ -121,6 +125,7 @@ main_menu
 MAIN_MENU
 main_menu_item
 MAIN_PAGE_LABEL
+map
 match
 menu
 Menu
@@ -132,18 +137,22 @@ name
 NAME
 names
 new
+normal
 note
 NOTE
 now
 ok
+old
 Open
 OpenSSL
 options
+override_color
 page
 PAGE
 page_label
 pages
 PAGES
+parse
 password
 PASSWORD
 password_entry
@@ -166,12 +175,14 @@ Rafini
 raise
 rand
 RAND
+Red
 Regexp
 RegexpError
 rehash
 require
 require_relative
 reset
+RGBA
 RND
 rndpwd
 row
@@ -218,6 +229,7 @@ toolbar
 toolbox
 TOOLBOX
 tool_button
+TooOld
 TooShort
 to_s
 TOTP

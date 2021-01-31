@@ -7,9 +7,24 @@ class Gtk2PasswordApp
   TOTPx = /^[A-Z2-7]{16,}$/
 
   CONFIG = {
+
+    # Hashing
+
+    Salt: s0,
+    LongPwd: 14,
+
+    # Miscellaneous Strings
+
     HelpFile: 'https://github.com/carlosjhr64/gtk2passwordapp',
     Logo: "#{UserSpace::XDG['data']}/gtk3app/gtk2passwordapp/logo.png",
     HiddenPwd: ' * * * ',
+
+    # Colors
+
+    Red: '#F00',
+    Green: '#0F0',
+    Blue: '#00F',
+    TooOld: 60*60*24*365, # Year
 
     # Buttons
 
@@ -53,11 +68,6 @@ class Gtk2PasswordApp
     PAGES: [:vertical],
     pages: h0,
     pages!: [:PAGES,:pages],
-
-    # Rehash
-
-    Salt: s0,
-    LongPwd: 14,
 
     # Page
 
