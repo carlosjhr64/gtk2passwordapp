@@ -92,6 +92,7 @@ gui
 h0
 h2q
 H2Q
+has_focus
 Hash
 has_key
 HELP

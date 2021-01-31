@@ -118,9 +118,15 @@ class Gtk2PasswordApp
 
   def visibility_toggleling(entry)
     entry.signal_connect('enter-notify-event') do
-      entry.set_visibility true
+      entry.set_visibility true unless entry.has_focus?
     end
     entry.signal_connect('leave-notify-event') do
+      entry.set_visibility false unless entry.has_focus?
+    end
+    entry.signal_connect('focus-in-event') do
+      entry.set_visibility true
+    end
+    entry.signal_connect('focus-out-event') do
       entry.set_visibility false
     end
   end
