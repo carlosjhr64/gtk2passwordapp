@@ -27,7 +27,6 @@ FromTo
 Gdk
 github
 GLib
-Goto
 gtk
 Gtk
 gui
@@ -50,6 +49,7 @@ nogui
 NONINFRINGEMENT
 notdercorated
 notoggle
+ok
 OpenSSL
 passwordapp
 PasswordApp
@@ -77,10 +77,13 @@ TOTP
 tShow
 upcase
 url
+ursure
+URSURE
 UserSpace
 WRITTERS
 XDG
 yaml
 YamlZlibBlowfish
+YesNoDialog
 yzb
 zlib

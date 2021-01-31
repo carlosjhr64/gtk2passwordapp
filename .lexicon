@@ -5,7 +5,9 @@ account
 Account
 Accounts
 add
+ADD
 add_account_entry
+add_label
 ADD_PAGE_LABEL
 add_seconds
 append
@@ -19,6 +21,7 @@ BadUsername
 base
 BaseConvert
 block
+bootstrap_setups
 Box
 build_add_page
 build_edit_page
@@ -26,6 +29,7 @@ build_main_page
 build_password_page
 build_tools
 Button
+CANCEL
 chmod
 Cipher
 CipherError
@@ -37,13 +41,19 @@ ClipboardTimeout
 CONFIG
 Confirm
 convert
+copy2clipboard
+CURRENT
 data
 delete
+DELETE
+delete_ursure
+DELETE_URSURE
 Digest
 digits
 dump
 dumpfile
 each
+EDIT
 EDIT_PAGE_LABEL
 empty
 Empty
@@ -67,6 +77,7 @@ Gdk
 get
 gets
 GLib
+GO
 graph
 Gtk
 Gtk2PasswordApp
@@ -115,6 +126,8 @@ new
 note
 NOTE
 now
+ok
+Open
 OpenSSL
 options
 page
@@ -152,6 +165,7 @@ run
 s0
 Salt
 save
+SAVE
 select
 Selection
 semantic
@@ -168,12 +182,11 @@ set_website_label
 SHA256
 SHOW
 show_all
+show_main_page
 sort
 stage
 String
 strip
-submit_button
-SUBMIT_BUTTON
 Such
 system
 text
@@ -187,12 +200,15 @@ toolbox
 TOOLBOX
 tool_button
 TooShort
+transient
 trash
 upcase
 updated
 UPDATED
 url
 URL
+ursure
+user
 username
 USERNAME
 UserSpace
@@ -204,3 +220,4 @@ view_row
 wait_for_text
 XDG
 YamlZlibBlowfish
+YesNoDialog

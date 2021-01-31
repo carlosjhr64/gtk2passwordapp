@@ -15,18 +15,22 @@ class Gtk2PasswordApp
             account = @accounts.get name
             setup_main_page account
             setup_edit_page account
-            @primary.text = pwd = account.password
-            @clipboard.text = account.username
-            GLib::Timeout.add_seconds(CONFIG[:ClipboardTimeout]) do
-              @primary.text = '' if @primary.wait_for_text == pwd
-              false
-            end
+            copy2clipboard(account.password, account.username)
           end
           menu.append menu_item
         end
         menu.show_all
         menu.popup_at_pointer
       end
+    end
+  end
+
+  def copy2clipboard(pwd, user)
+    @primary.text, @clipboard.text = pwd, user
+    GLib::Timeout.add_seconds(CONFIG[:ClipboardTimeout]) do
+      @primary.text = '' if @primary.wait_for_text == pwd
+      @clipboard.text = '' if @clipboard.wait_for_text == user
+      false
     end
   end
 
@@ -140,7 +144,7 @@ class Gtk2PasswordApp
       error_label.text = $!.message
     end
     Such::Button.new toolbox, :CANCEL, :tool_button do
-      account = @accounts.get @edit_name.text # TODO wut?
+      account = @accounts.get @edit_name.text
       setup_edit_page(account) # restore values
       @edit_page.hide
       show_main_page
@@ -208,10 +212,22 @@ class Gtk2PasswordApp
     Such::Button.new @toolbox, :SHOW, :tool_button do
       unless (name=@name.text).empty?
         if @password.text == CONFIG[:HiddenPwd]
-          @password.text = @accounts.get(@name.text).password
+          @password.text = @accounts.get(name).password
         else
           @password.text = CONFIG[:HiddenPwd]
         end
+      end
+    end
+    Such::Button.new @toolbox, :CURRENT, :tool_button do
+      unless (name=@name.text).empty?
+        account = @accounts.get name
+        copy2clipboard(account.password, account.username)
+      end
+    end
+    Such::Button.new @toolbox, :PREVIOUS, :tool_button do
+      unless (name=@name.text).empty?
+        account = @accounts.get name
+        copy2clipboard(account.previous, account.password)
       end
     end
   end

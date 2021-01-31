@@ -13,15 +13,15 @@ class Gtk2PasswordApp
 
     # Tools Labels
 
-    ADD:    [label: 'Add'],
-    EDIT:   [label: 'Edit'],
-    SHOW:   [label: 'Show'],
-    GO:     [label: 'Go'],
-    CANCEL: [label: 'Cancel'],
-    DELETE: [label: 'Delete'],
-    SAVE:   [label: 'Save'],
-  # Current:  'Current',
-  # Previous: 'Previous',
+    ADD:      [label: 'Add'],
+    EDIT:     [label: 'Edit'],
+    SHOW:     [label: 'Show'],
+    GO:       [label: 'Go'],
+    CANCEL:   [label: 'Cancel'],
+    DELETE:   [label: 'Delete'],
+    SAVE:     [label: 'Save'],
+    CURRENT:  [label: 'Current'],
+    PREVIOUS: [label: 'Previous'],
 
     # Initialize
     # Stage and Toolbar
