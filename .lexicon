@@ -148,6 +148,7 @@ password
 PASSWORD
 password_entry
 PASSWORD_ENTRY
+passwords
 pattern
 popup_at_pointer
 pp
@@ -218,6 +219,9 @@ toolbox
 TOOLBOX
 tool_button
 TooShort
+to_s
+TOTP
+TOTPx
 transient
 trash
 upcase

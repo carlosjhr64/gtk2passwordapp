@@ -4,6 +4,7 @@ class Gtk2PasswordApp
 
   H2Q = BaseConvert::FromTo.new(base: 16, digits: '0123456789ABCDEF', to_base:91, to_digits: :qgraph)
   RND = SuperRandom.new
+  TOTPx = /^[A-Z2-7]{16,}$/
 
   CONFIG = {
     HelpFile: 'https://github.com/carlosjhr64/gtk2passwordapp',

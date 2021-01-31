@@ -135,8 +135,11 @@ class Gtk2PasswordApp
   def show_toggleling(label)
     label.signal_connect('button-press-event') do |_,e|
       if e.button==1 and not (pwd=label.text).empty?
-        if pwd==CONFIG[:HiddenPwd]
+        case pwd
+        when CONFIG[:HiddenPwd]
           label.text = @accounts.get(@name.text).password
+        when TOTPx
+          label.text = TOTP.passwords(label.text)[1].to_s
         else
           label.text = CONFIG[:HiddenPwd]
         end
