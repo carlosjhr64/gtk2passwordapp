@@ -109,13 +109,6 @@ class Gtk2PasswordApp
     USERNAME: ['Username:'],
     PASSWORD: ['Password:'],
 
-    # Errors
-
-    BadUrl: 'URL must be like http://site.',
-    BadUsername: 'Username must be all graph.',
-    BadPassword: 'Password must be all graph.',
-    BadName: 'Account name must be a non-empty String.',
-
     # About Dialog
 
     about_dialog: {
@@ -127,9 +120,21 @@ class Gtk2PasswordApp
       set_website_label: 'See it at GitHub!',
     },
 
+    # Delete Dialog
+
     DELETE_URSURE: a0,
     delete_ursure: {add_label: 'Delete?'},
     delete_ursure!: [:DELETE_URSURE,:delete_ursure],
+
+    # Errors
+
+    BadUrl: 'URL must be like http://site.',
+    BadUsername: 'Username must be all graph.',
+    BadPassword: 'Password must be all graph.',
+    BadName: 'Account name must be a non-empty String.',
+    CipherError: 'Decryption error.',
+    AccountHit: 'Account exists.',
+    AccountMiss: 'Account does NOT exist.',
 
   }
 end

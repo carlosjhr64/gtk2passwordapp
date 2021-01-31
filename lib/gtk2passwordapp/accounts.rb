@@ -21,7 +21,7 @@ class Accounts
     reset(password) if password
     data = @yzb.load(@dumpfile)
     # Sanity check... load will raise CipherError on decription error.
-    raise "Decryption error." unless data.class == Hash
+    raise CONFIG[:CipherError] unless data.class == Hash
     @data = data
   end
 
@@ -36,16 +36,17 @@ class Accounts
   end
 
   def delete(account)
+    raise CONFIG[:AccountMiss] unless @data.has_key?(account)
     @data.delete(account)
   end
 
   def get(account)
-    raise "Account #{account} does NOT exists!" unless @data.has_key?(account)
+    raise CONFIG[:AccountMiss] unless @data.has_key?(account)
     Account.new(account, @data)
   end
 
   def add(account)
-    raise "Account #{account} exists!" if @data.has_key?(account)
+    raise CONFIG[:AccountHit] if @data.has_key?(account)
     Account.new(account, @data)
   end
 
