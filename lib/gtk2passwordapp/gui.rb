@@ -99,6 +99,7 @@ class Gtk2PasswordApp
     add_account_entry = field_row(@add_page, :NAME) do
       name = add_account_entry.text.strip
       @accounts.add name
+      @accounts.save
       account = @accounts.get name
       setup_edit_page(account)
       setup_main_page(account)
@@ -156,9 +157,13 @@ class Gtk2PasswordApp
     visibility_toggleling @edit_password
 
     generator = Such::Box.new @edit_page, :toolbox!
+    pwdlen=rndpwd=nil
     Such::Button.new generator, :RAND, :tool_button do
-      hex = RND.hexadecimal
-      @edit_password.text = hex
+      rndpwd = H2Q.convert RND.hexadecimal
+      @edit_password.text = rndpwd[0...pwdlen.value]
+    end
+    pwdlen = Such::SpinButton.new generator, :pwdlen!, 'value-changed' do
+      @edit_password.text = rndpwd[0...pwdlen.value] if rndpwd
     end
 
     toolbox     = Such::Box.new @edit_page,   :toolbox!
@@ -171,6 +176,7 @@ class Gtk2PasswordApp
       account.username = @edit_username.text.strip
       account.password = @edit_password.text.strip
       @accounts.save
+      rndpwd = nil
       @edit_page.hide
       setup_main_page(account)
       show_main_page
@@ -179,8 +185,9 @@ class Gtk2PasswordApp
     end
     Such::Button.new toolbox, :CANCEL, :tool_button do
       account = @accounts.get @edit_name.text
-      setup_edit_page(account) # restore values
+      rndpwd = nil
       @edit_page.hide
+      setup_edit_page(account) # restore values
       show_main_page
     end
     Such::Button.new toolbox, :DELETE, :tool_button do
@@ -189,6 +196,7 @@ class Gtk2PasswordApp
       if ursure.ok?
         @accounts.delete @edit_name.text
         @accounts.save
+        rndpwd = nil
         @edit_page.hide
         bootstrap_setups
         show_main_page

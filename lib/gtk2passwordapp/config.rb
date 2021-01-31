@@ -14,6 +14,12 @@ class Gtk2PasswordApp
 
     tool_button: h0,
 
+    # Spin Buttons
+
+    PWDLEN: [3,40,1],
+    pwdlen: {set_value: 13},
+    pwdlen!: [:PWDLEN,:pwdlen],
+
     # Tools Labels
 
     ADD:      [label: 'Add'],

@@ -97,7 +97,6 @@ Hash
 has_key
 HELP
 HelpFile
-hex
 hexadecimal
 hexdigest
 HiddenPwd
@@ -159,6 +158,8 @@ print
 puts
 pwd
 PwdFile
+pwdlen
+PWDLEN
 qgraph
 Rafini
 raise
@@ -171,6 +172,7 @@ require
 require_relative
 reset
 RND
+rndpwd
 row
 Ruby30
 run
@@ -187,6 +189,7 @@ set_program_name
 set_selectable
 setup_edit_page
 setup_main_page
+set_value
 set_version
 set_visibility
 set_website
@@ -197,6 +200,7 @@ show_main_page
 show_toggleling
 signal_connect
 sort
+SpinButton
 stage
 String
 strip
@@ -228,6 +232,7 @@ USERNAME
 UserSpace
 using
 v
+value
 VERSION
 vertical
 view_row
