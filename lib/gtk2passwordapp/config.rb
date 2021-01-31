@@ -21,9 +21,9 @@ class Gtk2PasswordApp
 
     # Colors
 
-    Red: '#F00',
-    Green: '#0F0',
-    Blue: '#00F',
+    Red: '#900',
+    Green: '#090',
+    Blue: '#009',
     TooOld: 60*60*24*365, # Year
 
     # Buttons

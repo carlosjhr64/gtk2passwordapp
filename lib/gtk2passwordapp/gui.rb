@@ -5,29 +5,39 @@ class Gtk2PasswordApp
     @accounts  = Accounts.new(CONFIG[:PwdFile])
     @toolbox   = Such::Box.new toolbar, :toolbox!
     @pages     = Such::Box.new stage, :pages!
-    @tools = @password_page = @edit_page = nil
     @red,@green,@blue = [:Red,:Green,:Blue].map{Gdk::RGBA.parse(CONFIG[_1])}
+    @recent = []
+    @tools = @password_page = @edit_page = @menu = nil
     build_password_page
+    build_logo_menu
+  end
+
+  def build_logo_menu
     Gtk3App.logo_press_event do #|button|
       unless @accounts.data.empty?
-        menu = Such::Menu.new :main_menu!
-        now,old = Time.now.to_i,CONFIG[:TooOld]
-        @accounts.data.keys.sort{|a,b|a.upcase<=>b.upcase}.each do |name|
-          menu_item = Such::MenuItem.new [label:name], :main_menu_item, 'activate' do
-            account = @accounts.get name
-            setup_main_page account
-            setup_edit_page account
-            copy2clipboard(account.password, account.username)
-          end
-          account = @accounts.get name
-          color = (now - account.updated > old)? @red : @blue
-          menu_item.override_color :normal, color
-          menu.append menu_item
-        end
-        menu.show_all
-        menu.popup_at_pointer
+        @menu = Such::Menu.new :main_menu!
+        @recent.each do |name| add_menu_item(name, @green) end
+        @accounts.data.keys.sort{|a,b|a.upcase<=>b.upcase}.each do |name| add_menu_item(name) end
+        @menu.show_all
+        @menu.popup_at_pointer
       end
     end
+  end
+
+  def add_menu_item(name, color=nil)
+    menu_item = Such::MenuItem.new [label:name], :main_menu_item, 'activate' do selected_account(name) end
+    account = @accounts.get name
+    color = (Time.now.to_i - account.updated > CONFIG[:TooOld])? @red : @blue unless color
+    menu_item.override_color :normal, color
+    @menu.append menu_item
+  end
+
+  def selected_account(name)
+    @recent.unshift name; @recent.uniq!; @recent.pop if @recent.length>3
+    account = @accounts.get name
+    setup_main_page account
+    setup_edit_page account
+    copy2clipboard(account.password, account.username)
   end
 
   def copy2clipboard(pwd, user)
