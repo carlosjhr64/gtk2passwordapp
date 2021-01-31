@@ -293,7 +293,7 @@ class Gtk2PasswordApp
     Such::Button.new @toolbox, :GO, :tool_button do
       unless (name=@name.text).empty?
         url = @accounts.get(name).url
-        system(Gtk3App::CONFIG[:Open], url) unless url.empty? # TODO Gtk3App :-???
+        system(Gtk3App::CONFIG[:Open], url) unless url.empty?
       end
     end
     Such::Button.new @toolbox, :CURRENT, :tool_button do
