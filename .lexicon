@@ -2,6 +2,7 @@ _
 _1
 a
 a0
+about
 about_dialog
 account
 Account
@@ -12,9 +13,11 @@ add
 ADD
 add_account_entry
 add_label
+add_menu_item
 ADD_PAGE_LABEL
 add_seconds
 append
+app_menu
 attr_reader
 b
 BackupFile
@@ -30,6 +33,7 @@ bootstrap_setups
 Box
 build_add_page
 build_edit_page
+build_logo_menu
 build_main_page
 build_password_page
 build_tools
@@ -105,6 +109,7 @@ hexadecimal
 hexdigest
 HiddenPwd
 hide
+hide_main_page
 horizontal
 IGNORECASE
 info
@@ -127,11 +132,11 @@ main_menu_item
 MAIN_PAGE_LABEL
 map
 match
-menu
 Menu
 menu_item
 MenuItem
 message
+minime
 MinPwdLen
 name
 NAME
@@ -142,7 +147,6 @@ note
 NOTE
 now
 ok
-old
 Open
 OpenSSL
 options
@@ -157,8 +161,10 @@ password
 PASSWORD
 password_entry
 PASSWORD_ENTRY
+PASSWORD_PAGE_LABEL
 passwords
 pattern
+pop
 popup_at_pointer
 pp
 previous
@@ -171,6 +177,7 @@ PwdFile
 pwdlen
 PWDLEN
 qgraph
+quit
 Rafini
 raise
 rand
@@ -182,6 +189,9 @@ rehash
 require
 require_relative
 reset
+reset_password
+reset_ursure
+RESET_URSURE
 RGBA
 RND
 rndpwd
@@ -193,6 +203,7 @@ Salt
 save
 SAVE
 select
+selected_account
 Selection
 semantic
 set_comments
@@ -207,6 +218,7 @@ set_visibility
 set_website
 set_website_label
 SHA256
+show
 show_all
 show_main_page
 show_toggleling
@@ -236,6 +248,8 @@ TOTP
 TOTPx
 transient
 trash
+uniq
+unshift
 upcase
 updated
 UPDATED
@@ -253,6 +267,7 @@ VERSION
 vertical
 view_row
 visibility_toggleling
+visible
 wait_for_text
 XDG
 YamlZlibBlowfish

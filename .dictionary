@@ -45,6 +45,7 @@ LongPwd
 lst
 MenuItem
 MERCHANTABILITY
+minime
 Minime
 MinPwdLen
 nogui
@@ -86,6 +87,8 @@ totp
 TOTP
 TOTPx
 tShow
+uniq
+unshift
 upcase
 url
 ursure

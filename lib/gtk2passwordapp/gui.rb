@@ -5,22 +5,41 @@ class Gtk2PasswordApp
     @accounts  = Accounts.new(CONFIG[:PwdFile])
     @toolbox   = Such::Box.new toolbar, :toolbox!
     @pages     = Such::Box.new stage, :pages!
-    @red,@green,@blue = [:Red,:Green,:Blue].map{Gdk::RGBA.parse(CONFIG[_1])}
     @recent = []
-    @tools = @password_page = @edit_page = @menu = nil
+    @reset  = false
+    @red,@green,@blue = [:Red,:Green,:Blue].map{Gdk::RGBA.parse(CONFIG[_1])}
+    @tools = @password_page = @add_page = @edit_page = @main_page = @menu = nil
     build_password_page
     build_logo_menu
   end
 
   def build_logo_menu
-    Gtk3App.logo_press_event do #|button|
-      unless @accounts.data.empty?
-        @menu = Such::Menu.new :main_menu!
-        @recent.each do |name| add_menu_item(name, @green) end
-        @accounts.data.keys.sort{|a,b|a.upcase<=>b.upcase}.each do |name| add_menu_item(name) end
-        @menu.show_all
-        @menu.popup_at_pointer
+    Gtk3App.logo_press_event do |button|
+      next unless @main_page&.visible?
+      case button
+      when 1
+        unless @accounts.data.empty?
+          @menu = Such::Menu.new :main_menu!
+          @recent.each do |name| add_menu_item(name, @green) end
+          @accounts.data.keys.sort{|a,b|a.upcase<=>b.upcase}.each do |name| add_menu_item(name) end
+          @menu.show_all
+          @menu.popup_at_pointer
+        end
+      when 2
+        reset_password
+      when 3
+        # Gets captured by Gtk3App's main menu
       end
+    end
+  end
+
+  def reset_password
+    ursure = Gtk3App::YesNoDialog.new :reset_ursure!
+    Gtk3App.transient ursure
+    if ursure.ok?
+      @reset = true
+      hide_main_page
+      @password_page.show
     end
   end
 
@@ -49,12 +68,6 @@ class Gtk2PasswordApp
     end
   end
 
-  def rehash(pwd)
-    pwd += CONFIG[:Salt] if pwd.length < CONFIG[:LongPwd]
-    pwd = Digest::SHA256.hexdigest(pwd).upcase
-    H2Q.convert pwd
-  end
-
   def view_row(page, label)
     row = Such::Box.new page, :field_row!
     Such::Label.new(row, label, :field_label)
@@ -72,6 +85,11 @@ class Gtk2PasswordApp
     @toolbox.show_all
   end
 
+  def hide_main_page
+    @main_page.hide
+    @toolbox.hide
+  end
+
   def bootstrap_setups
     names = @accounts.data.keys
     account = (names.empty?)? nil : @accounts.get(names[rand(names.length)])
@@ -79,18 +97,26 @@ class Gtk2PasswordApp
     setup_main_page(account)
   end
 
+  def rehash(pwd)
+    pwd += CONFIG[:Salt] if pwd.length < CONFIG[:LongPwd]
+    pwd = Digest::SHA256.hexdigest(pwd).upcase
+    H2Q.convert pwd
+  end
+
   def build_password_page
     @password_page = Such::Box.new @pages, :page!
-    # TODO: :PASSWORD_PAGE_LABEL ?
+    Such::Label.new @password_page, :PASSWORD_PAGE_LABEL, :page_label
     error_label,previous = nil,'' # updates below
     password_entry = field_row(@password_page, :PASSWORD, :password_entry!) do
       pwd = password_entry.text.strip
+      password_entry.text = ''
       raise 'Password too short!' if pwd.length < CONFIG[:MinPwdLen]
-      if @accounts.exist?
+      if not @reset and @accounts.exist?
         @accounts.load rehash pwd
       else
         raise CONFIG[:Confirm] unless pwd==previous
         @accounts.save rehash pwd
+        @reset = false
       end
       @password_page.hide
       build_add_page  unless @add_page
@@ -101,7 +127,6 @@ class Gtk2PasswordApp
       show_main_page
     rescue
       error_label.text = $!.message
-      password_entry.text = ''
       previous = pwd
     end
     error_label = Such::Label.new @password_page, :error_label!
@@ -254,14 +279,12 @@ class Gtk2PasswordApp
   def build_tools
     @tools = true
     Such::Button.new @toolbox, :ADD, :tool_button do
-      @main_page.hide
-      @toolbox.hide
+      hide_main_page
       @add_page.show_all
     end
     Such::Button.new @toolbox, :EDIT, :tool_button do
       unless (name=@name.text).empty?
-        @main_page.hide
-        @toolbox.hide
+        hide_main_page
         @edit_page.show_all
       end
     end

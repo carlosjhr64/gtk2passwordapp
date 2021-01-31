@@ -19,6 +19,12 @@ class Gtk2PasswordApp
     Logo: "#{UserSpace::XDG['data']}/gtk3app/gtk2passwordapp/logo.png",
     HiddenPwd: ' * * * ',
 
+    # Overriding Gtk3App's app_menu:
+
+    app_menu: {
+      add_menu_item: [:minime!,:about!,:quit!],
+    },
+
     # Colors
 
     Red: '#900',
@@ -117,6 +123,7 @@ class Gtk2PasswordApp
 
     # Page Labels
 
+    PASSWORD_PAGE_LABEL: ['Enter Master Password'],
     ADD_PAGE_LABEL: ['Add Account'],
     EDIT_PAGE_LABEL: ['Edit Account'],
     MAIN_PAGE_LABEL: ['View Account'],
@@ -145,6 +152,12 @@ class Gtk2PasswordApp
     DELETE_URSURE: a0,
     delete_ursure: {add_label: 'Delete?'},
     delete_ursure!: [:DELETE_URSURE,:delete_ursure],
+
+    # Reset Dialog
+
+    RESET_URSURE: a0,
+    reset_ursure: {add_label: 'Reset Master Password?'},
+    reset_ursure!: [:RESET_URSURE,:reset_ursure],
 
     # Errors
 
