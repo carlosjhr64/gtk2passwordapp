@@ -110,7 +110,7 @@ class Gtk2PasswordApp
     password_entry = field_row(@password_page, :PASSWORD, :password_entry!) do
       pwd = password_entry.text.strip
       password_entry.text = ''
-      raise 'Password too short!' if pwd.length < CONFIG[:MinPwdLen]
+      raise CONFIG[:TooShort] if pwd.length < CONFIG[:MinPwdLen]
       if not @reset and @accounts.exist?
         @accounts.load rehash pwd
       else

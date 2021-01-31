@@ -59,7 +59,8 @@ class Gtk2PasswordApp
 
     ClipboardTimeout: 15,
     PwdFile: "#{UserSpace::XDG['cache']}/gtk3app/gtk2passwordapp/dump.yzb",
-    BackupFile: File.expand_path('~/Dropbox/gtk2passwordapp.yzb'),
+
+    # Logo's Main Menu
 
     MAIN_MENU: a0,
     main_menu: h0,
@@ -67,9 +68,13 @@ class Gtk2PasswordApp
 
     main_menu_item: h0,
 
+    # Toolbar's Toolbox
+
     TOOLBOX: [:horizontal],
     toolbox: h0,
     toolbox!: [:TOOLBOX,:toolbox],
+
+    # Stage's Pages
 
     PAGES: [:vertical],
     pages: h0,
@@ -118,7 +123,6 @@ class Gtk2PasswordApp
     # Password Page
 
     MinPwdLen: 7,
-    TooShort: "Password too short!",
     Confirm: "Confirm password!",
 
     # Page Labels
@@ -168,6 +172,7 @@ class Gtk2PasswordApp
     CipherError: 'Decryption error.',
     AccountHit: 'Account exists.',
     AccountMiss: 'Account does NOT exist.',
+    TooShort: "Password too short!",
 
   }
 end
