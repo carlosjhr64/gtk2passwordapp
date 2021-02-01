@@ -36,8 +36,8 @@ lib/gtk2passwordapp/gui.rb
   )
   s.executables << 'gtk2passwordapp'
   s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 2.0', '>= 2.0.210127'
-  s.add_runtime_dependency 'base_convert', '~> 5.0', '>= 5.0.210126'
-  s.add_runtime_dependency 'gtk3app', '~> 4.0', '>= 4.0.210128'
+  s.add_runtime_dependency 'base_convert', '~> 6.0', '>= 6.0.210201'
+  s.add_runtime_dependency 'gtk3app', '~> 5.0', '>= 5.0.210201'
   s.add_runtime_dependency 'base32', '= 0.3.4'
   s.add_runtime_dependency 'totp', '= 1.0.0'
   s.add_runtime_dependency 'super_random', '~> 2.0', '>= 2.0.210126'
