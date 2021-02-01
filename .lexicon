@@ -20,7 +20,6 @@ append
 app_menu
 attr_reader
 b
-BackupFile
 BadName
 BadPassword
 BadUrl
@@ -165,6 +164,7 @@ PASSWORD_PAGE_LABEL
 passwords
 pattern
 pop
+popup_accounts_menu
 popup_at_pointer
 pp
 previous

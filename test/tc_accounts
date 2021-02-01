@@ -4,6 +4,12 @@ require 'yaml_zlib_blowfish'
 require 'gtk2passwordapp/account'
 require 'gtk2passwordapp/accounts'
 
+CONFIG = {
+  CipherError: 'wut',
+  AccountMiss: 'wut',
+  AccountHit:  'wut',
+}
+
 class TestAccounts < Test::Unit::TestCase
   def test_accounts()
     assert_nothing_raised() do

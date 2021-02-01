@@ -2,7 +2,12 @@
 require 'test/unit'
 require 'gtk2passwordapp/account'
 
-CONFIG = {}
+CONFIG = {
+  BadName:     'wut',
+  BadPassword: 'wut',
+  BadUsername: 'wut',
+  BadUrl:      'wut',
+}
 class TestAccount < Test::Unit::TestCase
   DATA = {
     'Chocolate'  =>  [ 'ThePassword', 'ThePreviousPassword', 'UserName', 'http://url', 'TheNote', 0 ],

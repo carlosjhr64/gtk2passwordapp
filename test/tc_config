@@ -1,46 +1,40 @@
 #! ruby
 require 'test/unit'
-require 'xdg'
-require 'rafini'
 
-module Gtk2PasswordApp
-  VERSION = `ruby -I ./lib ./bin/gtk2pwdV -v`.strip
+require 'rafini'
+require 'base_convert'
+require 'super_random'
+require 'user_space'
+class Gtk2PasswordApp
+  VERSION = `ruby -I ./lib ./bin/gtk2passwordapp -v`.strip
 end
+
 require 'gtk2passwordapp/config'
 
 class TestConfig < Test::Unit::TestCase
   using Rafini::String
   def test_config
-    assert_nothing_raised() do
+    config = Gtk2PasswordApp::CONFIG
+    assert_equal Hash, config.class
 
-      dir = File.dirname __dir__
-      assert_equal dir, Gtk2PasswordApp::APPDIR
-
-      assert_equal Hash, Gtk2PasswordApp::CONFIG.class
-
-      thing = Gtk2PasswordApp::CONFIG[:thing]
-      assert_not_nil thing
-      assert_equal Hash, thing.class
-
-      # Checking convention use
-      thing.each do |k,v|
-        case k
-        when /^[A-Z_]+$/
-          assert_equal Array, v.class
-        when /^[a-z_]+$/
-          assert_equal Hash, v.class
-        when /^[a-zA-Z]+$/
-          assert((v.class==String) || (v.class==Fixnum))
-        when /^\w+\!$/
-          assert_equal Array, v.class
-        else
-          raise "Got bad thing key :#{k}."
-        end
+    # Checking convention use
+    config.each do |k,v|
+      case k
+      when /^[A-Z_]+$/
+        assert_equal Array, v.class
+      when /^[a-z_]+$/
+        assert_equal Hash, v.class
+      when /^[a-zA-Z]+$/
+        assert((v.class==String) || (v.class==Fixnum))
+      when /^\w+\!$/
+        assert_equal Array, v.class
+      else
+        raise "Got bad thing key :#{k}."
       end
-
-      # sanity checks
-      assert_equal Gtk2PasswordApp::VERSION.semantic(0..1), thing[:about_dialog][:set_version]
-      assert_equal 'Password Manager', thing[:about_dialog][:set_program_name]
     end
+
+    # sanity checks
+    assert_equal Gtk2PasswordApp::VERSION.semantic(0..1), config[:about_dialog][:set_version]
+    assert_equal 'Password Manager', config[:about_dialog][:set_program_name]
   end
 end
