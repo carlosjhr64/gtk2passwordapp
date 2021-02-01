@@ -1,6 +1,6 @@
 # Gtk2PasswordApp
 
-* [VERSION 6.0.210131](https://github.com/carlosjhr64/gtk2passwordapp/releases)
+* [VERSION 6.0.210201](https://github.com/carlosjhr64/gtk2passwordapp/releases)
 * [github](https://github.com/carlosjhr64/gtk2passwordapp)
 * [rubygems](https://rubygems.org/gems/gtk2passwordapp)
 
