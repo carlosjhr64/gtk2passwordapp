@@ -15,7 +15,6 @@ class Gtk2PasswordApp
 
     # Miscellaneous Strings
 
-    HelpFile: 'https://github.com/carlosjhr64/gtk2passwordapp',
     Logo: "#{UserSpace::XDG['data']}/gtk3app/gtk2passwordapp/logo.png",
     HiddenPwd: ' * * * ',
 

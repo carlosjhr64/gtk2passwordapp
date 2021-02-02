@@ -4,6 +4,8 @@
 * [github](https://github.com/carlosjhr64/gtk2passwordapp)
 * [rubygems](https://rubygems.org/gems/gtk2passwordapp)
 
+![gui](test/gui.png)
+
 ## Description:
 
 Ruby-Gnome Password Manager.
@@ -40,10 +42,23 @@ Default passwords data file is:
   ~/.cache/gtk3app/gtk2passwordapp/dump.yzb
 ```
 
-## More:
+## Gui:
 
-"Mouse Left Click" on window to get the application menu.
+Mouse clicks on logo:
 
+1. `Right` to get the passwords list and select.
+2. `Center` to reset the master password.
+3. `Left` to get the application menu.
+
+When you select an account,
+the username/password will be in clipboard/primary for a few seconds.
+
+View Account page:
+
+* click on password to toggle visibility.
+* click on secret to toggle TOTP(secret is password).
+* `Current` button will put username/password in clipboard/primary for a few seconds. 
+* `Previous` button will put password/previous in clipboard/primary for a few seconds. 
 
 ## Configuration:
 
@@ -51,12 +66,20 @@ Default passwords data file is:
 $ ls ~/.config/gtk3app/gtk2passwordapp/config-?.?.rbon
 ```
 
-* Salt:  If your master-password length is under 14(MinPwdLen), it'll append this Salt.
-* TOTP:  If password matches this pattern, it will show the time based one time code.
-* BackupFile:  Although the GUI allows you to specify the file, this gives a default.
+* Salt:  If your master password length is under 14(LongPwd), it'll append this Salt.
 * TooOld:  I have this set for a year (in seconds).
-* CustomDigits:  I have this as "3479ACEFHJKLMNPRTUVWXYabcdefghijkmnopqrstuvwxyz".
-* Custom:  I have this as "Custom".
+* PwdFile:  passwords file... you'll want include this file in your back-ups.
+
+If you're upgrading from `gtk2pwdV`,
+copy your passwords files to the new file name:
+
+```shell
+$ cp ~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat  ~/.cache/gtk3app/gtk2passwordapp/dump.yzb
+```
+
+And remember to set your `Salt:` in the configuration file.
+The configuration file is created upon the first run of `gtk2passwordapp`, so
+you'll need to do that first.
 
 ## LICENSE:
 
