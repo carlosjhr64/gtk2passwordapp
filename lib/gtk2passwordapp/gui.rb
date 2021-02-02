@@ -73,7 +73,7 @@ class Gtk2PasswordApp
   def view_row(page, label)
     row = Such::Box.new page, :field_row!
     Such::Label.new(row, label, :field_label)
-    Such::Label.new(row, :field_label!)
+    Such::Label.new(row, :field_view!)
   end
 
   def field_row(page, label, entry=:field_entry!, &block)

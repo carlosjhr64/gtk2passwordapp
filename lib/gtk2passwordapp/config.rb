@@ -19,6 +19,16 @@ class Gtk2PasswordApp
     Logo: "#{UserSpace::XDG['data']}/gtk3app/gtk2passwordapp/logo.png",
     HiddenPwd: ' * * * ',
 
+    # Overriding Gtk3App's window, main:
+
+    main: { set_title: 'Password Manager' },
+
+    # Overriding Gtk3App's toolbar
+    toolbar: {
+      set_expanded: true,
+      into: [:pack_start, expand:true, fill:true, padding:4],
+    },
+
     # Overriding Gtk3App's app_menu:
 
     app_menu: {
@@ -34,7 +44,10 @@ class Gtk2PasswordApp
 
     # Buttons
 
-    tool_button: h0,
+    tool_button: {
+      set_width_request: 1,
+      into: [:pack_start, expand:true, fill:true, padding:1],
+    },
 
     # Spin Buttons
 
@@ -99,19 +112,42 @@ class Gtk2PasswordApp
     # Field Label
 
     FIELD_LABEL: a0,
-    field_label: {set_selectable: true},
+    field_label: {
+      set_selectable: false,
+      set_width_request: 80,
+      set_alignment: [1.0,0.5],
+      set_padding: [4,4],
+    },
     field_label!: [:FIELD_LABEL, :field_label],
+
+    # Field View
+
+    FIELD_VIEW: a0,
+    field_view: {
+      set_selectable: true,
+      set_width_request: 250,
+      set_alignment: [0.0,0.5],
+      set_padding: [4,4],
+    },
+    field_view!: [:FIELD_VIEW, :field_view],
 
     # Field Entry
 
     FIELD_ENTRY: a0,
-    field_entry: h0,
+    field_entry: {
+      set_width_request: 250,
+      into: [:pack_start, expand:true, fill:true, padding:4],
+    },
     field_entry!: [:FIELD_ENTRY,:field_entry],
 
     # Password Entry
 
     PASSWORD_ENTRY: a0,
-    password_entry: {set_visibility: false},
+    password_entry: {
+      set_visibility: false,
+      set_width_request: 250,
+      into: [:pack_start, expand:true, fill:true, padding:4],
+    },
     password_entry!: [:PASSWORD_ENTRY,:password_entry],
 
     # Error Label

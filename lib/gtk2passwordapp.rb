@@ -1,5 +1,5 @@
 class Gtk2PasswordApp
-  VERSION = '6.0.210201'
+  VERSION = '6.0.210202'
   HELP = <<~HELP
     Usage:
       gtk2passwordapp [:gui+]
