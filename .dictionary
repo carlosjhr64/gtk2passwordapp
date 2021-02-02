@@ -1,9 +1,7 @@
 ABCDEF
 AccountHit
 AccountMiss
-ACEFHJKLMNPRTUVWXYabcdefghijkmnopqrstuvwxyz
 attr
-BackupFile
 BadName
 BadPassword
 BadUrl
@@ -20,7 +18,8 @@ Cli
 ClipboardTimeout
 config
 CONFIG
-CustomDigits
+cp
+dat
 datafile
 decription
 Dont
@@ -33,7 +32,6 @@ gtk
 Gtk
 gui
 Gui
-HelpFile
 hexdigest
 HiddenPwd
 http
@@ -61,6 +59,7 @@ pwd
 PwdFile
 pwdlen
 PWDLEN
+pwdV
 qgraph
 Rafini
 rb

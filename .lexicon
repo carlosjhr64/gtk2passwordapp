@@ -74,6 +74,7 @@ error_label
 ERROR_LABEL
 exist
 exit
+expand
 expand_path
 extend
 field_entry
@@ -82,7 +83,10 @@ field_label
 FIELD_LABEL
 field_row
 FIELD_ROW
+field_view
+FIELD_VIEW
 File
+fill
 FromTo
 Gdk
 generator
@@ -103,7 +107,6 @@ has_focus
 Hash
 has_key
 HELP
-HelpFile
 hexadecimal
 hexdigest
 HiddenPwd
@@ -113,6 +116,7 @@ horizontal
 IGNORECASE
 info
 initialize
+into
 k
 keys
 klass
@@ -125,6 +129,7 @@ Logo
 logo_press_event
 LongPwd
 lst
+main
 main_menu
 MAIN_MENU
 main_menu_item
@@ -150,6 +155,8 @@ Open
 OpenSSL
 options
 override_color
+pack_start
+padding
 page
 PAGE
 page_label
@@ -206,10 +213,14 @@ select
 selected_account
 Selection
 semantic
+set_alignment
 set_comments
 set_copyright
+set_expanded
+set_padding
 set_program_name
 set_selectable
+set_title
 setup_edit_page
 setup_main_page
 set_value
@@ -217,6 +228,7 @@ set_version
 set_visibility
 set_website
 set_website_label
+set_width_request
 SHA256
 show
 show_all
