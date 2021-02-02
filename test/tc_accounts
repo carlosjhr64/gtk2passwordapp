@@ -13,7 +13,7 @@ CONFIG = {
 class TestAccounts < Test::Unit::TestCase
   def test_accounts()
     assert_nothing_raised() do
-      dumpfile = './test/dump.yzb'
+      dumpfile = './test/temp.yzb'
 
       accounts = Gtk2PasswordApp::Accounts.new(dumpfile, 'ThePassphrase')
       assert_equal 0, accounts.names.length
