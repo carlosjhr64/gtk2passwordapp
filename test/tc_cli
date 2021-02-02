@@ -1,0 +1,69 @@
+#! ruby
+require 'test/unit'
+
+class TestCli < Test::Unit::TestCase
+  def test_cli_good
+    string = nil
+    IO.popen('gtk2passwordapp --nogui ButtNotes test/dump.yzb', 'w+') do |pipe|
+      pipe.puts '1234'
+      pipe.puts '567'
+      string = pipe.read
+    end
+    expected = "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
+               "Enter password: " +
+               "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
+               "Enter salt: " +
+               "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
+               "{\"ButtNotes\"=>\n" +
+               "  [\"$bC4pii5$U{Br\",\n" +
+               "   \"\",\n" +
+               "   \"butterflies\",\n" +
+               "   \"https://butt.notes.com\",\n" +
+               "   \"Many notes on butts\",\n" +
+               "   1612292617]}\n"
+    assert_equal expected, string
+  end
+
+  def test_cli_empty
+    string = nil
+    IO.popen('gtk2passwordapp --nogui NoSuchAccount test/dump.yzb', 'w+') do |pipe|
+      pipe.puts '1234'
+      pipe.puts '567'
+      string = pipe.read
+    end
+    expected = "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
+               "Enter password: " +
+               "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
+               "Enter salt: " +
+               "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
+               "{}\n"
+    assert_equal expected, string
+  end
+
+  def test_cli_not_found
+    string = nil
+    IO.popen('gtk2passwordapp --nogui ButtNotes not_found.yzb 2>&1', 'w+') do |pipe|
+      pipe.puts '1234'
+      pipe.puts '567'
+      string = pipe.read
+    end
+    expected = "Passwords data file missing: not_found.yzb\n"
+    assert_equal expected, string
+  end
+
+  def test_cli_bad_cipher
+    string = nil
+    IO.popen('gtk2passwordapp --nogui ButtNotes test/dump.yzb 2>&1', 'w+') do |pipe|
+      pipe.puts '567'
+      pipe.puts '1234'
+      string = pipe.read
+    end
+    expected = "[H[2J[3J[H[2J[3J" +
+               "Enter password: " +
+               "[H[2J[3J[H[2J[3J" +
+               "Enter salt: " +
+               "[H[2J[3J[H[2J[3J" +
+               "Bad password+salt\n"
+    assert_equal expected, string
+  end
+end
