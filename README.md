@@ -28,7 +28,7 @@ Usage:
   gtk2passwordapp :cli [<pattern> [<file>]]
   gtk2passwordapp :info
 Gui:
-  --minime        Real minime
+  --minime       	Real minime
   --notoggle     	Minime wont toggle decorated and keep above
   --notdercorated	Dont decorate window
 Cli:
