@@ -1,11 +1,12 @@
 class Gtk2PasswordApp
-  VERSION = '6.0.210202'
+  VERSION = '6.1.210203'
   HELP = <<~HELP
     Usage:
       gtk2passwordapp [:gui+]
       gtk2passwordapp :cli [<pattern> [<file>]]
       gtk2passwordapp :info
     Gui:
+      --minime       \tReal minime
       --notoggle     \tMinime wont toggle decorated and keep above
       --notdercorated\tDont decorate window
     Cli:

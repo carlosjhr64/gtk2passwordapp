@@ -6,7 +6,7 @@ class Gtk2PasswordApp
     @toolbox   = Such::Box.new toolbar, :toolbox!
     @pages     = Such::Box.new stage, :pages!
     @recent = []
-    @reset  = false
+    @reset = @on_main_page = false
     @red,@green,@blue = [:Red,:Green,:Blue].map{Gdk::RGBA.parse(CONFIG[_1])}
     @tools = @password_page = @add_page = @edit_page = @main_page = @menu = nil
     build_password_page
@@ -15,7 +15,7 @@ class Gtk2PasswordApp
 
   def build_logo_menu
     Gtk3App.logo_press_event do |button|
-      next unless @main_page&.visible?
+      next unless @on_main_page
       case button
       when 1
         popup_accounts_menu unless @accounts.data.empty?
@@ -83,11 +83,13 @@ class Gtk2PasswordApp
   end
 
   def show_main_page
+    @on_main_page = true
     @main_page.show_all
     @toolbox.show_all
   end
 
   def hide_main_page
+    @on_main_page = false
     @main_page.hide
     @toolbox.hide
   end

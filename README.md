@@ -1,6 +1,6 @@
 # Gtk2PasswordApp
 
-* [VERSION 6.0.210202](https://github.com/carlosjhr64/gtk2passwordapp/releases)
+* [VERSION 6.1.210203](https://github.com/carlosjhr64/gtk2passwordapp/releases)
 * [github](https://github.com/carlosjhr64/gtk2passwordapp)
 * [rubygems](https://rubygems.org/gems/gtk2passwordapp)
 
@@ -28,6 +28,7 @@ Usage:
   gtk2passwordapp :cli [<pattern> [<file>]]
   gtk2passwordapp :info
 Gui:
+  --minime        Real minime
   --notoggle     	Minime wont toggle decorated and keep above
   --notdercorated	Dont decorate window
 Cli:
