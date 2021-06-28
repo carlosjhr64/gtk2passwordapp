@@ -20,7 +20,6 @@ $ gem install gtk2passwordapp
 ```
 
 ## Help:
-
 ```shell
 $ gtk2passwordapp --help
 Usage:
@@ -42,7 +41,6 @@ one can give a pattern to filter by account names.
 Default passwords data file is:
   ~/.cache/gtk3app/gtk2passwordapp/dump.yzb
 ```
-
 ## Gui:
 
 Mouse clicks on logo:
