@@ -241,6 +241,7 @@ class Gtk2PasswordApp
       ursure = Gtk3App::YesNoDialog.new :delete_ursure!
       Gtk3App.transient ursure
       if ursure.ok?
+        @recent.delete @edit_name.text
         @accounts.delete @edit_name.text
         @accounts.save
         rndpwd = nil
