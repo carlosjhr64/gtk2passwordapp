@@ -48,6 +48,7 @@ Minime
 MinPwdLen
 nogui
 NONINFRINGEMENT
+notdecorated
 notdercorated
 notoggle
 ok
@@ -76,15 +77,12 @@ stderr
 stdin
 sublicense
 SuperRandom
-tDont
-tMinime
 toggleling
 TooOld
 TooShort
 totp
 TOTP
 TOTPx
-tReal
 tShow
 uniq
 unshift
