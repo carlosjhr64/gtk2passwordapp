@@ -30,3 +30,5 @@ e37e51a842420228acd58e6ca91952b4  pkg/gtk2passwordapp-5.1.0.gem
 400425f4fdaced380f4d5bb71d24d15d  pkg/gtk2passwordapp-6.1.210203.gem
 # 6.1.210628 / 2021-06-28 08:17:47 -0700
 c0959fbceb11cdb790ab00ca253f8f1c  pkg/gtk2passwordapp-6.1.210628.gem
+# 6.1.210706 / 2021-07-06 16:14:48 -0700
+c0d5b9bbfef4ad880f5ee302adf5fa48  pkg/gtk2passwordapp-6.1.210706.gem
