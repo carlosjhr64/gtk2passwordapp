@@ -18,6 +18,8 @@ ADD_PAGE_LABEL
 add_seconds
 append
 app_menu
+args
+ARGV
 attr_reader
 b
 BadName
