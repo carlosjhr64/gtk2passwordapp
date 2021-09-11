@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
 
   s.homepage = 'https://github.com/carlosjhr64/gtk2passwordapp'
 
-  s.author   = 'carlosjhr64'
+  s.author   = 'CarlosJHR64'
   s.email    = 'carlosjhr64@gmail.com'
 
   s.date     = '2021-09-11'
@@ -41,6 +41,6 @@ lib/gtk2passwordapp/gui.rb
   s.add_runtime_dependency 'base32', '= 0.3.4'
   s.add_runtime_dependency 'totp', '= 1.0.0'
   s.add_runtime_dependency 'super_random', '~> 2.0', '>= 2.0.210126'
-  s.requirements << 'ruby: ruby 3.0.1p64 (2021-04-05 revision 0fb782ee38) [x86_64-linux]'
+  s.requirements << 'ruby: ruby 3.0.2p107 (2021-07-07 revision 0db68f0233) [x86_64-linux]'
 
 end

@@ -15,12 +15,12 @@ Features random password generator, clipboard use, and TOTP.
 
 ## Install:
 
-```shell
+```console
 $ gem install gtk2passwordapp
 ```
 
 ## Help:
-```shell
+```console
 $ gtk2passwordapp --help
 Usage:
   gtk2passwordapp [:gui+]
@@ -61,7 +61,7 @@ View Account page:
 
 ## Configuration:
 
-```shell
+```console
 $ ls ~/.config/gtk3app/gtk2passwordapp/config-?.?.rbon
 ```
 
@@ -72,7 +72,7 @@ $ ls ~/.config/gtk3app/gtk2passwordapp/config-?.?.rbon
 If you're upgrading from `gtk2pwdV`,
 copy your passwords files to the new file name:
 
-```shell
+```console
 $ cp ~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat  ~/.cache/gtk3app/gtk2passwordapp/dump.yzb
 ```
 
