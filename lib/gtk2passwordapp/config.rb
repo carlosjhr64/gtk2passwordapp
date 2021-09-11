@@ -2,7 +2,8 @@ class Gtk2PasswordApp
   using Rafini::String
   extend Rafini::Empty
 
-  H2Q = BaseConvert::FromTo.new(base: 16, digits: '0123456789ABCDEF', to_base:91, to_digits: :qgraph)
+  H2Q = BaseConvert::FromTo.new(base: 16, digits: '0123456789ABCDEF',
+                                to_base:91, to_digits: :qgraph)
   RND = SuperRandom.new
   TOTPx = /^[A-Z2-7]{16,}$/
 
@@ -39,6 +40,7 @@ class Gtk2PasswordApp
     Red: '#900',
     Green: '#090',
     Blue: '#009',
+    White: '#FFF',
     TooOld: 60*60*24*365, # Year
 
     # Buttons

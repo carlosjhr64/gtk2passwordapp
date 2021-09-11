@@ -154,6 +154,7 @@ ok
 Open
 OpenSSL
 options
+override_background_color
 override_color
 pack_start
 padding
@@ -280,6 +281,7 @@ vertical
 view_row
 visibility_toggleling
 wait_for_text
+White
 XDG
 YamlZlibBlowfish
 YesNoDialog

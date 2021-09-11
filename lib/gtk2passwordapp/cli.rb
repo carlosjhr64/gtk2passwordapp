@@ -1,5 +1,7 @@
 class Gtk2PasswordApp
-def self.run(pattern='.', dump=File.expand_path('~/.cache/gtk3app/gtk2passwordapp/dump.yzb'), *trash)
+def self.run(pattern='.',
+             dump=File.expand_path('~/.cache/gtk3app/gtk2passwordapp/dump.yzb'),
+             *trash)
   unless trash.empty?
     $stderr.puts HELP
     $stderr.puts "Please match usage."
@@ -22,7 +24,8 @@ def self.run(pattern='.', dump=File.expand_path('~/.cache/gtk3app/gtk2passwordap
   print "Enter salt: "
   pwd << $stdin.gets.strip
   system('clear; clear')
-  h2q = BaseConvert::FromTo.new base: 16, digits: '0123456789ABCDEF', to_base: 91, to_digits: :qgraph
+  h2q = BaseConvert::FromTo.new base: 16, digits: '0123456789ABCDEF',
+                                to_base: 91, to_digits: :qgraph
   pwd = h2q.convert Digest::SHA256.hexdigest(pwd).upcase
   begin
     lst = YamlZlibBlowfish.new(pwd).load(dump)

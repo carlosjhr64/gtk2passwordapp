@@ -7,7 +7,8 @@ class Gtk2PasswordApp
     @pages     = Such::Box.new stage, :pages!
     @recent = []
     @reset = @on_main_page = false
-    @red,@green,@blue = [:Red,:Green,:Blue].map{Gdk::RGBA.parse(CONFIG[_1])}
+    @red,@green,@blue,@white =
+      [:Red,:Green,:Blue,:White].map{Gdk::RGBA.parse(CONFIG[_1])}
     @tools = @password_page = @add_page = @edit_page = @main_page = @menu = nil
     build_password_page
     build_logo_menu
@@ -39,16 +40,23 @@ class Gtk2PasswordApp
 
   def popup_accounts_menu
     @menu = Such::Menu.new :main_menu!
+    @menu.override_background_color(:normal, @white)
     @recent.each do |name| add_menu_item(name, @green) end
-    @accounts.data.keys.sort{|a,b|a.upcase<=>b.upcase}.each do |name| add_menu_item(name) end
+    @accounts.data.keys.sort{|a,b|a.upcase<=>b.upcase}.each do |name|
+      add_menu_item(name)
+    end
     @menu.show_all
     @menu.popup_at_pointer
   end
 
   def add_menu_item(name, color=nil)
-    menu_item = Such::MenuItem.new [label:name], :main_menu_item, 'activate' do selected_account(name) end
+    menu_item = Such::MenuItem.new [label:name], :main_menu_item, 'activate' do
+      selected_account(name)
+    end
     account = @accounts.get name
-    color = (Time.now.to_i - account.updated > CONFIG[:TooOld])? @red : @blue unless color
+    unless color
+      color = (Time.now.to_i - account.updated > CONFIG[:TooOld])? @red : @blue
+    end
     menu_item.override_color :normal, color
     @menu.append menu_item
   end
