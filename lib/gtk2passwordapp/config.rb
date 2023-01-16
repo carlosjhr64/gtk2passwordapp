@@ -12,7 +12,7 @@ class Gtk2PasswordApp
     # Hashing
 
     Salt: s0,
-    LongPwd: 14,
+    LongPwd: 16,
 
     # Miscellaneous Strings
 
@@ -53,7 +53,7 @@ class Gtk2PasswordApp
     # Spin Buttons
 
     PWDLEN: [3,40,1],
-    pwdlen: {set_value: 13},
+    pwdlen: {set_value: 15},
     pwdlen!: [:PWDLEN,:pwdlen],
 
     # Tools Labels

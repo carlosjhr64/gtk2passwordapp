@@ -1,6 +1,6 @@
 # Gtk2PasswordApp
 
-* [VERSION 6.2.230116](https://github.com/carlosjhr64/gtk2passwordapp/releases)
+* [VERSION 6.3.230116](https://github.com/carlosjhr64/gtk2passwordapp/releases)
 * [github](https://github.com/carlosjhr64/gtk2passwordapp)
 * [rubygems](https://rubygems.org/gems/gtk2passwordapp)
 
@@ -14,11 +14,9 @@ Uses Blowfish to encrypt the datafile.
 Features random password generator, clipboard use, and TOTP.
 
 ## Install:
-
 ```console
 $ gem install gtk2passwordapp
 ```
-
 ## Help:
 ```console
 $ gtk2passwordapp --help
@@ -60,25 +58,49 @@ View Account page:
 * `Previous` button will put password/previous in clipboard/primary for a few seconds. 
 
 ## Configuration:
-
 ```console
 $ ls ~/.config/gtk3app/gtk2passwordapp/config-?.?.rbon
 ```
-
-* Salt:  If your master password length is under 14(LongPwd), it'll append this Salt.
+* Salt:  If your master password length is under 16(LongPwd), it'll append this Salt.
 * TooOld:  I have this set for a year (in seconds).
 * PwdFile:  passwords file... you'll want include this file in your back-ups.
 
 If you're upgrading from `gtk2pwdV`,
 copy your passwords files to the new file name:
-
 ```console
 $ cp ~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat  ~/.cache/gtk3app/gtk2passwordapp/dump.yzb
 ```
-
 And remember to set your `Salt:` in the configuration file.
 The configuration file is created upon the first run of `gtk2passwordapp`, so
 you'll need to do that first.
+
+## On password length
+
+As of early 2023,
+[Blockchain.com](https://www.blockchain.com/explorer/charts/hash-rate)
+charts the total hash rate of the Bitcoin network approaching `300*M*TH/s`.
+Interpreting this as the number a passwords it can test per second,
+I estimate the number of passwords it could test in two years:
+```ruby
+# Passwords attempted in two years:
+M         = 1_000_000
+T         = M*M
+YEAR      = 60*60*24*365
+PASSWORDS = 2*YEAR*300*M*T
+# There are 94 graph characters in ASCII.
+# I can estimate the password length needed to cover this number of PASSWORDS:
+Math.log(PASSWORDS,94).ceil #=> 15
+```
+So that's how come to a default password length of 15.
+
+## Trouble shooting on upgrades
+
+Edit your configuration file's `:Salt` value
+to what it was set in your previous configuration.
+Also, the `:LongPwd` value changed from 14 to 16,
+so if your long password length was 14 or 15,
+you'll have to enter that as it's now considered short
+and set `:Salt` to "".
 
 ## LICENSE:
 

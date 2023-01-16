@@ -10,8 +10,11 @@ BadPassword
 BadUrl
 BadUsername
 BaseConvert
+blockchain
+Blockchain
 carlosjhr
 CarlosJHR
+ceil
 chmod
 CipherError
 cli
@@ -110,6 +113,7 @@ UserSpace
 usr
 toggleling
 WRITTERS
+www
 XDG
 yaml
 zlib
