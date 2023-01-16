@@ -1,6 +1,7 @@
 #! ruby
 require 'test/unit'
 
+require 'such/convention'
 require 'rafini'
 require 'base_convert'
 require 'super_random'
@@ -13,6 +14,10 @@ require 'gtk2passwordapp/config'
 
 class TestConfig < Test::Unit::TestCase
   using Rafini::String
+  def test_convention
+    assert_nil Such::Convention.validate Gtk2PasswordApp::CONFIG
+  end
+
   def test_config
     config = Gtk2PasswordApp::CONFIG
     assert_equal Hash, config.class
@@ -25,7 +30,7 @@ class TestConfig < Test::Unit::TestCase
       when /^[a-z_]+$/
         assert_equal Hash, v.class
       when /^[a-zA-Z]+$/
-        assert((v.class==String) || (v.class==Fixnum))
+        assert((v.class==String) || (v.class==Integer))
       when /^\w+\!$/
         assert_equal Array, v.class
       else

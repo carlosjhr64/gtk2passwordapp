@@ -1,6 +1,6 @@
 # Gtk2PasswordApp
 
-* [VERSION 6.2.210911](https://github.com/carlosjhr64/gtk2passwordapp/releases)
+* [VERSION 6.2.230116](https://github.com/carlosjhr64/gtk2passwordapp/releases)
 * [github](https://github.com/carlosjhr64/gtk2passwordapp)
 * [rubygems](https://rubygems.org/gems/gtk2passwordapp)
 
@@ -84,7 +84,7 @@ you'll need to do that first.
 
 (The MIT License)
 
-Copyright (c) 2021 CarlosJHR64
+Copyright (c) 2023 CarlosJHR64
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

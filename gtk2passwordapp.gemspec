@@ -1,14 +1,14 @@
 Gem::Specification.new do |s|
 
   s.name     = 'gtk2passwordapp'
-  s.version  = '6.2.210911'
+  s.version  = '6.2.230116'
 
   s.homepage = 'https://github.com/carlosjhr64/gtk2passwordapp'
 
   s.author   = 'CarlosJHR64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2021-09-11'
+  s.date     = '2023-01-16'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
