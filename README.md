@@ -90,6 +90,8 @@ PASSWORDS = 2*YEAR*300*M*T
 # There are 94 graph characters in ASCII.
 # I can estimate the password length needed to cover this number of PASSWORDS:
 Math.log(PASSWORDS,94).ceil #=> 15
+# Excluding the quotes in graph, it's still:
+Math.log(PASSWORDS,91).ceil #=> 15
 ```
 So that's how come to a default password length of 15.
 
