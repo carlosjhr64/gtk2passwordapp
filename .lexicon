@@ -97,6 +97,7 @@ get
 gets
 GLib
 GO
+grab_focus
 graph
 Green
 Gtk

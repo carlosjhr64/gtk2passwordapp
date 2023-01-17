@@ -12,6 +12,7 @@ class Gtk2PasswordApp
     @tools = @password_page = @add_page = @edit_page = @main_page = @menu = nil
     build_password_page
     build_logo_menu
+    @password_entry.grab_focus
   end
 
   def build_logo_menu
@@ -35,6 +36,7 @@ class Gtk2PasswordApp
       @reset = true
       hide_main_page
       @password_page.show
+      @password_entry.grab_focus
     end
   end
 
@@ -119,9 +121,9 @@ class Gtk2PasswordApp
     @password_page = Such::Box.new @pages, :page!
     Such::Label.new @password_page, :PASSWORD_PAGE_LABEL, :page_label
     error_label,previous = nil,'' # updates below
-    password_entry = field_row(@password_page, :PASSWORD, :password_entry!) do
-      pwd = password_entry.text.strip
-      password_entry.text = ''
+    @password_entry = field_row(@password_page, :PASSWORD, :password_entry!) do
+      pwd = @password_entry.text.strip
+      @password_entry.text = ''
       raise CONFIG[:TooShort] if pwd.length < CONFIG[:MinPwdLen]
       if not @reset and @accounts.exist?
         @accounts.load rehash pwd
