@@ -216,7 +216,7 @@ class Gtk2PasswordApp
     generator = Such::Box.new @edit_page, :toolbox!
     pwdlen=rndpwd=nil
     Such::Button.new generator, :RAND, :tool_button do
-      rndpwd = H2Q.convert RND.hexadecimal
+      rndpwd = H2Q.convert RND.hexadecimal.upcase
       @edit_password.text = rndpwd[0...pwdlen.value]
     end
     pwdlen = Such::SpinButton.new generator, :pwdlen!, 'value-changed' do
