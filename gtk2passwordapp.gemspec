@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name     = 'gtk2passwordapp'
-  s.version  = '6.3.230116'
+  s.version  = '6.3.230117'
 
   s.homepage = 'https://github.com/carlosjhr64/gtk2passwordapp'
 

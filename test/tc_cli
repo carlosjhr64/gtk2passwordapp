@@ -14,13 +14,7 @@ class TestCli < Test::Unit::TestCase
                "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
                "Enter salt: " +
                "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
-               "{\"ButtNotes\"=>\n" +
-               "  [\"$bC4pii5$U{Br\",\n" +
-               "   \"\",\n" +
-               "   \"butterflies\",\n" +
-               "   \"https://butt.notes.com\",\n" +
-               "   \"Many notes on butts\",\n" +
-               "   1612292617]}\n"
+               "ButtNotes\tbutterflies\t$bC4pii5$U{Br\n"
     assert_equal expected, string
   end
 
@@ -35,8 +29,7 @@ class TestCli < Test::Unit::TestCase
                "Enter password: " +
                "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
                "Enter salt: " +
-               "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
-               "{}\n"
+               "\e[H\e[2J\e[3J\e[H\e[2J\e[3J"   # clear; clear
     assert_equal expected, string
   end
 

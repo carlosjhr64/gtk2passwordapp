@@ -33,6 +33,9 @@ def self.run(pattern='.',
     $stderr.puts "Bad password+salt"
     exit 65
   end
-  pp lst.select{|k,v|pattern.match? k}
+  lst.select{|k,v|pattern.match? k}.each do |k,v|
+    # Account Username Password(Current)
+    puts "#{k}\t#{v[2]}\t#{v[0]}"
+  end
 end
 end
