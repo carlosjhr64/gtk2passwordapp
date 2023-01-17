@@ -23,8 +23,6 @@ ClipboardTimeout
 com
 config
 CONFIG
-cp
-dat
 decription
 def
 ursure
@@ -43,8 +41,6 @@ gtk
 passwordapp
 Gtk
 PasswordApp
-gtk
-pwdV
 gtk
 app
 Gtk

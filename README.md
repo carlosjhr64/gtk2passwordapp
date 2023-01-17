@@ -43,9 +43,9 @@ Default passwords data file is:
 
 Mouse clicks on logo:
 
-1. `Right` to get the passwords list and select.
-2. `Center` to reset the master password.
-3. `Left` to get the application menu.
++ Button #1: Get the passwords list and select.
++ Button #2: Reset the master password.
++ Button #3: Application menu.
 
 When you select an account,
 the username/password will be in clipboard/primary for a few seconds.
@@ -61,18 +61,9 @@ View Account page:
 ```console
 $ ls ~/.config/gtk3app/gtk2passwordapp/config-?.?.rbon
 ```
-* Salt:  If your master password length is under 16(LongPwd), it'll append this Salt.
-* TooOld:  I have this set for a year (in seconds).
-* PwdFile:  passwords file... you'll want include this file in your back-ups.
-
-If you're upgrading from `gtk2pwdV`,
-copy your passwords files to the new file name:
-```console
-$ cp ~/.cache/gtk3app/gtk2passwordapp/gtk2pwdV.dat  ~/.cache/gtk3app/gtk2passwordapp/dump.yzb
-```
-And remember to set your `Salt:` in the configuration file.
-The configuration file is created upon the first run of `gtk2passwordapp`, so
-you'll need to do that first.
++ Salt:  If your master password length is under 16(LongPwd), it'll append this Salt.
++ TooOld:  I have this set for a year (in seconds).
++ PwdFile:  passwords file... you'll want include this file in your back-ups.
 
 ## On password length
 
