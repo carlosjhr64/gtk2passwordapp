@@ -14,7 +14,13 @@ class TestCli < Test::Unit::TestCase
                "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
                "Enter salt: " +
                "\e[H\e[2J\e[3J\e[H\e[2J\e[3J" + # clear; clear
-               "ButtNotes\tbutterflies\t$bC4pii5$U{Br\n"
+               "Account: ButtNotes\n" +
+               "   Username: butterflies\n" +
+               "   Password: $bC4pii5$U{Br\n" +
+               "   Previous: \n" +
+               "   Note: Many notes on butts\n" +
+               "   URL: https://butt.notes.com\n" +
+               "   Updated: 2021-02-02 11:03:37\n"
     assert_equal expected, string
   end
 

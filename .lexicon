@@ -20,6 +20,7 @@ append
 app_menu
 args
 ARGV
+at
 attr_reader
 b
 BadName
@@ -240,6 +241,7 @@ signal_connect
 sort
 SpinButton
 stage
+strftime
 String
 strip
 Such

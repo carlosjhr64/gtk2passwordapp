@@ -34,8 +34,15 @@ def self.run(pattern='.',
     exit 65
   end
   lst.select{|k,v|pattern.match? k}.each do |k,v|
-    # Account Username Password(Current)
-    puts "#{k}\t#{v[2]}\t#{v[0]}"
+    puts <<~RECORD
+      Account: #{k}
+         Username: #{v[2]}
+         Password: #{v[0]}
+         Previous: #{v[1]}
+         Note: #{v[4]}
+         URL: #{v[3]}
+         Updated: #{Time.at(v[5]).strftime('%Y-%m-%d %H:%M:%S')}
+    RECORD
   end
 end
 end
