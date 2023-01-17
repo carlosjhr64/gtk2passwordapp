@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.author   = 'CarlosJHR64'
   s.email    = 'carlosjhr64@gmail.com'
 
-  s.date     = '2023-01-16'
+  s.date     = '2023-01-17'
   s.licenses = ['MIT']
 
   s.description = <<DESCRIPTION
@@ -35,12 +35,12 @@ lib/gtk2passwordapp/config.rb
 lib/gtk2passwordapp/gui.rb
   )
   s.executables << 'gtk2passwordapp'
-  s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 2.0', '>= 2.0.210127'
-  s.add_runtime_dependency 'base_convert', '~> 6.0', '>= 6.0.210201'
-  s.add_runtime_dependency 'gtk3app', '~> 5.1', '>= 5.1.210203'
+  s.add_runtime_dependency 'yaml_zlib_blowfish', '~> 2.0', '>= 2.0.230116'
+  s.add_runtime_dependency 'base_convert', '~> 7.1', '>= 7.1.221229'
+  s.add_runtime_dependency 'gtk3app', '~> 5.4', '>= 5.4.230109'
   s.add_runtime_dependency 'base32', '= 0.3.4'
   s.add_runtime_dependency 'totp', '= 1.0.0'
-  s.add_runtime_dependency 'super_random', '~> 2.0', '>= 2.0.210126'
-  s.requirements << 'ruby: ruby 3.0.2p107 (2021-07-07 revision 0db68f0233) [x86_64-linux]'
+  s.add_runtime_dependency 'super_random', '~> 3.2', '>= 3.2.230116'
+  s.requirements << 'ruby: ruby 3.2.0 (2022-12-25 revision a528908271) [aarch64-linux]'
 
 end
