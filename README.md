@@ -6,6 +6,11 @@
 
 ![gui](test/gui.png)
 
+Note: There was a breaking change in Ruby that affects TOTP.
+Edit the specification file to use `totp` gem version 1.0.1.
+
+    ~/.rbenv/versions/3.4.2/lib/ruby/gems/3.4.0/specifications/gtk2passwordapp-6.3.230117.gemspec
+
 ## Description:
 
 Ruby-Gnome Password Manager.
