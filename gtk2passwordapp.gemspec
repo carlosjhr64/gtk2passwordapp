@@ -41,6 +41,6 @@ lib/gtk2passwordapp/gui.rb
   s.add_runtime_dependency 'base32', '= 0.3.4'
   s.add_runtime_dependency 'totp', '= 1.0.1'
   s.add_runtime_dependency 'super_random', '~> 3.2', '>= 3.2.230116'
-  s.required_ruby_version = '>= 3.3'
+  s.required_ruby_version = '>= 3.4'
 
 end
