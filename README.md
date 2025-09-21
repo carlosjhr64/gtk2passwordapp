@@ -6,10 +6,11 @@
 
 ![gui](test/gui.png)
 
-Note: There was a breaking change in Ruby that affects TOTP.
-Edit the specification file to use `totp` gem version 1.0.1.
-
-    ~/.rbenv/versions/3.4.2/lib/ruby/gems/3.4.0/specifications/gtk2passwordapp-6.3.230117.gemspec
+Note: Due to breaking changes in Ruby, this project is broken.
+If you've been using Gtk2PasswordApp,
+you'll need to run it using Ruby 3.2(when it definitely worked).
+And then, please migrate out,
+as I don't think I'll be able to continue the maintanance.
 
 ## Description:
 
