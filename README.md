@@ -8,7 +8,7 @@
 
 WARNING: Blowfish is considered a legacy and deprecated algorithm.
 On my next review of this project, I'll migrate this to a different encryption,
-but I don't know when I'll get it.
+but I don't know when I'll get to it.
 
 ## Description:
 
