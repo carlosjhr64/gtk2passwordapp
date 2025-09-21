@@ -1,7 +1,6 @@
 ABCDEF
 AccountHit
 AccountMiss
-app
 args
 ARGV
 attr
@@ -10,8 +9,6 @@ BadPassword
 BadUrl
 BadUsername
 BaseConvert
-blockchain
-Blockchain
 carlosjhr
 CarlosJHR
 ceil
@@ -42,9 +39,7 @@ passwordapp
 Gtk
 PasswordApp
 gtk
-app
 Gtk
-App
 gui
 Gui
 hexdigest
@@ -78,7 +73,6 @@ Rafini
 rand
 rb
 rbon
-Regexp
 RegexpError
 ursure
 URSURE

@@ -1,13 +1,14 @@
 # Gtk2PasswordApp
 
-* [VERSION 6.3.230117](https://github.com/carlosjhr64/gtk2passwordapp/releases)
+* [VERSION 6.3.250921](https://github.com/carlosjhr64/gtk2passwordapp/releases)
 * [github](https://github.com/carlosjhr64/gtk2passwordapp)
 * [rubygems](https://rubygems.org/gems/gtk2passwordapp)
 
 ![gui](test/gui.png)
 
-NOTE: BREAKING CHANGES HAS BROKEN THIS PROJECT.
-IF YOU BEEN USING THIS APP, YOU NEED TO MIGRATE OUT IMMEDIATELY!
+WARNING: Blowfish is considered a legacy and deprecated algorithm.
+On my next review of this project, I'll migrate this to a different encryption,
+but I don't know when I'll get it.
 
 ## Description:
 
@@ -102,7 +103,7 @@ and set `:Salt` to "".
 
 (The MIT License)
 
-Copyright (c) 2023 CarlosJHR64
+Copyright (c) 2025 CarlosJHR64
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
