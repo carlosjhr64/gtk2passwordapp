@@ -6,11 +6,8 @@
 
 ![gui](test/gui.png)
 
-Note: Due to breaking changes in Ruby, this project is broken.
-If you've been using Gtk2PasswordApp,
-you'll need to run it using Ruby 3.2(when it definitely worked).
-And then, please migrate out,
-as I don't think I'll be able to continue the maintanance.
+NOTE: BREAKING CHANGES HAS BROKEN THIS PROJECT.
+IF YOU BEEN USING THIS APP, YOU NEED TO MIGRATE OUT IMMEDIATELY!
 
 ## Description:
 
